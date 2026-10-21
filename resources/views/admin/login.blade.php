@@ -106,8 +106,23 @@
                     >
                 </div>
 
+                <!-- Flash Messages -->
+                @if (session('error'))
+                    <div class="mb-4 bg-red-100 border border-red-300 text-red-700 text-sm rounded-xl px-4 py-2.5"> 
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                @if (session('success'))
+                    <div class="mb-4 bg-green-100 border border-green-300 text-green-700 text-sm rounded-xl px-4 py-2.5"> 
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 <!-- Form -->
-                <form class="space-y-4" onsubmit="return false;">
+                <form method="POST" action="{{ route('admin.login') }}" class="space-y-4">
+                    @csrf
+
                     <!-- Nama Pengguna Field -->
                     <div>
                         <label class="block text-white text-sm sm:text-base font-medium mb-1.5">
@@ -115,8 +130,8 @@
                         </label>
                         <input 
                             type="text" 
-                            value="Admin" 
-                            readonly 
+                            name="username"
+                            value="{{ old('username') }}"
                             class="w-full bg-white text-[#A0AEC0] placeholder-[#A0AEC0] rounded-xl px-4 py-2.5 sm:py-3 text-sm sm:text-base font-normal shadow-sm outline-none border border-transparent focus:border-[#65BD5E] transition"
                             placeholder="Admin"
                         >
@@ -128,11 +143,10 @@
                             Password
                         </label>
                         <input 
-                            type="text" 
-                            value="Admin" 
-                            readonly 
+                            type="password" 
+                            name="password"
                             class="w-full bg-white text-[#A0AEC0] placeholder-[#A0AEC0] rounded-xl px-4 py-2.5 sm:py-3 text-sm sm:text-base font-normal shadow-sm outline-none border border-transparent focus:border-[#65BD5E] transition"
-                            placeholder="Admin"
+                            placeholder="••••••"
                         >
                     </div>
 
@@ -161,7 +175,7 @@
 
                     <!-- Submit Button: Masuk -->
                     <button 
-                        type="button" 
+                        type="submit" 
                         class="w-full bg-[#65BD5E] hover:bg-[#58a851] text-white font-medium text-sm sm:text-base rounded-xl py-2.5 sm:py-3 shadow-sm hover:shadow transition cursor-pointer"
                     >
                         Masuk
