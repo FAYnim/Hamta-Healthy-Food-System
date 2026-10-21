@@ -15,8 +15,8 @@ class Cabang extends Model
         'alamat',
         'jam_buka',
         'jam_tutup',
-        'layanan_pickup',
-        'layanan_dinein'
+        'layani_pickup',
+        'layani_dinein'
     ];
 
     public function produk() {
