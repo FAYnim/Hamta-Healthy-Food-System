@@ -25,59 +25,7 @@
 
     <div class="min-h-screen flex flex-col lg:flex-row">
 
-        <!-- ========================================== -->
-        <!-- 1. SIDEBAR (Dark Green: #0B412B)           -->
-        <!-- ========================================== -->
-        <aside class="w-full lg:w-72 bg-[#0B412B] text-white flex flex-col shrink-0 lg:min-h-screen">
-            <!-- Brand / Logo Header -->
-            <div class="px-7 pt-8 pb-6 lg:pb-8 flex items-center justify-between">
-                <h1 class="text-2xl font-bold tracking-tight text-white">Hamta Panel</h1>
-                
-                <!-- Badge Admin (Mobile Only) -->
-                <div class="lg:hidden bg-white text-[#010101] text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">
-                    Yunita
-                </div>
-            </div>
-
-            <!-- Navigation Links -->
-            <nav class="flex-1 px-4 pb-6 space-y-1.5 overflow-x-auto lg:overflow-visible flex lg:flex-col gap-1 lg:gap-0">
-                <!-- Item 1: Dashboard -->
-                <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 font-medium transition whitespace-nowrap">
-                    <x-lucide-home class="w-5 h-5 shrink-0" />
-                    <span>Dashboard</span>
-                </a>
-
-                <!-- Item 2: Kasir -->
-                <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 font-medium transition whitespace-nowrap">
-                    <x-lucide-calculator class="w-5 h-5 shrink-0" />
-                    <span>Kasir</span>
-                </a>
-
-                <!-- Item 3: Kelola Menu -->
-                <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 font-medium transition whitespace-nowrap">
-                    <x-lucide-concierge-bell class="w-5 h-5 shrink-0" />
-                    <span>Kelola Menu</span>
-                </a>
-
-                <!-- Item 4: Daftar Pesanan (Active) -->
-                <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-xl bg-[#65BD5E] text-white font-semibold shadow-sm transition whitespace-nowrap">
-                    <x-lucide-clipboard-list class="w-5 h-5 shrink-0" />
-                    <span>Daftar Pesanan</span>
-                </a>
-
-                <!-- Item 5: Promo -->
-                <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 font-medium transition whitespace-nowrap">
-                    <x-lucide-tag class="w-5 h-5 shrink-0" />
-                    <span>Promo</span>
-                </a>
-
-                <!-- Item 6: Pengaturan -->
-                <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 font-medium transition whitespace-nowrap">
-                    <x-lucide-store class="w-5 h-5 shrink-0" />
-                    <span>Pengaturan</span>
-                </a>
-            </nav>
-        </aside>
+        <x-admin.sidebar />
 
         <!-- ========================================== -->
         <!-- 2. MAIN CONTENT AREA (Cream: #F7F2E7)      -->
