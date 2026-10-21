@@ -19,6 +19,37 @@
         body {
             font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
         }
+
+        @keyframes slideInFromLeft {
+            0% {
+                transform: translateX(-120%);
+                scale: 1;
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                scale: 1.5;
+                opacity: 1;
+            }
+        }
+
+        @keyframes infiniteSpin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .animate-slide-in-left {
+            animation: slideInFromLeft 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .animate-spin-infinite {
+            animation: infiniteSpin 35s linear infinite;
+            transform-origin: center center;
+        }
     </style>
 </head>
 <body class="bg-[#F7F2E7] text-[#010101] antialiased min-h-screen relative overflow-x-hidden selection:bg-[#65BD5E] selection:text-white">
@@ -46,14 +77,16 @@
         <!-- LEFT SIDE: Cream Background with Salad     -->
         <!-- ========================================== -->
         <div class="w-full lg:w-[56%] flex items-center justify-start py-8 px-4 sm:px-8 lg:p-0 relative min-h-[340px] lg:min-h-screen">
-            <!-- Salad Bowl: positioned touching/overlapping the left edge just like in Figma -->
-            <div class="relative w-72 sm:w-84 md:w-96 lg:w-[420px] xl:w-[460px] -ml-8 sm:-ml-12 lg:-ml-14 xl:-ml-16 select-none pointer-events-none">
-                <img 
-                    src="/images/salad-bowl.png" 
-                    alt="Salad Bowl Hamta" 
-                    class="w-full h-auto object-contain block"
-                    onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=80';"
-                >
+            <!-- Salad Bowl: positioned touching/overlapping the left edge with slide-in and continuous rotation -->
+            <div class="animate-slide-in-left relative w-72 sm:w-84 md:w-96 lg:w-[420px] xl:w-[460px] -ml-8 sm:-ml-12 lg:-ml-14 xl:-ml-16 select-none pointer-events-none">
+                <div class="animate-spin-infinite">
+                    <img 
+                        src="/images/salad-1-clean.webp" 
+                        alt="Salad Bowl Hamta" 
+                        class="w-full h-auto object-contain block"
+                        onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=80';"
+                    >
+                </div>
             </div>
         </div>
 
@@ -65,11 +98,11 @@
             <div class="w-full max-w-[300px] sm:max-w-[320px] mx-auto">
 
                 <!-- Brand Wordmark Logo -->
-                <div class="mb-7">
+                <div class="mb-7 flex justify-center">
                     <img 
                         src="/images/hamta-logo-white.png" 
                         alt="hamtā" 
-                        class="h-12 sm:h-14 lg:h-16 w-auto object-contain select-none"
+                        class="h-16 sm:h-20 lg:h-24 w-auto object-contain select-none"
                     >
                 </div>
 
