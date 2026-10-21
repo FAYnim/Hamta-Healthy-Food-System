@@ -40,7 +40,7 @@ class AuthController extends \App\Http\Controllers\Controller
 
         // Simpan data admin di session sebagai penanda sudah login
         $request->session()->regenerate();
-        $request->session([
+        $request->session()->put([
             'admin_id' => $admin->id_admin,
             'admin_nama' => $admin->nama,
         ]);
