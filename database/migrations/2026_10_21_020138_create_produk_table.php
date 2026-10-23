@@ -21,6 +21,9 @@ return new class extends Migration
             // Deskripsi detail mengenai produk
             $table->text('deskripsi')->nullable();
 
+            // Kategori menu utk tab filter: Salad / Sandwich / Juice
+            $table->enum('kategori', ['Salad', 'Sandwich', 'Juice'])->notNull();
+
             // Harga jual produk saat pembelian offline/di kasir
             $table->decimal('harga_offline', 10, 2);
 

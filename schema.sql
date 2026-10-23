@@ -49,6 +49,7 @@ CREATE TABLE produk (
     id_produk      INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nama_produk    VARCHAR(100) NOT NULL,
     deskripsi      TEXT NULL,
+    kategori       ENUM('Salad', 'Sandwich', 'Juice') NOT NULL COMMENT 'kategori utk tab filter menu',
     harga_offline  DECIMAL(10,2) NOT NULL,
     harga_online   DECIMAL(10,2) NOT NULL COMMENT 'harga online dibuat lebih tinggi dari offline',
     foto           VARCHAR(255) NULL,
