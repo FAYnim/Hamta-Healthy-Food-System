@@ -39,6 +39,8 @@ Route::middleware('admin.auth')->group(function () {
         ->name('admin.kelola_menu');
     Route::post('/admin/kelola-menu', [\App\Http\Controllers\Admin\MenuController::class, 'store'])
         ->name('admin.kelola_menu.store');
+    Route::patch('/admin/kelola-menu/{id}/status', [\App\Http\Controllers\Admin\MenuController::class, 'toggleStatus'])
+        ->name('admin.kelola_menu.status');
     Route::patch('/admin/kelola-menu/{id}', [\App\Http\Controllers\Admin\MenuController::class, 'update'])
         ->name('admin.kelola_menu.update');
     Route::delete('/admin/kelola-menu/{id}', [\App\Http\Controllers\Admin\MenuController::class, 'destroy'])

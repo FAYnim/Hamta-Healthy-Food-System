@@ -11,12 +11,33 @@ use App\Models\Produk;
 
 class MenuController extends \App\Http\Controllers\Controller
 {
-    public function index() {
+    public function index(Request $request) {
+        // Whitelist, bukan validate(): parameter GET yang salah cukup diabaikan,
+        // tidak boleh melempar halaman error 422 ke admin.
+        $kategori = in_array($request->kategori, ['Salad', 'Sandwich', 'Juice'], true)
+            ? $request->kategori
+            : null;
+
+        // is_string() menjaga input `?cari[]=x` (array) tidak memicu TypeError
+        $cari = is_string($request->cari) ? trim($request->cari) : '';
+        $cari = $cari !== '' ? $cari : null;
+
         // Tampilkan semua produk, termasuk yang nonaktif (status_aktif = false),
         // supaya admin bisa melihat & mengaktifkan kembali produk yang sold-out
-        $produk = Produk::with('cabang')->orderBy('nama_produk')->get();
+        $produk = Produk::with('cabang')
+            ->when($kategori, fn ($q, $k) => $q->where('kategori', $k))
+            // $cari nullable: bandingkan ke null eksplisit (bukan truthiness) agar "0" tetap difilter.
+            // Nilai diambil dari closure capture; `when()` mengirim hasil kondisi (bool), bukan $cari.
+            ->when($cari !== null, fn ($q) => $q->where('nama_produk', 'like', "%{$cari}%"))
+            ->orderBy('nama_produk')
+            ->paginate(10)
+            ->withQueryString();
 
-        return view('admin.kelola_menu', ['produk' => $produk]);
+        return view('admin.kelola_menu', [
+            'produk' => $produk,
+            'kategori' => $kategori,
+            'cari' => $cari,
+        ]);
     }
 
     public function create() {
@@ -100,6 +121,18 @@ class MenuController extends \App\Http\Controllers\Controller
             ->with('success', 'Menu "' . $data['nama_produk'] . '" berhasil diperbarui.');
     }
 
+    public function toggleStatus($id) {
+        // Toggle sold-out: false = menu disembunyikan dari kasir & katalog customer
+        $produk = Produk::findOrFail($id);
+        $produk->update(['status_aktif' => ! $produk->status_aktif]);
+
+        // Kembali ke daftar menu dengan filter kategori/cari yang masih aktif
+        return $this->kembaliKeDaftarMenu()->with(
+            'success',
+            'Menu "' . $produk->nama_produk . '" ditandai ' . ($produk->status_aktif ? 'tersedia.' : 'sold-out.')
+        );
+    }
+
     public function destroy($id) {
         // Hapus produk dari database (hard delete)
         $produk = Produk::findOrFail($id);
@@ -111,7 +144,23 @@ class MenuController extends \App\Http\Controllers\Controller
 
         $produk->delete();
 
-        return redirect()->route('admin.kelola_menu')
+        return $this->kembaliKeDaftarMenu()
             ->with('success', 'Menu "' . $nama_produk . '" berhasil dihapus.');
+    }
+
+    /**
+     * Redirect kembali ke URL sebelumnya hanya jika host-nya sama dengan aplikasi ini.
+     * back() bawaan Laravel menerima Referer lintas-host tanpa validasi (open redirect),
+     * jadi host dicek sendiri dan fallback ke daftar menu admin.
+     */
+    private function kembaliKeDaftarMenu() {
+        $previous = url()->previous();
+        $host = parse_url($previous, PHP_URL_HOST);
+
+        $tujuan = $host === request()->getHost()
+            ? $previous
+            : route('admin.kelola_menu');
+
+        return redirect()->to($tujuan);
     }
 }

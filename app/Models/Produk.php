@@ -22,6 +22,11 @@ class Produk extends Model
         'id_cabang',
     ];
 
+    protected $casts = [
+        'status_aktif' => 'boolean',
+        'bisa_dikustom' => 'boolean',
+    ];
+
     // Produk ini milik satu cabang tertentu (NULL = berlaku di semua cabang)
     public function cabang()
     {

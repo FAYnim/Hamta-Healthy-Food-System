@@ -57,34 +57,45 @@
                 
                 <!-- Category Tabs -->
                 <div class="flex items-center gap-3 w-full md:w-auto overflow-x-auto">
-                    <button type="button" class="px-5 py-2 rounded-xl bg-[#65BD5E] text-white font-bold text-sm shadow-sm shrink-0">
-                        Semua
-                    </button>
-                    <button type="button" class="px-5 py-2 rounded-xl text-[#010101] hover:bg-stone-100 font-semibold text-sm transition shrink-0">
-                        Salad
-                    </button>
-                    <button type="button" class="px-5 py-2 rounded-xl text-[#010101] hover:bg-stone-100 font-semibold text-sm transition shrink-0">
-                        Sandwich
-                    </button>
-                    <button type="button" class="px-5 py-2 rounded-xl text-[#010101] hover:bg-stone-100 font-semibold text-sm transition shrink-0">
-                        Juice
-                    </button>
+                    @php
+                        // List of pairs, bukan array asosiatif: PHP mengubah key null
+                        // menjadi "" sehingga $kategori === $nilai tak pernah cocok.
+                        $tabs = [
+                            ['nilai' => null,       'label' => 'Semua'],
+                            ['nilai' => 'Salad',    'label' => 'Salad'],
+                            ['nilai' => 'Sandwich', 'label' => 'Sandwich'],
+                            ['nilai' => 'Juice',    'label' => 'Juice'],
+                        ];
+                    @endphp
+
+                    @foreach ($tabs as ['nilai' => $nilai, 'label' => $label])
+                        <a href="{{ route('admin.kelola_menu', array_filter(['kategori' => $nilai, 'cari' => $cari], fn ($v) => $v !== null)) }}"
+                           class="px-5 py-2 rounded-xl text-sm shrink-0 transition {{ $kategori === $nilai ? 'bg-[#65BD5E] text-white font-bold shadow-sm' : 'text-[#010101] hover:bg-stone-100 font-semibold' }}"
+                           @if ($kategori === $nilai) aria-current="page" @endif>
+                            {{ $label }}
+                        </a>
+                    @endforeach
                 </div>
 
                 <!-- Search Input + Tambah Menu Button -->
                 <div class="flex items-center gap-3.5 w-full md:w-auto justify-end">
                     <!-- Search Input -->
-                    <div class="relative w-full md:w-64">
-                        <input 
-                            type="text" 
-                            placeholder="Cari Menu" 
-                            readonly 
-                            class="w-full bg-white border border-stone-300 rounded-xl pl-4 pr-10 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none"
+                    <form method="GET" action="{{ route('admin.kelola_menu') }}" class="relative w-full md:w-64">
+                        @if ($kategori)
+                            <input type="hidden" name="kategori" value="{{ $kategori }}">
+                        @endif
+                        <input
+                            type="text"
+                            name="cari"
+                            value="{{ $cari }}"
+                            placeholder="Cari Menu"
+                            aria-label="Cari menu"
+                            class="w-full bg-white border border-stone-300 rounded-xl pl-4 pr-10 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
                         >
-                        <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
-                            <x-lucide-search class="w-4 h-4 text-[#8A8A8A]" />
-                        </div>
-                    </div>
+                        <button type="submit" class="absolute inset-y-0 right-0 pr-3.5 flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#65BD5E]" aria-label="Cari menu">
+                            <x-lucide-search class="w-4 h-4 text-[#8A8A8A]" aria-hidden="true" />
+                        </button>
+                    </form>
 
                     <!-- Tambah Menu Button -->
                     <button 
@@ -108,6 +119,7 @@
                                 <th class="py-4 px-6 w-32">Foto</th>
                                 <th class="py-4 px-6">Menu</th>
                                 <th class="py-4 px-6">Kategori</th>
+                                <th class="py-4 px-6 text-center w-32">Status</th>
                                 <th class="py-4 px-6">Harga</th>
                                 <th class="py-4 px-6 text-center w-28">Aksi</th>
                             </tr>
@@ -116,7 +128,7 @@
                         <!-- Table Body -->
                         <tbody class="divide-y divide-stone-200 text-sm">
                             @forelse ($produk as $item)
-                                <tr class="hover:bg-stone-50/50 transition">
+                                <tr class="hover:bg-stone-50/50 transition {{ $item->status_aktif ? '' : 'opacity-60' }}">
                                     <td class="py-4 px-6">
                                         <div class="w-20 h-14 bg-[#D9D9D9] rounded-xl flex items-center justify-center overflow-hidden">
                                             @if ($item->foto)
@@ -133,6 +145,21 @@
                                         <span class="inline-block bg-[#65BD5E] text-white font-semibold text-xs px-4 py-1 rounded-full">
                                             {{ $item->kategori }}
                                         </span>
+                                    </td>
+                                    <td class="py-4 px-6 text-center">
+                                        <form method="POST" action="{{ route('admin.kelola_menu.status', $item->id_produk) }}" class="inline-flex">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit"
+                                                role="switch"
+                                                aria-checked="{{ $item->status_aktif ? 'true' : 'false' }}"
+                                                aria-label="Status ketersediaan {{ $item->nama_produk }}"
+                                                title="{{ $item->status_aktif ? 'Klik untuk menandai sold-out' : 'Klik untuk mengaktifkan kembali' }}"
+                                                class="relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0B412B] focus-visible:ring-offset-2 {{ $item->status_aktif ? 'bg-[#65BD5E] hover:bg-[#58a851]' : 'bg-stone-300 hover:bg-stone-400' }}">
+                                                <span class="sr-only">{{ $item->status_aktif ? 'Tersedia' : 'Sold-out' }}</span>
+                                                <span class="inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform {{ $item->status_aktif ? 'translate-x-6' : 'translate-x-1' }}"></span>
+                                            </button>
+                                        </form>
                                     </td>
                                     <td class="py-4 px-6 font-bold text-[#010101] text-base">
                                         Rp {{ number_format($item->harga_offline, 0, ',', '.') }}
@@ -158,14 +185,34 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="py-10 px-6 text-center text-[#8A8A8A]">
-                                        Belum ada menu. Klik "Tambah Menu" untuk menambahkan.
+                                    <td colspan="6" class="py-10 px-6 text-center text-[#8A8A8A]">
+                                        @if ($produk->total() > 0)
+                                            <p class="mb-3">Halaman ini tidak memiliki menu.</p>
+                                            <a href="{{ $produk->url(1) }}"
+                                               class="inline-block bg-[#65BD5E] hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-xl transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0B412B] focus-visible:ring-offset-2">
+                                                Ke halaman pertama
+                                            </a>
+                                        @elseif ($kategori !== null || $cari !== null)
+                                            <p class="mb-3">Tidak ada menu yang cocok dengan filter.</p>
+                                            <a href="{{ route('admin.kelola_menu') }}"
+                                               class="inline-block bg-[#65BD5E] hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-xl transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0B412B] focus-visible:ring-offset-2">
+                                                Reset filter
+                                            </a>
+                                        @else
+                                            Belum ada menu. Klik "Tambah Menu" untuk menambahkan.
+                                        @endif
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
+
+                @if ($produk->hasPages())
+                    <div class="px-6 py-4 border-t border-stone-100">
+                        {{ $produk->links() }}
+                    </div>
+                @endif
             </div>
 
         </main>
