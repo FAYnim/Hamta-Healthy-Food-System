@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\KasirController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,9 +20,8 @@ Route::middleware('admin.auth')->group(function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
-    Route::get('/admin/kasir', function () {
-        return view('admin.kasir');
-    })->name('admin.kasir');
+    Route::get('/admin/kasir', [KasirController::class, 'index'])->name('admin.kasir');
+    Route::post('/admin/kasir', [KasirController::class, 'store'])->name('admin.kasir.store');
 
     Route::get('/admin/promo', function () {
         return view('admin.promo');

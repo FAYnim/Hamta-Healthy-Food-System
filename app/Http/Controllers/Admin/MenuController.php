@@ -73,7 +73,7 @@ class MenuController extends \App\Http\Controllers\Controller
             // NULL = produk tersedia di semua cabang
             'id_cabang' => $data['id_cabang'] ?? null,
             'status_aktif' => $data['status_aktif'] ?? true,
-            'bisa_dikustom' => $data['bisa_dikustom'] ?? false,
+            'bisa_dikustom' => $request->boolean('bisa_dikustom'),
         ]);
 
         return redirect()->route('admin.kelola_menu')
@@ -95,6 +95,7 @@ class MenuController extends \App\Http\Controllers\Controller
             'kategori' => ['required', 'in:Salad,Sandwich,Juice'],
             'harga' => ['required', 'numeric', 'min:0'],
             'foto' => ['nullable', 'image', 'max:2048'],
+            'bisa_dikustom' => ['nullable', 'boolean'],
         ]);
 
         $produk = Produk::findOrFail($id);
@@ -115,6 +116,7 @@ class MenuController extends \App\Http\Controllers\Controller
             'harga_offline' => $data['harga'],
             'harga_online' => $data['harga'],
             'foto' => $fotoPath,
+            'bisa_dikustom' => $request->boolean('bisa_dikustom'),
         ]);
 
         return redirect()->route('admin.kelola_menu')

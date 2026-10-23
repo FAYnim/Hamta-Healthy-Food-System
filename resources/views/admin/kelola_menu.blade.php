@@ -172,6 +172,7 @@
                                                 data-deskripsi="{{ $item->deskripsi }}"
                                                 data-kategori="{{ $item->kategori }}"
                                                 data-harga="{{ (int) round((float) $item->harga_offline) }}"
+                                                data-bisa-dikustom="{{ $item->bisa_dikustom ? '1' : '0' }}"
                                                 data-foto="{{ $item->foto ? asset('storage/' . $item->foto) : '' }}">
                                                 <x-lucide-pencil class="w-4 h-4" />
                                             </button>
@@ -323,6 +324,15 @@
                     </div>
                 </div>
 
+                <!-- Bisa Dikustom -->
+                <label class="flex items-start gap-3 border border-stone-200 rounded-xl px-4 py-3 cursor-pointer hover:bg-stone-50 transition">
+                    <input type="checkbox" id="bisa_dikustom" name="bisa_dikustom" value="1" {{ old('bisa_dikustom') ? 'checked' : '' }} class="w-4 h-4 mt-0.5 shrink-0 accent-[#65BD5E]">
+                    <span>
+                        <span class="block text-sm font-semibold text-[#010101]">Bisa dikreasikan</span>
+                        <span class="block text-xs text-[#8A8A8A] mt-0.5">Muncul sebagai salad dasar di menu "Kreasikan Salad Sendiri" pada kasir.</span>
+                    </span>
+                </label>
+
                 <!-- Tombol Aksi -->
                 <div class="flex items-center justify-end gap-2.5 pt-1">
                     <button type="button" data-tutup-modal class="bg-[#E5E5E5] hover:bg-[#d9d9d9] text-[#010101] font-bold text-sm px-5 py-2 rounded-lg transition">
@@ -443,6 +453,15 @@
                         @enderror
                     </div>
                 </div>
+
+                <!-- Bisa Dikustom -->
+                <label class="flex items-start gap-3 border border-stone-200 rounded-xl px-4 py-3 cursor-pointer hover:bg-stone-50 transition">
+                    <input type="checkbox" id="edit-bisa_dikustom" name="bisa_dikustom" value="1" {{ old('bisa_dikustom') ? 'checked' : '' }} class="w-4 h-4 mt-0.5 shrink-0 accent-[#65BD5E]">
+                    <span>
+                        <span class="block text-sm font-semibold text-[#010101]">Bisa dikreasikan</span>
+                        <span class="block text-xs text-[#8A8A8A] mt-0.5">Muncul sebagai salad dasar di menu "Kreasikan Salad Sendiri" pada kasir.</span>
+                    </span>
+                </label>
 
                 <!-- Tombol Aksi -->
                 <div class="flex items-center justify-end gap-2.5 pt-1">
@@ -604,6 +623,7 @@
             editHarga.value = angkaHarga ? angkaHarga.toLocaleString('id-ID') : '';
             editFoto.value = '';
             editFotoLama.value = d.foto || '';
+            document.getElementById('edit-bisa_dikustom').checked = String(d.bisaDikustom) === '1';
             if (d.foto) {
                 editFotoPreview.src = d.foto;
                 editFotoPreview.classList.remove('hidden');
@@ -630,6 +650,7 @@
                     deskripsi: @js(old('deskripsi')),
                     kategori: @js(old('kategori')),
                     harga: @js(old('harga')),
+                    bisaDikustom: @js(old('bisa_dikustom') ? '1' : '0'),
                     foto: @js(old('foto_lama', '')),
                 });
             @else
