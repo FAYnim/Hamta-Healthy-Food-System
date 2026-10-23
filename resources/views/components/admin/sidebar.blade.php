@@ -9,7 +9,7 @@
     ];
 @endphp
 
-<aside class="w-full lg:w-72 bg-[#0B412B] text-white flex flex-col shrink-0 lg:min-h-screen">
+<aside class="w-full lg:w-72 bg-[#0B412B] text-white flex flex-col shrink-0 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
     <!-- Brand / Logo Header -->
     <div class="px-7 pt-8 pb-6 lg:pb-8 flex items-center justify-between">
         <h1 class="text-2xl font-bold tracking-tight text-white">Hamta Panel</h1>

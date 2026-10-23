@@ -27,9 +27,16 @@ Route::middleware('admin.auth')->group(function () {
         return view('admin.promo');
     })->name('admin.promo');
 
-    Route::get('/admin/daftar-pesanan', function () {
-        return view('admin.daftar_pesanan');
-    })->name('admin.daftar_pesanan');
+    Route::get('/admin/daftar-pesanan', [\App\Http\Controllers\Admin\PesananController::class, 'index'])
+        ->name('admin.daftar_pesanan');
+    Route::get('/admin/daftar-pesanan/{id}', [\App\Http\Controllers\Admin\PesananController::class, 'show'])
+        ->name('admin.daftar_pesanan.show');
+    Route::patch('/admin/daftar-pesanan/{id}/status', [\App\Http\Controllers\Admin\PesananController::class, 'updateStatus'])
+        ->name('admin.daftar_pesanan.status');
+    Route::patch('/admin/daftar-pesanan/{id}/ongkir', [\App\Http\Controllers\Admin\PesananController::class, 'konfirmasiOngkir'])
+        ->name('admin.daftar_pesanan.ongkir');
+    Route::patch('/admin/daftar-pesanan/item/{id}/batal', [\App\Http\Controllers\Admin\PesananController::class, 'batalkanItem'])
+        ->name('admin.daftar_pesanan.item.batal');
 
     Route::get('/admin/pengaturan', function () {
         return view('admin.pengaturan');
