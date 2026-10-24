@@ -45,6 +45,14 @@
                     <span class="flex-1"></span>
                     <span class="font-semibold text-[#010101]">-{{ $rp($pesanan->total_diskon) }}</span>
                 </div>
+                {{-- Promo yang terpakai, biar admin tahu diskonnya datang dari promo mana --}}
+                @foreach ($pesanan->promo as $promoTerpakai)
+                    <div class="flex items-baseline gap-2 text-xs text-[#8A8A8A]">
+                        <span class="shrink-0">• {{ $promoTerpakai->nama_promo }}</span>
+                        <span class="flex-1"></span>
+                        <span class="shrink-0">-{{ $rp($promoTerpakai->pivot->nilai_potongan) }}</span>
+                    </div>
+                @endforeach
             @endif
             @if ($pesanan->metode_ambil === 'delivery' && $pesanan->ongkir != null)
                 <div class="flex items-baseline gap-2">

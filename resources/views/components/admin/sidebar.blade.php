@@ -4,7 +4,7 @@
         ['rute' => 'admin.kasir', 'label' => 'Kasir', 'ikon' => 'calculator'],
         ['rute' => 'admin.daftar_pesanan', 'label' => 'Daftar Pesanan', 'ikon' => 'clipboard-list'],
         ['rute' => 'admin.kelola_menu', 'label' => 'Kelola Menu', 'ikon' => 'concierge-bell'],
-        ['rute' => 'admin.promo', 'label' => 'Promo', 'ikon' => 'tag'],
+        ['rute' => 'admin.promo.index', 'label' => 'Promo', 'ikon' => 'tag'],
         ['rute' => 'admin.pengaturan', 'label' => 'Pengaturan', 'ikon' => 'store'],
     ];
 @endphp

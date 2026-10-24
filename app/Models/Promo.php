@@ -23,6 +23,19 @@ class Promo extends Model
         'tanggal_selesai',
     ];
 
+    // Cast kolom supaya tipe datanya konsisten di PHP & di query
+    protected $casts = [
+        'nilai_potongan' => 'decimal:2',
+        'syarat_min_porsi' => 'integer',
+        'batas_penggunaan' => 'integer',
+        'jumlah_terpakai' => 'integer',
+        'status_aktif' => 'boolean',
+        // Tanggal promo di-cast jadi Carbon, jadi perbandingan periode pakai
+        // compare yang aman (bukan string)
+        'tanggal_mulai' => 'date',
+        'tanggal_selesai' => 'date',
+    ];
+
     // Satu promo bisa diterapkan ke banyak pesanan (lewat junction pesanan_promo)
     public function pesanan()
     {

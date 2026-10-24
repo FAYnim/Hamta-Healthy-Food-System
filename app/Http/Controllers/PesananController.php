@@ -13,6 +13,7 @@ use App\Models\Pesanan;
 use App\Models\DetailPesanan;
 use App\Models\Produk;
 use App\Models\KomponenSalad;
+use App\Services\PromoService;
 
 
 class PesananController extends Controller
@@ -125,9 +126,9 @@ class PesananController extends Controller
                 'ongkir' => $data['metode_ambil'] === 'delivery' ? null : 0,
                 'status_ongkir' => $data['metode_ambil'] === 'delivery' ? 'menunggu_konfirmasi' : 'tidak_perlu',
                 'subtotal' => round($subtotal, 2),
-                // Diskon promo belum dihitung di scope checkout ini (fitur promo terpisah)
+                // Diskon promo & total tagihan dihitung ulang PromoService setelah detail tersimpan
                 'total_diskon' => 0,
-                // Total tagihan = subtotal - diskon + ongkir (ongkir delivery menyusul konfirmasi admin)
+                // Total tagihan sementara = subtotal (sebelum promo); ongkir delivery menyusul konfirmasi admin
                 'total_bayar' => round($subtotal, 2),
                 'metode_bayar' => $data['metode_bayar'],
                 // Bukti bayar sudah diupload terpisah, di sini cukup disimpan path-nya
@@ -158,6 +159,12 @@ class PesananController extends Controller
                     $detail->komponenSalad()->attach($pivot);
                 }
             }
+
+            // Terapkan promo otomatis (boleh stacking) sesuai kondisi pesanan.
+            // totalPorsi = jumlah total porsi (quantity) semua item detail.
+            // Service ini menghitung ulang total_diskon & total_bayar di dalam transaksi DB yang sama.
+            $totalPorsi = collect($items)->sum('jumlah');
+            app(PromoService::class)->terapkanKePesanan($pesanan, (int) $totalPorsi);
 
             return $pesanan;
         });

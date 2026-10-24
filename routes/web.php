@@ -23,9 +23,16 @@ Route::middleware('admin.auth')->group(function () {
     Route::get('/admin/kasir', [KasirController::class, 'index'])->name('admin.kasir');
     Route::post('/admin/kasir', [KasirController::class, 'store'])->name('admin.kasir.store');
 
-    Route::get('/admin/promo', function () {
-        return view('admin.promo');
-    })->name('admin.promo');
+    Route::get('/admin/promo', [\App\Http\Controllers\Admin\PromoController::class, 'index'])
+        ->name('admin.promo.index');
+    Route::post('/admin/promo', [\App\Http\Controllers\Admin\PromoController::class, 'store'])
+        ->name('admin.promo.store');
+    Route::match(['put', 'patch'], '/admin/promo/{id}', [\App\Http\Controllers\Admin\PromoController::class, 'update'])
+        ->name('admin.promo.update');
+    Route::delete('/admin/promo/{id}', [\App\Http\Controllers\Admin\PromoController::class, 'destroy'])
+        ->name('admin.promo.destroy');
+    Route::patch('/admin/promo/{id}/status', [\App\Http\Controllers\Admin\PromoController::class, 'toggleStatus'])
+        ->name('admin.promo.status');
 
     Route::get('/admin/daftar-pesanan', [\App\Http\Controllers\Admin\PesananController::class, 'index'])
         ->name('admin.daftar_pesanan');

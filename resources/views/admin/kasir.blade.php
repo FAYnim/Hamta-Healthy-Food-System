@@ -147,6 +147,45 @@
                         Tidak ada menu yang cocok dengan pencarian / kategori ini.
                     </div>
 
+                    <!-- Promo yang sedang berlaku (dihitung otomatis oleh PromoService) -->
+                    @if ($promoAktif->isNotEmpty())
+                        <div class="bg-white rounded-2xl p-5 shadow-sm border border-stone-100">
+                            <div class="flex items-center gap-2.5 mb-3">
+                                <x-lucide-tag class="w-5 h-5 text-[#65BD5E]" />
+                                <h3 class="text-base font-bold text-[#010101]">Promo Berjalan</h3>
+                            </div>
+
+                            <ul class="space-y-2">
+                                @foreach ($promoAktif as $item)
+                                    <li class="flex items-start justify-between gap-3 text-sm">
+                                        <div class="min-w-0">
+                                            <p class="font-semibold text-[#010101] truncate">{{ $item->nama_promo }}</p>
+                                            <p class="text-xs text-[#8A8A8A] mt-0.5">
+                                                @if ($item->tipe_potongan === 'persen')
+                                                    Diskon {{ rtrim(rtrim(number_format((float) $item->nilai_potongan, 2, ',', '.'), '0'), ',') }}%
+                                                @elseif ($item->tipe_potongan === 'gratis_ongkir')
+                                                    Gratis ongkir
+                                                @else
+                                                    Potongan Rp {{ number_format((float) $item->nilai_potongan, 0, ',', '.') }}
+                                                @endif
+                                                @if ($item->syarat_min_porsi)
+                                                    &middot; min. {{ $item->syarat_min_porsi }} porsi
+                                                @endif
+                                            </p>
+                                        </div>
+                                        <span class="shrink-0 text-xs font-semibold text-[#8A8A8A] bg-stone-100 rounded-lg px-2 py-1">
+                                            sisa {{ (int) $item->batas_penggunaan - (int) $item->jumlah_terpakai }}
+                                        </span>
+                                    </li>
+                                @endforeach
+                            </ul>
+
+                            <p class="text-xs text-[#8A8A8A] mt-3 pt-3 border-t border-stone-100">
+                                Promo otomatis terpakai saat transaksi disimpan, sesuai syarat &amp; kuota.
+                            </p>
+                        </div>
+                    @endif
+
                 </div>
 
                 <!-- Right Column (Shopping Cart / Keranjang): 4 Cols -->
@@ -365,7 +404,8 @@
     </div>
 
     {{-- Keranjang lama dipulihkan JS setelah validasi gagal --}}
-    <script type="application/json" id="kasir-old-cart">@json(old('cart', []), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)</script>
+    {{-- json_encode langsung: @json() memecah argumen lewat explode(','), koma di dalam array bikin compile rusak --}}
+    <script type="application/json" id="kasir-old-cart">{!! json_encode(old('cart', []), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
 
 </body>
 </html>

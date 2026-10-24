@@ -14,6 +14,8 @@ use App\Models\DetailPesanan;
 use App\Models\Produk;
 use App\Models\KomponenSalad;
 use App\Models\Cabang;
+use App\Models\Promo;
+use App\Services\PromoService;
 
 
 class KasirController extends \App\Http\Controllers\Controller
@@ -32,11 +34,19 @@ class KasirController extends \App\Http\Controllers\Controller
         // Daftar cabang untuk dipilih kasir saat input transaksi
         $cabang = Cabang::orderBy('nama_cabang')->get();
 
+        // Promo yang sedang berlaku, biar kasir tahu promo mana yang bisa dipakai customer.
+        // Promo tetap diterapkan otomatis oleh PromoService, ini cuma informasi.
+        $promoAktif = Promo::where('status_aktif', true)
+            ->whereColumn('jumlah_terpakai', '<', 'batas_penggunaan')
+            ->orderBy('nama_promo')
+            ->get();
+
         return view('admin.kasir', [
             'produk' => $produk,
             'sayuran' => $sayuran,
             'protein' => $protein,
             'cabang' => $cabang,
+            'promoAktif' => $promoAktif,
         ]);
     }
 
@@ -188,12 +198,22 @@ class KasirController extends \App\Http\Controllers\Controller
                 }
             }
 
+            // Terapkan promo otomatis (boleh stacking) sesuai kondisi pesanan kasir.
+            // totalPorsi = jumlah total porsi (quantity) semua item detail.
+            // Service ini menghitung ulang total_diskon & total_bayar di dalam transaksi DB yang sama.
+            $totalPorsi = collect($items)->sum('jumlah');
+            app(PromoService::class)->terapkanKePesanan($pesanan, (int) $totalPorsi);
+
             return $pesanan;
         });
 
+        // Nama promo yang terpakai, ditampilkan di pesan sukses biar kasir tahu diskonnya
+        $namaPromo = $pesanan->promo->pluck('nama_promo')->join(', ');
+
         // Kembali ke halaman kasir dengan pesan sukses
         return redirect()->route('admin.kasir')
-            ->with('success', 'Transaksi kasir tersimpan dengan kode pesanan ' . $pesanan->kode_pesanan . '.');
+            ->with('success', 'Transaksi kasir tersimpan dengan kode pesanan ' . $pesanan->kode_pesanan . '.'
+                . ($namaPromo !== '' ? ' Promo terpakai: ' . $namaPromo . '.' : ''));
     }
 
     // Generate kode pesanan unik untuk transaksi kasir (format sama dengan pesanan online)

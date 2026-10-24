@@ -30,6 +30,17 @@ class Pesanan extends Model
         'id_admin',
     ];
 
+    // Cast kolom nominal ke decimal & kolom angka ke integer, supaya arithmetic
+    // (diskon, ongkir, total) tidak salah karena string dari database
+    protected $casts = [
+        'ongkir' => 'decimal:2',
+        'subtotal' => 'decimal:2',
+        'total_diskon' => 'decimal:2',
+        'total_bayar' => 'decimal:2',
+        'id_cabang' => 'integer',
+        'id_admin' => 'integer',
+    ];
+
     // Pesanan ini dilayani oleh satu cabang
     public function cabang()
     {

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\Pesanan;
 use App\Models\DetailPesanan;
+use App\Services\PromoService;
 
 
 class PesananController extends \App\Http\Controllers\Controller
@@ -61,9 +62,12 @@ class PesananController extends \App\Http\Controllers\Controller
         $pesanan->update([
             'ongkir' => $data['ongkir'],
             'status_ongkir' => 'terkonfirmasi',
-            // Total bayar = subtotal - diskon + ongkir (dihitung ulang karena sebelumnya ongkir belum ada)
-            'total_bayar' => round((float) $pesanan->subtotal - (float) $pesanan->total_diskon + (float) $data['ongkir'], 2),
         ]);
+
+        // Hitung ulang diskon & total bayar (subtotal - diskon + ongkir).
+        // Promo gratis ongkir baru ada nilainya di sini, karena tarif ongkir
+        // baru diketahui setelah admin mengonfirmasi.
+        app(PromoService::class)->terapkanUlang($pesanan);
 
         // Dari loker (ajax) → balik partial segar supaya panel tetap terbuka
         if ($request->ajax()) {
@@ -113,12 +117,12 @@ class PesananController extends \App\Http\Controllers\Controller
                 'status_item' => 'dibatalkan',
             ]);
 
-            // Hitung ulang subtotal & total bayar pesanan induk (item batal tidak dihitung)
+            // Hitung ulang subtotal & diskon pesanan induk (item batal tidak dihitung).
+            // Promo ikut dihitung ulang karena diskon persen bergantung pada subtotal,
+            // dan total bayar tidak boleh jadi negatif.
             $subtotalBaru = $pesanan->detailPesanan()->where('status_item', '!=', 'dibatalkan')->sum('subtotal_item');
-            $pesanan->update([
-                'subtotal' => $subtotalBaru,
-                'total_bayar' => round((float) $subtotalBaru - (float) $pesanan->total_diskon + (float) ($pesanan->ongkir ?? 0), 2),
-            ]);
+
+            app(PromoService::class)->terapkanUlang($pesanan, (float) $subtotalBaru);
 
             $flash = 'success';
             $pesan = 'Item "' . $detail->nama_item . '" pada pesanan ' . $pesanan->kode_pesanan . ' dibatalkan.';
