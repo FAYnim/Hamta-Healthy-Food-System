@@ -41,7 +41,7 @@
                 <!-- Admin Profile Chip -->
                 <div class="hidden lg:flex items-center">
                     <button type="button" class="bg-white hover:bg-stone-50 border border-stone-200/60 rounded-xl px-7 py-2.5 font-bold text-[#010101] text-base shadow-sm transition">
-                        Yunita
+                        {{ session('admin_nama', 'Admin') }}
                     </button>
                 </div>
             </header>

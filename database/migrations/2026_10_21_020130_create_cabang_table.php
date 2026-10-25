@@ -27,6 +27,10 @@ return new class extends Migration
             // Jam operasional tutup cabang
             $table->time('jam_tutup');
 
+            // Jam operasional akhir pekan
+            $table->time('jam_buka_weekend')->nullable();
+            $table->time('jam_tutup_weekend')->nullable();
+
             // Status apakah cabang melayani pesanan pickup
             $table->boolean('layani_pickup')->default(true);
 

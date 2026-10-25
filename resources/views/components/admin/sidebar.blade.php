@@ -1,4 +1,5 @@
 @php
+    $logo_pengaturan = $logo_pengaturan ?? null;
     $menu_admin = [
         ['rute' => 'admin.dashboard', 'label' => 'Dashboard', 'ikon' => 'home'],
         ['rute' => 'admin.kasir', 'label' => 'Kasir', 'ikon' => 'calculator'],
@@ -10,17 +11,18 @@
 @endphp
 
 <aside class="w-full lg:w-72 bg-[#0B412B] text-white flex flex-col shrink-0 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
-    <!-- Brand / Logo Header -->
-    <div class="px-7 pt-8 pb-6 lg:pb-8 flex items-center justify-between">
-        <h1 class="text-2xl font-bold tracking-tight text-white">Hamta Panel</h1>
+    <div class="px-7 pt-8 pb-6 lg:pb-8 flex items-center justify-between gap-4">
+        @if ($logo_pengaturan)
+            <img src="{{ Storage::url($logo_pengaturan) }}" alt="Logo Hamta" class="max-h-12 max-w-40 object-contain">
+        @else
+            <h1 class="text-2xl font-bold tracking-tight text-white">Hamta Panel</h1>
+        @endif
 
-        <!-- Badge Admin (Mobile Only) -->
         <div class="lg:hidden bg-white text-[#010101] text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">
             {{ session('admin_nama', 'Admin') }}
         </div>
     </div>
 
-    <!-- Navigation Links -->
     <nav class="flex-1 px-4 pb-6 space-y-1.5 overflow-x-auto lg:overflow-visible flex lg:flex-col gap-1 lg:gap-0">
         @foreach ($menu_admin as $item)
             @php
@@ -34,7 +36,6 @@
             </a>
         @endforeach
 
-        <!-- Logout -->
         <form method="POST" action="{{ route('admin.logout') }}">
             @csrf
             <button type="submit" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 font-medium transition whitespace-nowrap">

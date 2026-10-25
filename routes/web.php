@@ -1,8 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\KasirController;
+use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\PengaturanController;
+use App\Http\Controllers\Admin\PesananController;
+use App\Http\Controllers\Admin\PromoController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,41 +27,50 @@ Route::middleware('admin.auth')->group(function () {
     Route::get('/admin/kasir', [KasirController::class, 'index'])->name('admin.kasir');
     Route::post('/admin/kasir', [KasirController::class, 'store'])->name('admin.kasir.store');
 
-    Route::get('/admin/promo', [\App\Http\Controllers\Admin\PromoController::class, 'index'])
+    Route::get('/admin/promo', [PromoController::class, 'index'])
         ->name('admin.promo.index');
-    Route::post('/admin/promo', [\App\Http\Controllers\Admin\PromoController::class, 'store'])
+    Route::post('/admin/promo', [PromoController::class, 'store'])
         ->name('admin.promo.store');
-    Route::match(['put', 'patch'], '/admin/promo/{id}', [\App\Http\Controllers\Admin\PromoController::class, 'update'])
+    Route::match(['put', 'patch'], '/admin/promo/{id}', [PromoController::class, 'update'])
         ->name('admin.promo.update');
-    Route::delete('/admin/promo/{id}', [\App\Http\Controllers\Admin\PromoController::class, 'destroy'])
+    Route::delete('/admin/promo/{id}', [PromoController::class, 'destroy'])
         ->name('admin.promo.destroy');
-    Route::patch('/admin/promo/{id}/status', [\App\Http\Controllers\Admin\PromoController::class, 'toggleStatus'])
+    Route::patch('/admin/promo/{id}/status', [PromoController::class, 'toggleStatus'])
         ->name('admin.promo.status');
 
-    Route::get('/admin/daftar-pesanan', [\App\Http\Controllers\Admin\PesananController::class, 'index'])
+    Route::get('/admin/daftar-pesanan', [PesananController::class, 'index'])
         ->name('admin.daftar_pesanan');
-    Route::get('/admin/daftar-pesanan/{id}', [\App\Http\Controllers\Admin\PesananController::class, 'show'])
+    Route::get('/admin/daftar-pesanan/{id}', [PesananController::class, 'show'])
         ->name('admin.daftar_pesanan.show');
-    Route::patch('/admin/daftar-pesanan/{id}/status', [\App\Http\Controllers\Admin\PesananController::class, 'updateStatus'])
+    Route::patch('/admin/daftar-pesanan/{id}/status', [PesananController::class, 'updateStatus'])
         ->name('admin.daftar_pesanan.status');
-    Route::patch('/admin/daftar-pesanan/{id}/ongkir', [\App\Http\Controllers\Admin\PesananController::class, 'konfirmasiOngkir'])
+    Route::patch('/admin/daftar-pesanan/{id}/ongkir', [PesananController::class, 'konfirmasiOngkir'])
         ->name('admin.daftar_pesanan.ongkir');
-    Route::patch('/admin/daftar-pesanan/item/{id}/batal', [\App\Http\Controllers\Admin\PesananController::class, 'batalkanItem'])
+    Route::patch('/admin/daftar-pesanan/item/{id}/batal', [PesananController::class, 'batalkanItem'])
         ->name('admin.daftar_pesanan.item.batal');
 
-    Route::get('/admin/pengaturan', function () {
-        return view('admin.pengaturan');
-    })->name('admin.pengaturan');
+    Route::get('/admin/pengaturan', [PengaturanController::class, 'index'])
+        ->name('admin.pengaturan');
+    Route::post('/admin/pengaturan/identitas', [PengaturanController::class, 'updateIdentitas'])
+        ->name('admin.pengaturan.identitas');
+    Route::post('/admin/pengaturan/kontak', [PengaturanController::class, 'updateKontak'])
+        ->name('admin.pengaturan.kontak');
+    Route::post('/admin/pengaturan/cabang', [PengaturanController::class, 'storeCabang'])
+        ->name('admin.pengaturan.cabang.store');
+    Route::patch('/admin/pengaturan/cabang/{cabang}', [PengaturanController::class, 'updateCabang'])
+        ->name('admin.pengaturan.cabang.update');
+    Route::delete('/admin/pengaturan/cabang/{cabang}', [PengaturanController::class, 'destroyCabang'])
+        ->name('admin.pengaturan.cabang.destroy');
 
-    Route::get('/admin/kelola-menu', [\App\Http\Controllers\Admin\MenuController::class, 'index'])
+    Route::get('/admin/kelola-menu', [MenuController::class, 'index'])
         ->name('admin.kelola_menu');
-    Route::post('/admin/kelola-menu', [\App\Http\Controllers\Admin\MenuController::class, 'store'])
+    Route::post('/admin/kelola-menu', [MenuController::class, 'store'])
         ->name('admin.kelola_menu.store');
-    Route::patch('/admin/kelola-menu/{id}/status', [\App\Http\Controllers\Admin\MenuController::class, 'toggleStatus'])
+    Route::patch('/admin/kelola-menu/{id}/status', [MenuController::class, 'toggleStatus'])
         ->name('admin.kelola_menu.status');
-    Route::patch('/admin/kelola-menu/{id}', [\App\Http\Controllers\Admin\MenuController::class, 'update'])
+    Route::patch('/admin/kelola-menu/{id}', [MenuController::class, 'update'])
         ->name('admin.kelola_menu.update');
-    Route::delete('/admin/kelola-menu/{id}', [\App\Http\Controllers\Admin\MenuController::class, 'destroy'])
+    Route::delete('/admin/kelola-menu/{id}', [MenuController::class, 'destroy'])
         ->name('admin.kelola_menu.destroy');
 
 });
