@@ -1,3 +1,61 @@
+import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip } from 'chart.js';
+
+Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip);
+
+const dashboardChart = document.getElementById('dashboard-sales-chart');
+
+if (dashboardChart) {
+    const values = JSON.parse(dashboardChart.dataset.values);
+    const labels = JSON.parse(dashboardChart.dataset.labels);
+    const rupiah = (value) => 'Rp ' + new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(value);
+
+    new Chart(dashboardChart, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Penjualan',
+                data: values,
+                borderColor: '#65BD5E',
+                backgroundColor: '#65BD5E',
+                borderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 7,
+                pointBackgroundColor: '#FFFFFF',
+                pointBorderWidth: 2,
+                tension: 0.25,
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => rupiah(context.parsed.y),
+                    },
+                },
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#8A8A8A', maxRotation: 0 },
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#8A8A8A',
+                        maxTicksLimit: 5,
+                        callback: (value) => rupiah(value),
+                    },
+                },
+            },
+        },
+    });
+}
+
 // Kasir (POS) — cart state, filters, custom salad builder, form payload.
 const root = document.getElementById('kasir-root');
 
