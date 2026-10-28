@@ -13,8 +13,22 @@ CREATE TABLE cabang (
     alamat         VARCHAR(255) NOT NULL,
     jam_buka       TIME NOT NULL,
     jam_tutup      TIME NOT NULL,
+    jam_buka_weekend  TIME NULL COMMENT 'NULL = tutup di akhir pekan',
+    jam_tutup_weekend TIME NULL COMMENT 'NULL = tutup di akhir pekan',
     layani_pickup  BOOLEAN NOT NULL DEFAULT TRUE,
     layani_dinein  BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- -----------------------------------------------------
+-- PENGATURAN  (satu baris: identitas & kontak toko)
+-- -----------------------------------------------------
+CREATE TABLE pengaturan (
+    id_pengaturan  BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    logo           VARCHAR(255) NULL,
+    whatsapp       VARCHAR(20) NULL,
+    instagram      VARCHAR(50) NULL,
     created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
@@ -49,6 +63,7 @@ CREATE TABLE produk (
     id_produk      INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nama_produk    VARCHAR(100) NOT NULL,
     deskripsi      TEXT NULL,
+    kategori       ENUM('Salad', 'Sandwich', 'Juice') NOT NULL COMMENT 'kategori utk tab filter menu',
     harga_offline  DECIMAL(10,2) NOT NULL,
     harga_online   DECIMAL(10,2) NOT NULL COMMENT 'harga online dibuat lebih tinggi dari offline',
     foto           VARCHAR(255) NULL,
