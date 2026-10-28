@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Admin - Hamta Healthy Food</title>
 
-    <!-- Google Fonts: Plus Jakarta Sans -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS via Vite -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -16,10 +12,6 @@
     @endif
 
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-        }
-
         @keyframes slideInFromLeft {
             0% {
                 transform: translateX(-120%);
@@ -52,7 +44,7 @@
         }
     </style>
 </head>
-<body class="bg-[#F7F2E7] text-[#010101] antialiased min-h-screen relative overflow-x-hidden selection:bg-[#65BD5E] selection:text-white">
+<body class="bg-hamta-cream text-hamta-black antialiased min-h-screen relative overflow-x-hidden selection:bg-hamta-green selection:text-white">
 
     <!-- ======================================================== -->
     <!-- DESKTOP BACKGROUND SVG: EXACT CURVED DIVIDER             -->
@@ -93,7 +85,7 @@
         <!-- ========================================== -->
         <!-- RIGHT SIDE: Dark Green Form Area           -->
         <!-- ========================================== -->
-        <div class="w-full lg:w-[44%] bg-[#0B412B] lg:bg-transparent min-h-screen flex flex-col justify-center items-center px-6 sm:px-12 py-12 relative">
+        <div class="w-full lg:w-[44%] bg-hamta-dark lg:bg-transparent min-h-screen flex flex-col justify-center items-center px-6 sm:px-12 py-12 relative">
 
             <div class="w-full max-w-[300px] sm:max-w-[320px] mx-auto">
 
@@ -132,7 +124,7 @@
                             type="text" 
                             name="username"
                             value="{{ old('username') }}"
-                            class="w-full bg-white text-[#A0AEC0] placeholder-[#A0AEC0] rounded-xl px-4 py-2.5 sm:py-3 text-sm sm:text-base font-normal shadow-sm outline-none border border-transparent focus:border-[#65BD5E] transition"
+                            class="w-full bg-white text-[#A0AEC0] placeholder-[#A0AEC0] rounded-xl px-4 py-2.5 sm:py-3 text-sm sm:text-base font-normal shadow-sm outline-none border border-transparent focus:border-hamta-green transition"
                             placeholder="Admin"
                         >
                     </div>
@@ -145,7 +137,7 @@
                         <input 
                             type="password" 
                             name="password"
-                            class="w-full bg-white text-[#A0AEC0] placeholder-[#A0AEC0] rounded-xl px-4 py-2.5 sm:py-3 text-sm sm:text-base font-normal shadow-sm outline-none border border-transparent focus:border-[#65BD5E] transition"
+                            class="w-full bg-white text-[#A0AEC0] placeholder-[#A0AEC0] rounded-xl px-4 py-2.5 sm:py-3 text-sm sm:text-base font-normal shadow-sm outline-none border border-transparent focus:border-hamta-green transition"
                             placeholder="••••••"
                         >
                     </div>
@@ -154,11 +146,11 @@
                     <div class="bg-white rounded-xl px-4 py-2.5 sm:py-3 flex items-center justify-between shadow-sm border border-stone-200">
                         <div class="flex items-center gap-3">
                             <div class="w-6 h-6 rounded border-2 border-stone-300 flex items-center justify-center bg-white">
-                                <svg class="w-4 h-4 text-[#65BD5E]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <svg class="w-4 h-4 text-hamta-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="20 6 9 17 4 12"></polyline>
                                 </svg>
                             </div>
-                            <span class="text-xs sm:text-sm font-medium text-[#010101]">I'm not a robot</span>
+                            <span class="text-xs sm:text-sm font-medium text-hamta-black">I'm not a robot</span>
                         </div>
                         <div class="flex flex-col items-center">
                             <div class="w-7 h-7 flex items-center justify-center">
@@ -169,14 +161,14 @@
                                     <path d="M16 21h5v-5"/>
                                 </svg>
                             </div>
-                            <span class="text-[9px] text-[#8A8A8A] leading-tight">reCAPTCHA</span>
+                            <span class="text-[9px] text-hamta-gray leading-tight">reCAPTCHA</span>
                         </div>
                     </div>
 
                     <!-- Submit Button: Masuk -->
                     <button 
                         type="submit" 
-                        class="w-full bg-[#65BD5E] hover:bg-[#58a851] text-white font-medium text-sm sm:text-base rounded-xl py-2.5 sm:py-3 shadow-sm hover:shadow transition cursor-pointer"
+                        class="w-full bg-hamta-green hover:bg-[#58a851] text-white font-medium text-sm sm:text-base rounded-xl py-2.5 sm:py-3 shadow-sm hover:shadow transition cursor-pointer"
                     >
                         Masuk
                     </button>

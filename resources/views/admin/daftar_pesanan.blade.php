@@ -1,27 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Pesanan - Hamta Healthy Food</title>
 
-    <!-- Google Fonts: Plus Jakarta Sans -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     <!-- Tailwind CSS via Vite -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-        }
-    </style>
 </head>
-<body class="bg-[#F7F2E7] text-[#010101] antialiased min-h-screen">
+<body class="bg-hamta-cream text-hamta-black antialiased min-h-screen">
 
     <div class="min-h-screen flex flex-col lg:flex-row">
 
@@ -35,12 +25,12 @@
             <!-- Topbar Section -->
             <header class="flex items-center justify-between mb-8">
                 <div>
-                    <h2 class="text-2xl md:text-3xl font-bold text-[#010101] tracking-tight">Daftar Pesanan</h2>
+                    <h2 class="text-2xl md:text-3xl font-bold text-hamta-black tracking-tight">Daftar Pesanan</h2>
                 </div>
 
                 <!-- Admin Profile Chip -->
                 <div class="hidden lg:flex items-center">
-                    <button type="button" class="bg-white hover:bg-stone-50 border border-stone-200/60 rounded-xl px-7 py-2.5 font-bold text-[#010101] text-base shadow-sm transition">
+                    <button type="button" class="bg-white hover:bg-stone-50 border border-stone-200/60 rounded-xl px-7 py-2.5 font-bold text-hamta-black text-base shadow-sm transition">
                         {{ session('admin_nama', 'Admin') }}
                     </button>
                 </div>
@@ -64,7 +54,7 @@
                     @foreach ($tabs as $nilai => $label)
                         @php $aktif = ($status ?? '') === $nilai; @endphp
                         <a href="{{ route('admin.daftar_pesanan', array_filter(['status' => $nilai, 'q' => $q ?: null])) }}"
-                           class="px-5 py-2 rounded-xl text-sm shrink-0 transition {{ $aktif ? 'bg-[#65BD5E] text-white font-bold shadow-sm' : 'text-[#010101] hover:bg-stone-100 font-semibold' }}"
+                           class="px-5 py-2 rounded-xl text-sm shrink-0 transition {{ $aktif ? 'bg-hamta-green text-white font-bold shadow-sm' : 'text-hamta-black hover:bg-stone-100 font-semibold' }}"
                            @if ($aktif) aria-current="page" @endif>
                             {{ $label }}
                         </a>
@@ -82,10 +72,10 @@
                             name="q"
                             value="{{ $q }}"
                             placeholder="Cari Pesanan"
-                            class="w-full bg-white border border-stone-300 rounded-xl pl-4 pr-10 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none focus:border-[#65BD5E]"
+                            class="w-full bg-white border border-stone-300 rounded-xl pl-4 pr-10 py-2.5 text-sm text-hamta-black placeholder-hamta-gray outline-none focus:border-hamta-green"
                         >
                         <button type="submit" class="absolute inset-y-0 right-0 pr-3.5 flex items-center" aria-label="Cari">
-                            <x-lucide-search class="w-4 h-4 text-[#8A8A8A]" />
+                            <x-lucide-search class="w-4 h-4 text-hamta-gray" />
                         </button>
                     </div>
                 </form>
@@ -93,7 +83,7 @@
             </div>
 
             @if (session('success'))
-                <div class="bg-[#65BD5E]/15 border border-[#65BD5E] text-[#0B412B] text-sm font-semibold rounded-xl px-4 py-3 mb-6">
+                <div class="bg-hamta-green/15 border border-hamta-green text-hamta-dark text-sm font-semibold rounded-xl px-4 py-3 mb-6">
                     {{ session('success') }}
                 </div>
             @elseif (session('error'))
@@ -108,7 +98,7 @@
                     <table class="w-full text-left border-collapse">
                         <!-- Table Header -->
                         <thead>
-                            <tr class="bg-[#E5E5E5] text-[#010101] text-sm font-bold">
+                            <tr class="bg-[#E5E5E5] text-hamta-black text-sm font-bold">
                                 <th class="py-4 px-6">No. Pesanan</th>
                                 <th class="py-4 px-6">Customer</th>
                                 <th class="py-4 px-6">Cabang</th>
@@ -124,19 +114,19 @@
                                 @php
                                     $badge = $item->status_pesanan === 'batal'
                                         ? 'bg-red-100 text-red-700'
-                                        : 'bg-[#BEE3B6] text-[#0B412B]';
+                                        : 'bg-[#BEE3B6] text-hamta-dark';
                                 @endphp
                                 <tr class="hover:bg-stone-50/50 transition">
-                                    <td class="py-5 px-6 font-semibold text-[#010101]">
+                                    <td class="py-5 px-6 font-semibold text-hamta-black">
                                         {{ $item->kode_pesanan }}
                                     </td>
-                                    <td class="py-5 px-6 font-bold text-[#010101] text-base">
+                                    <td class="py-5 px-6 font-bold text-hamta-black text-base">
                                         {{ $item->nama_pelanggan ?: 'Walk-in' }}
                                     </td>
-                                    <td class="py-5 px-6 font-medium text-[#010101]">
+                                    <td class="py-5 px-6 font-medium text-hamta-black">
                                         {{ $item->cabang?->nama_cabang ?? '-' }}
                                     </td>
-                                    <td class="py-5 px-6 font-bold text-[#010101] text-base">
+                                    <td class="py-5 px-6 font-bold text-hamta-black text-base">
                                         Rp {{ number_format((float) $item->total_bayar, 0, ',', '.') }}
                                     </td>
                                     <td class="py-5 px-6">
@@ -147,7 +137,7 @@
                                     <td class="py-5 px-6 text-center">
                                         <button type="button"
                                                 data-detail-url="{{ route('admin.daftar_pesanan.show', $item->id_pesanan) }}"
-                                                class="btn-detail inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-[#010101] text-[#010101] hover:bg-stone-100 font-semibold text-xs transition"
+                                                class="btn-detail inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-hamta-black text-hamta-black hover:bg-stone-100 font-semibold text-xs transition"
                                                 aria-expanded="false">
                                             <x-lucide-eye class="w-4 h-4" />
                                             <span>Detail</span>
@@ -158,13 +148,13 @@
                                 <tr class="detail-row hidden">
                                     <td colspan="6" class="p-0">
                                         <div class="detail-slot bg-white border-y border-stone-200">
-                                            <div class="p-10 text-center text-sm text-[#8A8A8A]">Memuat detail…</div>
+                                            <div class="p-10 text-center text-sm text-hamta-gray">Memuat detail…</div>
                                         </div>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="py-14 px-6 text-center text-[#8A8A8A] font-medium">
+                                    <td colspan="6" class="py-14 px-6 text-center text-hamta-gray font-medium">
                                         Belum ada pesanan{{ $q !== '' ? ' yang cocok dengan pencarian.' : '.' }}
                                     </td>
                                 </tr>
@@ -234,7 +224,7 @@
                 // Sudah pernah dimuat → tidak perlu fetch ulang
                 if (slot.dataset.loaded === '1') return;
 
-                slot.innerHTML = '<div class="p-10 text-center text-sm text-[#8A8A8A]">Memuat detail…</div>';
+                slot.innerHTML = '<div class="p-10 text-center text-sm text-hamta-gray">Memuat detail…</div>';
 
                 fetch(tombol.dataset.detailUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
                     .then(function (res) {
@@ -295,7 +285,7 @@
                                 if (badge) {
                                     badge.textContent = statusBaru;
                                     badge.className = 'inline-block px-3 py-1 rounded-full font-semibold text-xs capitalize ' +
-                                        (statusBaru === 'batal' ? 'bg-red-100 text-red-700' : 'bg-[#BEE3B6] text-[#0B412B]');
+                                        (statusBaru === 'batal' ? 'bg-red-100 text-red-700' : 'bg-[#BEE3B6] text-hamta-dark');
                                 }
                             }
                             const totalBaru = root.getAttribute('data-total');

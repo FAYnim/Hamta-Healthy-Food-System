@@ -1,23 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengaturan - Hamta Healthy Food</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 
-    <style>
-        body { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; }
-    </style>
 </head>
-<body class="bg-[#F7F2E7] text-[#010101] antialiased min-h-screen">
+<body class="bg-hamta-cream text-hamta-black antialiased min-h-screen">
     <div class="min-h-screen flex flex-col lg:flex-row">
         <x-admin.sidebar />
 
@@ -32,7 +25,7 @@
             </header>
 
             @if (session('success'))
-                <div role="status" class="bg-[#65BD5E]/15 border border-[#65BD5E]/40 text-[#0B412B] text-sm font-semibold rounded-xl px-4 py-3 mb-6">
+                <div role="status" class="bg-hamta-green/15 border border-hamta-green/40 text-hamta-dark text-sm font-semibold rounded-xl px-4 py-3 mb-6">
                     {{ session('success') }}
                 </div>
             @elseif (session('error'))
@@ -53,7 +46,7 @@
                             <img id="preview-logo" src="{{ $pengaturan->logo ? Storage::url($pengaturan->logo) : '' }}" alt="Pratinjau logo usaha" class="{{ $pengaturan->logo ? '' : 'hidden' }} w-full h-full object-contain">
                             <x-lucide-image id="placeholder-logo" class="{{ $pengaturan->logo ? 'hidden' : '' }} w-10 h-10 text-stone-500" aria-hidden="true" />
                         </div>
-                        <label for="logo" class="block text-sm font-semibold mt-4 mb-1.5">Pilih logo <span class="font-normal text-[#8A8A8A]">(PNG, JPG, WebP · maks. 2 MB)</span></label>
+                        <label for="logo" class="block text-sm font-semibold mt-4 mb-1.5">Pilih logo <span class="font-normal text-hamta-gray">(PNG, JPG, WebP · maks. 2 MB)</span></label>
                         <input id="logo" name="logo" type="file" accept="image/png,image/jpeg,image/webp" class="w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-[#E5E5E5] file:px-3 file:py-2 file:font-semibold">
                         <div class="flex items-center justify-between gap-3 mt-6">
                             @if ($pengaturan->logo)
@@ -62,8 +55,8 @@
                                 <span></span>
                             @endif
                             <div class="flex items-center gap-3">
-                                <button type="reset" class="bg-[#8A8A8A] hover:bg-stone-500 text-white font-semibold text-sm px-5 py-2 rounded-xl transition">Batal</button>
-                                <button type="submit" class="bg-[#65BD5E] hover:bg-[#58a851] text-white font-semibold text-sm px-5 py-2 rounded-xl shadow-sm transition">Simpan</button>
+                                <button type="reset" class="bg-hamta-gray hover:bg-stone-500 text-white font-semibold text-sm px-5 py-2 rounded-xl transition">Batal</button>
+                                <button type="submit" class="bg-hamta-green hover:bg-[#58a851] text-white font-semibold text-sm px-5 py-2 rounded-xl shadow-sm transition">Simpan</button>
                             </div>
                         </div>
                     </form>
@@ -85,16 +78,16 @@
                         <div class="space-y-4">
                             <div>
                                 <label for="whatsapp" class="block text-sm font-semibold mb-1.5">WhatsApp</label>
-                                <input id="whatsapp" name="whatsapp" type="text" maxlength="20" value="{{ old('whatsapp', $pengaturan->whatsapp) }}" class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]">
+                                <input id="whatsapp" name="whatsapp" type="text" maxlength="20" value="{{ old('whatsapp', $pengaturan->whatsapp) }}" class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green">
                             </div>
                             <div>
                                 <label for="instagram" class="block text-sm font-semibold mb-1.5">Instagram</label>
-                                <input id="instagram" name="instagram" type="text" maxlength="50" value="{{ old('instagram', $pengaturan->instagram) }}" class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]">
+                                <input id="instagram" name="instagram" type="text" maxlength="50" value="{{ old('instagram', $pengaturan->instagram) }}" class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green">
                             </div>
                         </div>
                         <div class="flex items-center justify-end gap-3 mt-6">
-                            <button type="reset" class="bg-[#8A8A8A] hover:bg-stone-500 text-white font-semibold text-sm px-5 py-2 rounded-xl transition">Batal</button>
-                            <button type="submit" class="bg-[#65BD5E] hover:bg-[#58a851] text-white font-semibold text-sm px-5 py-2 rounded-xl shadow-sm transition">Simpan</button>
+                            <button type="reset" class="bg-hamta-gray hover:bg-stone-500 text-white font-semibold text-sm px-5 py-2 rounded-xl transition">Batal</button>
+                            <button type="submit" class="bg-hamta-green hover:bg-[#58a851] text-white font-semibold text-sm px-5 py-2 rounded-xl shadow-sm transition">Simpan</button>
                         </div>
                     </form>
                 </section>
@@ -103,7 +96,7 @@
             <section class="bg-white rounded-2xl p-6 md:p-7 shadow-sm border border-stone-100">
                 <div class="flex items-center justify-between gap-4 mb-6">
                     <h3 class="text-xl font-bold">Cabang</h3>
-                    <button type="button" id="btn-tambah-cabang" class="bg-[#65BD5E] hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow-sm transition shrink-0">Tambah Cabang</button>
+                    <button type="button" id="btn-tambah-cabang" class="bg-hamta-green hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow-sm transition shrink-0">Tambah Cabang</button>
                 </div>
 
                 @if ($errors->any() && old('form_cabang'))
@@ -122,13 +115,13 @@
                         <div class="flex items-start justify-between gap-4">
                             <div class="min-w-0">
                                 <h4 class="text-lg font-bold">{{ $item->nama_cabang }}</h4>
-                                <p class="text-sm text-[#8A8A8A] font-medium mt-1">{{ $item->alamat }}</p>
+                                <p class="text-sm text-hamta-gray font-medium mt-1">{{ $item->alamat }}</p>
                                 <div class="flex flex-wrap gap-2 mt-3">
                                     @if ($item->layani_pickup)
-                                        <span class="bg-[#65BD5E]/15 text-[#0B412B] text-xs font-bold px-2.5 py-1 rounded-full">Pickup</span>
+                                        <span class="bg-hamta-green/15 text-hamta-dark text-xs font-bold px-2.5 py-1 rounded-full">Pickup</span>
                                     @endif
                                     @if ($item->layani_dinein)
-                                        <span class="bg-[#65BD5E]/15 text-[#0B412B] text-xs font-bold px-2.5 py-1 rounded-full">Dine-in</span>
+                                        <span class="bg-hamta-green/15 text-hamta-dark text-xs font-bold px-2.5 py-1 rounded-full">Dine-in</span>
                                     @endif
                                 </div>
                             </div>
@@ -161,7 +154,7 @@
                 @empty
                     <div class="border border-dashed border-stone-300 rounded-2xl px-6 py-12 text-center">
                         <p class="font-semibold">Belum ada cabang.</p>
-                        <p class="text-sm text-[#8A8A8A] mt-1">Pilih Tambah Cabang untuk menambahkan lokasi pertama.</p>
+                        <p class="text-sm text-hamta-gray mt-1">Pilih Tambah Cabang untuk menambahkan lokasi pertama.</p>
                     </div>
                 @endforelse
             </section>
@@ -179,11 +172,11 @@
                 <input id="cabang-id" type="hidden" name="cabang_id" value="{{ old('cabang_id') }}">
                 <div>
                     <label for="nama_cabang" class="block text-sm font-semibold mb-1.5">Nama cabang</label>
-                    <input id="nama_cabang" name="nama_cabang" value="{{ old('nama_cabang') }}" required maxlength="100" class="w-full border border-stone-300 rounded-xl px-4 py-2.5 text-sm focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]">
+                    <input id="nama_cabang" name="nama_cabang" value="{{ old('nama_cabang') }}" required maxlength="100" class="w-full border border-stone-300 rounded-xl px-4 py-2.5 text-sm focus:border-hamta-green focus:ring-1 focus:ring-hamta-green">
                 </div>
                 <div>
                     <label for="alamat" class="block text-sm font-semibold mb-1.5">Alamat</label>
-                    <textarea id="alamat" name="alamat" required maxlength="255" rows="2" class="w-full border border-stone-300 rounded-xl px-4 py-2.5 text-sm focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]">{{ old('alamat') }}</textarea>
+                    <textarea id="alamat" name="alamat" required maxlength="255" rows="2" class="w-full border border-stone-300 rounded-xl px-4 py-2.5 text-sm focus:border-hamta-green focus:ring-1 focus:ring-hamta-green">{{ old('alamat') }}</textarea>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -193,20 +186,20 @@
                     <div>
                         <label class="block text-sm font-semibold mb-1.5">Jam Sabtu - Minggu</label>
                         <div class="flex items-center gap-2"><input id="jam_buka_weekend" type="time" name="jam_buka_weekend" value="{{ old('jam_buka_weekend') }}" class="min-w-0 flex-1 border border-stone-300 rounded-xl px-3 py-2.5 text-sm"><span>-</span><input id="jam_tutup_weekend" type="time" name="jam_tutup_weekend" value="{{ old('jam_tutup_weekend') }}" class="min-w-0 flex-1 border border-stone-300 rounded-xl px-3 py-2.5 text-sm"></div>
-                        <div class="flex items-center justify-between gap-3 mt-2"><p class="text-xs text-[#8A8A8A]">Kosongkan keduanya jika tutup.</p><button type="button" id="salin-jam-weekend" class="text-xs font-semibold text-[#0B412B] hover:underline">Samakan dengan hari kerja</button></div>
+                        <div class="flex items-center justify-between gap-3 mt-2"><p class="text-xs text-hamta-gray">Kosongkan keduanya jika tutup.</p><button type="button" id="salin-jam-weekend" class="text-xs font-semibold text-hamta-dark hover:underline">Samakan dengan hari kerja</button></div>
                     </div>
                 </div>
                 <fieldset>
                     <legend class="text-sm font-semibold mb-2">Layanan (pilih minimal satu)</legend>
                     <div class="flex flex-wrap gap-4">
-                        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="layani_pickup" value="1" {{ (old('form_cabang') ? old('layani_pickup') : '1') ? 'checked' : '' }} class="accent-[#65BD5E]">Pickup</label>
-                        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="layani_dinein" value="1" {{ (old('form_cabang') ? old('layani_dinein') : '') ? 'checked' : '' }} class="accent-[#65BD5E]">Dine-in</label>
+                        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="layani_pickup" value="1" {{ (old('form_cabang') ? old('layani_pickup') : '1') ? 'checked' : '' }} class="accent-hamta-green">Pickup</label>
+                        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="layani_dinein" value="1" {{ (old('form_cabang') ? old('layani_dinein') : '') ? 'checked' : '' }} class="accent-hamta-green">Dine-in</label>
                     </div>
                     @error('layanan')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
                 </fieldset>
                 <div class="flex items-center justify-end gap-3 pt-2">
                     <button type="button" data-tutup-modal class="bg-[#E5E5E5] hover:bg-[#d9d9d9] font-bold text-sm px-5 py-2 rounded-lg transition">Batal</button>
-                    <button type="submit" class="bg-[#65BD5E] hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-lg transition">Simpan Cabang</button>
+                    <button type="submit" class="bg-hamta-green hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-lg transition">Simpan Cabang</button>
                 </div>
             </form>
         </div>

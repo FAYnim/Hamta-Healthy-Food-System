@@ -1,27 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Promo - Hamta Healthy Food</title>
 
-    <!-- Google Fonts: Plus Jakarta Sans -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     <!-- Tailwind CSS via Vite -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-        }
-    </style>
 </head>
-<body class="bg-[#F7F2E7] text-[#010101] antialiased min-h-screen">
+<body class="bg-hamta-cream text-hamta-black antialiased min-h-screen">
 
     <div class="min-h-screen flex flex-col lg:flex-row">
 
@@ -35,19 +25,19 @@
             <!-- Topbar Section -->
             <header class="flex items-center justify-between mb-8">
                 <div>
-                    <h2 class="text-2xl md:text-3xl font-bold text-[#010101] tracking-tight">Promo</h2>
+                    <h2 class="text-2xl md:text-3xl font-bold text-hamta-black tracking-tight">Promo</h2>
                 </div>
 
                 <!-- Admin Profile Chip -->
                 <div class="hidden lg:flex items-center">
-                    <button type="button" class="bg-white hover:bg-stone-50 border border-stone-200/60 rounded-xl px-7 py-2.5 font-bold text-[#010101] text-base shadow-sm transition">
+                    <button type="button" class="bg-white hover:bg-stone-50 border border-stone-200/60 rounded-xl px-7 py-2.5 font-bold text-hamta-black text-base shadow-sm transition">
                         {{ session('admin_nama', 'Admin') }}
                     </button>
                 </div>
             </header>
 
             @if (session('success'))
-                <div class="bg-[#65BD5E]/15 border border-[#65BD5E] text-[#0B412B] text-sm font-semibold rounded-xl px-4 py-3 mb-6">
+                <div class="bg-hamta-green/15 border border-hamta-green text-hamta-dark text-sm font-semibold rounded-xl px-4 py-3 mb-6">
                     {{ session('success') }}
                 </div>
             @elseif (session('error'))
@@ -67,16 +57,16 @@
                             value="{{ $q }}"
                             placeholder="Cari Promo"
                             aria-label="Cari promo"
-                            class="w-full bg-white border border-stone-300 rounded-xl pl-4 pr-10 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                            class="w-full bg-white border border-stone-300 rounded-xl pl-4 pr-10 py-2.5 text-sm text-hamta-black placeholder-hamta-gray outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                         >
-                        <button type="submit" class="absolute inset-y-0 right-0 pr-3.5 flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#65BD5E]" aria-label="Cari promo">
-                            <x-lucide-search class="w-4 h-4 text-[#8A8A8A]" aria-hidden="true" />
+                        <button type="submit" class="absolute inset-y-0 right-0 pr-3.5 flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hamta-green" aria-label="Cari promo">
+                            <x-lucide-search class="w-4 h-4 text-hamta-gray" aria-hidden="true" />
                         </button>
                     </form>
 
                     <!-- Tambah Promo Button -->
                     <button type="button" id="btn-tambah-promo"
-                       class="bg-[#65BD5E] hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow-sm transition shrink-0">
+                       class="bg-hamta-green hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow-sm transition shrink-0">
                         Tambah Promo
                     </button>
                 </div>
@@ -88,7 +78,7 @@
                     <table class="w-full text-left border-collapse">
                         <!-- Table Header -->
                         <thead>
-                            <tr class="bg-[#E5E5E5] text-[#010101] text-sm font-bold">
+                            <tr class="bg-[#E5E5E5] text-hamta-black text-sm font-bold">
                                 <th class="py-4 px-6">Promo</th>
                                 <th class="py-4 px-6 text-center w-40">Kuota</th>
                                 <th class="py-4 px-6 w-52">Periode</th>
@@ -122,11 +112,11 @@
                                     data-selesai="{{ $item->tanggal_selesai?->format('Y-m-d') }}"
                                     data-aktif="{{ $item->status_aktif ? '1' : '0' }}">
                                     <td class="py-5 px-6">
-                                        <p class="font-bold text-[#010101] text-base">{{ $item->nama_promo }}</p>
+                                        <p class="font-bold text-hamta-black text-base">{{ $item->nama_promo }}</p>
                                         @if ($item->deskripsi)
-                                            <p class="text-[#8A8A8A] text-xs mt-0.5">{{ $item->deskripsi }}</p>
+                                            <p class="text-hamta-gray text-xs mt-0.5">{{ $item->deskripsi }}</p>
                                         @endif
-                                        <p class="text-[#8A8A8A] text-xs mt-1">
+                                        <p class="text-hamta-gray text-xs mt-1">
                                             {{ $ringkas }}
                                             @if ($item->syarat_min_porsi)
                                                 &middot; min. {{ $item->syarat_min_porsi }} porsi
@@ -134,9 +124,9 @@
                                         </p>
                                     </td>
                                     <td class="py-5 px-6 text-center">
-                                        <span class="font-semibold text-[#010101]">{{ $item->jumlah_terpakai }}/{{ $item->batas_penggunaan }}</span>
+                                        <span class="font-semibold text-hamta-black">{{ $item->jumlah_terpakai }}/{{ $item->batas_penggunaan }}</span>
                                     </td>
-                                    <td class="py-5 px-6 text-[#010101]">
+                                    <td class="py-5 px-6 text-hamta-black">
                                         @if ($item->tanggal_mulai && $item->tanggal_selesai)
                                             {{ $item->tanggal_mulai->translatedFormat('d M Y') }}
                                             &ndash;
@@ -146,7 +136,7 @@
                                         @elseif ($item->tanggal_selesai)
                                             Sampai {{ $item->tanggal_selesai->translatedFormat('d M Y') }}
                                         @else
-                                            <span class="text-[#8A8A8A]">Selalu aktif</span>
+                                            <span class="text-hamta-gray">Selalu aktif</span>
                                         @endif
                                     </td>
                                     <td class="py-5 px-6 text-center">
@@ -160,7 +150,7 @@
                                                 aria-checked="{{ $item->status_aktif ? 'true' : 'false' }}"
                                                 aria-label="Status promo {{ $item->nama_promo }}"
                                                 title="{{ $item->status_aktif ? 'Klik untuk menonaktifkan' : 'Klik untuk mengaktifkan' }}"
-                                                class="relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0B412B] focus-visible:ring-offset-2 {{ $item->status_aktif ? 'bg-[#65BD5E] hover:bg-[#58a851]' : 'bg-stone-300 hover:bg-stone-400' }}">
+                                                class="relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-hamta-dark focus-visible:ring-offset-2 {{ $item->status_aktif ? 'bg-hamta-green hover:bg-[#58a851]' : 'bg-stone-300 hover:bg-stone-400' }}">
                                                 <span class="sr-only">{{ $item->status_aktif ? 'Aktif' : 'Nonaktif' }}</span>
                                                 <span class="inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform {{ $item->status_aktif ? 'translate-x-6' : 'translate-x-1' }}"></span>
                                             </button>
@@ -178,7 +168,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
-                                                        class="w-9 h-9 rounded-lg bg-[#E05C5C] hover:bg-[#d04b4b] text-white flex items-center justify-center transition"
+                                                        class="w-9 h-9 rounded-lg bg-hamta-red hover:bg-[#d04b4b] text-white flex items-center justify-center transition"
                                                         aria-label="Hapus promo {{ $item->nama_promo }}">
                                                     <x-lucide-trash-2 class="w-4 h-4" />
                                                 </button>
@@ -188,11 +178,11 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="py-10 px-6 text-center text-[#8A8A8A]">
+                                    <td colspan="5" class="py-10 px-6 text-center text-hamta-gray">
                                         @if ($q !== '')
                                             <p class="mb-3">Tidak ada promo yang cocok dengan pencarian "{{ $q }}".</p>
                                             <a href="{{ route('admin.promo.index') }}"
-                                               class="inline-block bg-[#65BD5E] hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-xl transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0B412B] focus-visible:ring-offset-2">
+                                               class="inline-block bg-hamta-green hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-xl transition focus:outline-none focus-visible:ring-2 focus-visible:ring-hamta-dark focus-visible:ring-offset-2">
                                                 Reset pencarian
                                             </a>
                                         @else
@@ -224,7 +214,7 @@
 
         <!-- Panel Modal -->
         <div class="relative mx-auto mt-8 mb-8 w-[calc(100%-2rem)] max-w-[440px] bg-white rounded-2xl shadow-xl p-6 max-h-[calc(100vh-4rem)] overflow-y-auto">
-            <h3 id="judul-modal-tambah" class="text-lg font-bold text-[#010101] mb-4">
+            <h3 id="judul-modal-tambah" class="text-lg font-bold text-hamta-black mb-4">
                 Tambah Promo Baru
             </h3>
 
@@ -244,7 +234,7 @@
 
                 <!-- Nama Promo -->
                 <div>
-                    <label for="nama_promo" class="block text-sm font-semibold text-[#010101] mb-1.5">Nama Promo</label>
+                    <label for="nama_promo" class="block text-sm font-semibold text-hamta-black mb-1.5">Nama Promo</label>
                     <input
                         type="text"
                         id="nama_promo"
@@ -252,31 +242,31 @@
                         value="{{ old('nama_promo') }}"
                         placeholder="Diskon Akhir Pekan"
                         required
-                        class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                        class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black placeholder-hamta-gray outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                     >
                 </div>
 
                 <!-- Deskripsi -->
                 <div>
-                    <label for="deskripsi" class="block text-sm font-semibold text-[#010101] mb-1.5">Deskripsi <span class="text-[#8A8A8A] font-normal">(opsional)</span></label>
+                    <label for="deskripsi" class="block text-sm font-semibold text-hamta-black mb-1.5">Deskripsi <span class="text-hamta-gray font-normal">(opsional)</span></label>
                     <textarea
                         id="deskripsi"
                         name="deskripsi"
                         rows="2"
                         placeholder="Potongan harga khusus hari Sabtu dan Minggu"
-                        class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                        class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black placeholder-hamta-gray outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                     >{{ old('deskripsi') }}</textarea>
                 </div>
 
                 <!-- Tipe Potongan + Nilai Potongan -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label for="tipe_potongan" class="block text-sm font-semibold text-[#010101] mb-1.5">Tipe Potongan</label>
+                        <label for="tipe_potongan" class="block text-sm font-semibold text-hamta-black mb-1.5">Tipe Potongan</label>
                         <select
                             id="tipe_potongan"
                             name="tipe_potongan"
                             required
-                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                         >
                             @foreach ($tipeOptions as $nilai => $label)
                                 <option value="{{ $nilai }}" {{ old('tipe_potongan', 'nominal') === $nilai ? 'selected' : '' }}>{{ $label }}</option>
@@ -286,9 +276,9 @@
 
                     <!-- Disembunyikan saat tipe gratis_ongkir -->
                     <div data-area-nilai>
-                        <label for="nilai_potongan" class="block text-sm font-semibold text-[#010101] mb-1.5">Nilai Potongan</label>
-                        <div class="flex items-center bg-white border border-stone-300 rounded-xl focus-within:border-[#65BD5E] focus-within:ring-1 focus-within:ring-[#65BD5E]">
-                            <span data-prefix-nilai class="pl-4 pr-1.5 py-2.5 text-sm font-semibold text-[#8A8A8A] select-none">Rp.</span>
+                        <label for="nilai_potongan" class="block text-sm font-semibold text-hamta-black mb-1.5">Nilai Potongan</label>
+                        <div class="flex items-center bg-white border border-stone-300 rounded-xl focus-within:border-hamta-green focus-within:ring-1 focus-within:ring-hamta-green">
+                            <span data-prefix-nilai class="pl-4 pr-1.5 py-2.5 text-sm font-semibold text-hamta-gray select-none">Rp.</span>
                             <input
                                 type="number"
                                 id="nilai_potongan"
@@ -297,7 +287,7 @@
                                 min="0"
                                 step="1"
                                 placeholder="5000"
-                                class="w-full bg-transparent rounded-r-xl px-1 py-2.5 pr-4 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none"
+                                class="w-full bg-transparent rounded-r-xl px-1 py-2.5 pr-4 text-sm text-hamta-black placeholder-hamta-gray outline-none"
                             >
                         </div>
                     </div>
@@ -306,7 +296,7 @@
                 <!-- Syarat Min Porsi + Batas Penggunaan -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label for="syarat_min_porsi" class="block text-sm font-semibold text-[#010101] mb-1.5">Syarat Min. Porsi <span class="text-[#8A8A8A] font-normal">(opsional)</span></label>
+                        <label for="syarat_min_porsi" class="block text-sm font-semibold text-hamta-black mb-1.5">Syarat Min. Porsi <span class="text-hamta-gray font-normal">(opsional)</span></label>
                         <input
                             type="number"
                             id="syarat_min_porsi"
@@ -315,12 +305,12 @@
                             min="1"
                             step="1"
                             placeholder="2"
-                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black placeholder-hamta-gray outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                         >
                     </div>
 
                     <div>
-                        <label for="batas_penggunaan" class="block text-sm font-semibold text-[#010101] mb-1.5">Batas Penggunaan</label>
+                        <label for="batas_penggunaan" class="block text-sm font-semibold text-hamta-black mb-1.5">Batas Penggunaan</label>
                         <input
                             type="number"
                             id="batas_penggunaan"
@@ -330,7 +320,7 @@
                             step="1"
                             placeholder="50"
                             required
-                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black placeholder-hamta-gray outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                         >
                     </div>
                 </div>
@@ -338,24 +328,24 @@
                 <!-- Periode -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label for="tanggal_mulai" class="block text-sm font-semibold text-[#010101] mb-1.5">Tanggal Mulai <span class="text-[#8A8A8A] font-normal">(opsional)</span></label>
+                        <label for="tanggal_mulai" class="block text-sm font-semibold text-hamta-black mb-1.5">Tanggal Mulai <span class="text-hamta-gray font-normal">(opsional)</span></label>
                         <input
                             type="date"
                             id="tanggal_mulai"
                             name="tanggal_mulai"
                             value="{{ old('tanggal_mulai') }}"
-                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                         >
                     </div>
 
                     <div>
-                        <label for="tanggal_selesai" class="block text-sm font-semibold text-[#010101] mb-1.5">Tanggal Selesai <span class="text-[#8A8A8A] font-normal">(opsional)</span></label>
+                        <label for="tanggal_selesai" class="block text-sm font-semibold text-hamta-black mb-1.5">Tanggal Selesai <span class="text-hamta-gray font-normal">(opsional)</span></label>
                         <input
                             type="date"
                             id="tanggal_selesai"
                             name="tanggal_selesai"
                             value="{{ old('tanggal_selesai') }}"
-                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                         >
                     </div>
                 </div>
@@ -370,20 +360,20 @@
                         name="status_aktif"
                         value="1"
                         {{ old('status_aktif', '1') ? 'checked' : '' }}
-                        class="w-4 h-4 mt-0.5 shrink-0 accent-[#65BD5E]"
+                        class="w-4 h-4 mt-0.5 shrink-0 accent-hamta-green"
                     >
                     <span>
-                        <span class="block text-sm font-semibold text-[#010101]">Promo aktif</span>
-                        <span class="block text-xs text-[#8A8A8A] mt-0.5">Promo aktif langsung berlaku di kasir & checkout.</span>
+                        <span class="block text-sm font-semibold text-hamta-black">Promo aktif</span>
+                        <span class="block text-xs text-hamta-gray mt-0.5">Promo aktif langsung berlaku di kasir & checkout.</span>
                     </span>
                 </label>
 
                 <!-- Tombol Aksi -->
                 <div class="flex items-center justify-end gap-2.5 pt-1">
-                    <button type="button" data-tutup-modal class="bg-[#E5E5E5] hover:bg-[#d9d9d9] text-[#010101] font-bold text-sm px-5 py-2 rounded-lg transition">
+                    <button type="button" data-tutup-modal class="bg-[#E5E5E5] hover:bg-[#d9d9d9] text-hamta-black font-bold text-sm px-5 py-2 rounded-lg transition">
                         Batal
                     </button>
-                    <button type="submit" class="bg-[#65BD5E] hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-lg transition">
+                    <button type="submit" class="bg-hamta-green hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-lg transition">
                         Simpan
                     </button>
                 </div>
@@ -400,7 +390,7 @@
 
         <!-- Panel Modal -->
         <div class="relative mx-auto mt-8 mb-8 w-[calc(100%-2rem)] max-w-[440px] bg-white rounded-2xl shadow-xl p-6 max-h-[calc(100vh-4rem)] overflow-y-auto">
-            <h3 id="judul-modal-edit" class="text-lg font-bold text-[#010101] mb-4">
+            <h3 id="judul-modal-edit" class="text-lg font-bold text-hamta-black mb-4">
                 Edit Promo
             </h3>
 
@@ -426,37 +416,37 @@
 
                 <!-- Nama Promo -->
                 <div>
-                    <label for="edit-nama_promo" class="block text-sm font-semibold text-[#010101] mb-1.5">Nama Promo</label>
+                    <label for="edit-nama_promo" class="block text-sm font-semibold text-hamta-black mb-1.5">Nama Promo</label>
                     <input
                         type="text"
                         id="edit-nama_promo"
                         name="nama_promo"
                         value="{{ old('nama_promo') }}"
                         required
-                        class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                        class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black placeholder-hamta-gray outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                     >
                 </div>
 
                 <!-- Deskripsi -->
                 <div>
-                    <label for="edit-deskripsi" class="block text-sm font-semibold text-[#010101] mb-1.5">Deskripsi <span class="text-[#8A8A8A] font-normal">(opsional)</span></label>
+                    <label for="edit-deskripsi" class="block text-sm font-semibold text-hamta-black mb-1.5">Deskripsi <span class="text-hamta-gray font-normal">(opsional)</span></label>
                     <textarea
                         id="edit-deskripsi"
                         name="deskripsi"
                         rows="2"
-                        class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                        class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black placeholder-hamta-gray outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                     >{{ old('deskripsi') }}</textarea>
                 </div>
 
                 <!-- Tipe Potongan + Nilai Potongan -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label for="edit-tipe_potongan" class="block text-sm font-semibold text-[#010101] mb-1.5">Tipe Potongan</label>
+                        <label for="edit-tipe_potongan" class="block text-sm font-semibold text-hamta-black mb-1.5">Tipe Potongan</label>
                         <select
                             id="edit-tipe_potongan"
                             name="tipe_potongan"
                             required
-                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                         >
                             @foreach ($tipeOptions as $nilai => $label)
                                 <option value="{{ $nilai }}" {{ old('tipe_potongan') === $nilai ? 'selected' : '' }}>{{ $label }}</option>
@@ -466,9 +456,9 @@
 
                     <!-- Disembunyikan saat tipe gratis_ongkir -->
                     <div data-area-nilai>
-                        <label for="edit-nilai_potongan" class="block text-sm font-semibold text-[#010101] mb-1.5">Nilai Potongan</label>
-                        <div class="flex items-center bg-white border border-stone-300 rounded-xl focus-within:border-[#65BD5E] focus-within:ring-1 focus-within:ring-[#65BD5E]">
-                            <span data-prefix-nilai class="pl-4 pr-1.5 py-2.5 text-sm font-semibold text-[#8A8A8A] select-none">Rp.</span>
+                        <label for="edit-nilai_potongan" class="block text-sm font-semibold text-hamta-black mb-1.5">Nilai Potongan</label>
+                        <div class="flex items-center bg-white border border-stone-300 rounded-xl focus-within:border-hamta-green focus-within:ring-1 focus-within:ring-hamta-green">
+                            <span data-prefix-nilai class="pl-4 pr-1.5 py-2.5 text-sm font-semibold text-hamta-gray select-none">Rp.</span>
                             <input
                                 type="number"
                                 id="edit-nilai_potongan"
@@ -477,7 +467,7 @@
                                 min="0"
                                 step="1"
                                 placeholder="5000"
-                                class="w-full bg-transparent rounded-r-xl px-1 py-2.5 pr-4 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none"
+                                class="w-full bg-transparent rounded-r-xl px-1 py-2.5 pr-4 text-sm text-hamta-black placeholder-hamta-gray outline-none"
                             >
                         </div>
                     </div>
@@ -486,7 +476,7 @@
                 <!-- Syarat Min Porsi + Batas Penggunaan -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label for="edit-syarat_min_porsi" class="block text-sm font-semibold text-[#010101] mb-1.5">Syarat Min. Porsi <span class="text-[#8A8A8A] font-normal">(opsional)</span></label>
+                        <label for="edit-syarat_min_porsi" class="block text-sm font-semibold text-hamta-black mb-1.5">Syarat Min. Porsi <span class="text-hamta-gray font-normal">(opsional)</span></label>
                         <input
                             type="number"
                             id="edit-syarat_min_porsi"
@@ -494,12 +484,12 @@
                             value="{{ old('syarat_min_porsi') }}"
                             min="1"
                             step="1"
-                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black placeholder-hamta-gray outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                         >
                     </div>
 
                     <div>
-                        <label for="edit-batas_penggunaan" class="block text-sm font-semibold text-[#010101] mb-1.5">Batas Penggunaan</label>
+                        <label for="edit-batas_penggunaan" class="block text-sm font-semibold text-hamta-black mb-1.5">Batas Penggunaan</label>
                         <input
                             type="number"
                             id="edit-batas_penggunaan"
@@ -508,7 +498,7 @@
                             min="1"
                             step="1"
                             required
-                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black placeholder-hamta-gray outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                         >
                     </div>
                 </div>
@@ -516,24 +506,24 @@
                 <!-- Periode -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label for="edit-tanggal_mulai" class="block text-sm font-semibold text-[#010101] mb-1.5">Tanggal Mulai <span class="text-[#8A8A8A] font-normal">(opsional)</span></label>
+                        <label for="edit-tanggal_mulai" class="block text-sm font-semibold text-hamta-black mb-1.5">Tanggal Mulai <span class="text-hamta-gray font-normal">(opsional)</span></label>
                         <input
                             type="date"
                             id="edit-tanggal_mulai"
                             name="tanggal_mulai"
                             value="{{ old('tanggal_mulai') }}"
-                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                         >
                     </div>
 
                     <div>
-                        <label for="edit-tanggal_selesai" class="block text-sm font-semibold text-[#010101] mb-1.5">Tanggal Selesai <span class="text-[#8A8A8A] font-normal">(opsional)</span></label>
+                        <label for="edit-tanggal_selesai" class="block text-sm font-semibold text-hamta-black mb-1.5">Tanggal Selesai <span class="text-hamta-gray font-normal">(opsional)</span></label>
                         <input
                             type="date"
                             id="edit-tanggal_selesai"
                             name="tanggal_selesai"
                             value="{{ old('tanggal_selesai') }}"
-                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                         >
                     </div>
                 </div>
@@ -548,20 +538,20 @@
                         name="status_aktif"
                         value="1"
                         {{ old('status_aktif') ? 'checked' : '' }}
-                        class="w-4 h-4 mt-0.5 shrink-0 accent-[#65BD5E]"
+                        class="w-4 h-4 mt-0.5 shrink-0 accent-hamta-green"
                     >
                     <span>
-                        <span class="block text-sm font-semibold text-[#010101]">Promo aktif</span>
-                        <span class="block text-xs text-[#8A8A8A] mt-0.5">Promo aktif langsung berlaku di kasir & checkout.</span>
+                        <span class="block text-sm font-semibold text-hamta-black">Promo aktif</span>
+                        <span class="block text-xs text-hamta-gray mt-0.5">Promo aktif langsung berlaku di kasir & checkout.</span>
                     </span>
                 </label>
 
                 <!-- Tombol Aksi -->
                 <div class="flex items-center justify-end gap-2.5 pt-1">
-                    <button type="button" data-tutup-modal-edit class="bg-[#E5E5E5] hover:bg-[#d9d9d9] text-[#010101] font-bold text-sm px-5 py-2 rounded-lg transition">
+                    <button type="button" data-tutup-modal-edit class="bg-[#E5E5E5] hover:bg-[#d9d9d9] text-hamta-black font-bold text-sm px-5 py-2 rounded-lg transition">
                         Batal
                     </button>
-                    <button type="submit" class="bg-[#65BD5E] hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-lg transition">
+                    <button type="submit" class="bg-hamta-green hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-lg transition">
                         Simpan Perubahan
                     </button>
                 </div>

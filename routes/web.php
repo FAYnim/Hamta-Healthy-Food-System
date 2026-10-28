@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\KasirController;
+use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\PesananController;
@@ -71,5 +72,7 @@ Route::middleware('admin.auth')->group(function () {
         ->name('admin.kelola_menu.update');
     Route::delete('/admin/kelola-menu/{id}', [MenuController::class, 'destroy'])
         ->name('admin.kelola_menu.destroy');
+
+    Route::get('/admin/laporan', [LaporanController::class, 'index'])->name('admin.laporan');
 
 });

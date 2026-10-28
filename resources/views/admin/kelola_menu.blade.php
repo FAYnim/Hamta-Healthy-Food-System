@@ -1,27 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Menu - Hamta Healthy Food</title>
 
-    <!-- Google Fonts: Plus Jakarta Sans -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     <!-- Tailwind CSS via Vite -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-        }
-    </style>
 </head>
-<body class="bg-[#F7F2E7] text-[#010101] antialiased min-h-screen">
+<body class="bg-hamta-cream text-hamta-black antialiased min-h-screen">
 
     <div class="min-h-screen flex flex-col lg:flex-row">
 
@@ -35,19 +25,19 @@
             <!-- Topbar Section -->
             <header class="flex items-center justify-between mb-8">
                 <div>
-                    <h2 class="text-2xl md:text-3xl font-bold text-[#010101] tracking-tight">Kelola Menu</h2>
+                    <h2 class="text-2xl md:text-3xl font-bold text-hamta-black tracking-tight">Kelola Menu</h2>
                 </div>
 
                 <!-- Admin Profile Chip -->
                 <div class="hidden lg:flex items-center">
-                    <button type="button" class="bg-white hover:bg-stone-50 border border-stone-200/60 rounded-xl px-7 py-2.5 font-bold text-[#010101] text-base shadow-sm transition">
+                    <button type="button" class="bg-white hover:bg-stone-50 border border-stone-200/60 rounded-xl px-7 py-2.5 font-bold text-hamta-black text-base shadow-sm transition">
                         {{ session('admin_nama', 'Admin') }}
                     </button>
                 </div>
             </header>
 
             @if (session('success'))
-                <div class="bg-[#65BD5E]/15 border border-[#65BD5E]/40 text-[#2f6b2a] text-sm font-semibold rounded-xl px-4 py-3 mb-6">
+                <div class="bg-hamta-green/15 border border-hamta-green/40 text-[#2f6b2a] text-sm font-semibold rounded-xl px-4 py-3 mb-6">
                     {{ session('success') }}
                 </div>
             @endif
@@ -70,7 +60,7 @@
 
                     @foreach ($tabs as ['nilai' => $nilai, 'label' => $label])
                         <a href="{{ route('admin.kelola_menu', array_filter(['kategori' => $nilai, 'cari' => $cari], fn ($v) => $v !== null)) }}"
-                           class="px-5 py-2 rounded-xl text-sm shrink-0 transition {{ $kategori === $nilai ? 'bg-[#65BD5E] text-white font-bold shadow-sm' : 'text-[#010101] hover:bg-stone-100 font-semibold' }}"
+                           class="px-5 py-2 rounded-xl text-sm shrink-0 transition {{ $kategori === $nilai ? 'bg-hamta-green text-white font-bold shadow-sm' : 'text-hamta-black hover:bg-stone-100 font-semibold' }}"
                            @if ($kategori === $nilai) aria-current="page" @endif>
                             {{ $label }}
                         </a>
@@ -90,10 +80,10 @@
                             value="{{ $cari }}"
                             placeholder="Cari Menu"
                             aria-label="Cari menu"
-                            class="w-full bg-white border border-stone-300 rounded-xl pl-4 pr-10 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                            class="w-full bg-white border border-stone-300 rounded-xl pl-4 pr-10 py-2.5 text-sm text-hamta-black placeholder-hamta-gray outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                         >
-                        <button type="submit" class="absolute inset-y-0 right-0 pr-3.5 flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#65BD5E]" aria-label="Cari menu">
-                            <x-lucide-search class="w-4 h-4 text-[#8A8A8A]" aria-hidden="true" />
+                        <button type="submit" class="absolute inset-y-0 right-0 pr-3.5 flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hamta-green" aria-label="Cari menu">
+                            <x-lucide-search class="w-4 h-4 text-hamta-gray" aria-hidden="true" />
                         </button>
                     </form>
 
@@ -101,7 +91,7 @@
                     <button 
                         type="button" 
                         id="btn-tambah-menu"
-                        class="bg-[#65BD5E] hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow-sm transition shrink-0"
+                        class="bg-hamta-green hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow-sm transition shrink-0"
                     >
                         Tambah Menu
                     </button>
@@ -115,7 +105,7 @@
                     <table class="w-full text-left border-collapse">
                         <!-- Table Header -->
                         <thead>
-                            <tr class="bg-[#E5E5E5] text-[#010101] text-sm font-bold">
+                            <tr class="bg-[#E5E5E5] text-hamta-black text-sm font-bold">
                                 <th class="py-4 px-6 w-32">Foto</th>
                                 <th class="py-4 px-6">Menu</th>
                                 <th class="py-4 px-6">Kategori</th>
@@ -138,11 +128,11 @@
                                             @endif
                                         </div>
                                     </td>
-                                    <td class="py-4 px-6 font-bold text-[#010101] text-base">
+                                    <td class="py-4 px-6 font-bold text-hamta-black text-base">
                                         {{ $item->nama_produk }}
                                     </td>
                                     <td class="py-4 px-6">
-                                        <span class="inline-block bg-[#65BD5E] text-white font-semibold text-xs px-4 py-1 rounded-full">
+                                        <span class="inline-block bg-hamta-green text-white font-semibold text-xs px-4 py-1 rounded-full">
                                             {{ $item->kategori }}
                                         </span>
                                     </td>
@@ -155,13 +145,13 @@
                                                 aria-checked="{{ $item->status_aktif ? 'true' : 'false' }}"
                                                 aria-label="Status ketersediaan {{ $item->nama_produk }}"
                                                 title="{{ $item->status_aktif ? 'Klik untuk menandai sold-out' : 'Klik untuk mengaktifkan kembali' }}"
-                                                class="relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0B412B] focus-visible:ring-offset-2 {{ $item->status_aktif ? 'bg-[#65BD5E] hover:bg-[#58a851]' : 'bg-stone-300 hover:bg-stone-400' }}">
+                                                class="relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-hamta-dark focus-visible:ring-offset-2 {{ $item->status_aktif ? 'bg-hamta-green hover:bg-[#58a851]' : 'bg-stone-300 hover:bg-stone-400' }}">
                                                 <span class="sr-only">{{ $item->status_aktif ? 'Tersedia' : 'Sold-out' }}</span>
                                                 <span class="inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform {{ $item->status_aktif ? 'translate-x-6' : 'translate-x-1' }}"></span>
                                             </button>
                                         </form>
                                     </td>
-                                    <td class="py-4 px-6 font-bold text-[#010101] text-base">
+                                    <td class="py-4 px-6 font-bold text-hamta-black text-base">
                                         Rp {{ number_format($item->harga_offline, 0, ',', '.') }}
                                     </td>
                                     <td class="py-4 px-6">
@@ -176,7 +166,7 @@
                                                 data-foto="{{ $item->foto ? asset('storage/' . $item->foto) : '' }}">
                                                 <x-lucide-pencil class="w-4 h-4" />
                                             </button>
-                                            <button type="button" class="btn-hapus-menu w-9 h-9 rounded-lg bg-[#E05C5C] hover:bg-[#d04b4b] text-white flex items-center justify-center transition"
+                                            <button type="button" class="btn-hapus-menu w-9 h-9 rounded-lg bg-hamta-red hover:bg-[#d04b4b] text-white flex items-center justify-center transition"
                                                 data-id="{{ $item->id_produk }}"
                                                 data-nama="{{ $item->nama_produk }}">
                                                 <x-lucide-trash-2 class="w-4 h-4" />
@@ -186,17 +176,17 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="py-10 px-6 text-center text-[#8A8A8A]">
+                                    <td colspan="6" class="py-10 px-6 text-center text-hamta-gray">
                                         @if ($produk->total() > 0)
                                             <p class="mb-3">Halaman ini tidak memiliki menu.</p>
                                             <a href="{{ $produk->url(1) }}"
-                                               class="inline-block bg-[#65BD5E] hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-xl transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0B412B] focus-visible:ring-offset-2">
+                                               class="inline-block bg-hamta-green hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-xl transition focus:outline-none focus-visible:ring-2 focus-visible:ring-hamta-dark focus-visible:ring-offset-2">
                                                 Ke halaman pertama
                                             </a>
                                         @elseif ($kategori !== null || $cari !== null)
                                             <p class="mb-3">Tidak ada menu yang cocok dengan filter.</p>
                                             <a href="{{ route('admin.kelola_menu') }}"
-                                               class="inline-block bg-[#65BD5E] hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-xl transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0B412B] focus-visible:ring-offset-2">
+                                               class="inline-block bg-hamta-green hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-xl transition focus:outline-none focus-visible:ring-2 focus-visible:ring-hamta-dark focus-visible:ring-offset-2">
                                                 Reset filter
                                             </a>
                                         @else
@@ -229,7 +219,7 @@
 
         <!-- Panel Modal -->
         <div class="relative mx-auto mt-8 mb-8 w-[calc(100%-2rem)] max-w-[440px] bg-white rounded-2xl shadow-xl p-6 max-h-[calc(100vh-4rem)] overflow-y-auto">
-            <h3 id="judul-modal-tambah" class="text-lg font-bold text-[#010101] mb-4">
+            <h3 id="judul-modal-tambah" class="text-lg font-bold text-hamta-black mb-4">
                 Tambah Menu Baru
             </h3>
 
@@ -253,7 +243,7 @@
 
                 <!-- Nama Menu -->
                 <div>
-                    <label for="nama_produk" class="block text-sm font-semibold text-[#010101] mb-1.5">Nama Menu</label>
+                    <label for="nama_produk" class="block text-sm font-semibold text-hamta-black mb-1.5">Nama Menu</label>
                     <input 
                         type="text" 
                         id="nama_produk" 
@@ -261,7 +251,7 @@
                         value="{{ old('nama_produk') }}" 
                         placeholder="Salad Sayur" 
                         required
-                        class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                        class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black placeholder-hamta-gray outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                     >
                     @error('nama_produk')
                         <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
@@ -270,14 +260,14 @@
 
                 <!-- Deskripsi -->
                 <div>
-                    <label for="deskripsi" class="block text-sm font-semibold text-[#010101] mb-1.5">Deskripsi</label>
+                    <label for="deskripsi" class="block text-sm font-semibold text-hamta-black mb-1.5">Deskripsi</label>
                     <input 
                         type="text" 
                         id="deskripsi" 
                         name="deskripsi" 
                         value="{{ old('deskripsi') }}" 
                         placeholder="Salad sayur yang enak"
-                        class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                        class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black placeholder-hamta-gray outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                     >
                     @error('deskripsi')
                         <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
@@ -287,12 +277,12 @@
                 <!-- Kategori + Harga -->
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label for="kategori" class="block text-sm font-semibold text-[#010101] mb-1.5">Kategori</label>
+                        <label for="kategori" class="block text-sm font-semibold text-hamta-black mb-1.5">Kategori</label>
                         <select 
                             id="kategori" 
                             name="kategori" 
                             required
-                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                         >
                             <option value="" disabled selected hidden>Salad</option>
                             <option value="Salad" {{ old('kategori') == 'Salad' ? 'selected' : '' }}>Salad</option>
@@ -304,9 +294,9 @@
                         @enderror
                     </div>
                     <div>
-                        <label for="harga" class="block text-sm font-semibold text-[#010101] mb-1.5">Harga</label>
-                        <div class="flex items-center bg-white border border-stone-300 rounded-xl focus-within:border-[#65BD5E] focus-within:ring-1 focus-within:ring-[#65BD5E]">
-                            <span class="pl-4 pr-1.5 py-2.5 text-sm font-semibold text-[#8A8A8A] select-none">Rp.</span>
+                        <label for="harga" class="block text-sm font-semibold text-hamta-black mb-1.5">Harga</label>
+                        <div class="flex items-center bg-white border border-stone-300 rounded-xl focus-within:border-hamta-green focus-within:ring-1 focus-within:ring-hamta-green">
+                            <span class="pl-4 pr-1.5 py-2.5 text-sm font-semibold text-hamta-gray select-none">Rp.</span>
                             <input 
                                 type="text" 
                                 id="harga" 
@@ -315,7 +305,7 @@
                                 placeholder="15.000" 
                                 inputmode="numeric" 
                                 required
-                                class="w-full bg-transparent rounded-r-xl px-1 py-2.5 pr-4 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none"
+                                class="w-full bg-transparent rounded-r-xl px-1 py-2.5 pr-4 text-sm text-hamta-black placeholder-hamta-gray outline-none"
                             >
                         </div>
                         @error('harga')
@@ -326,19 +316,19 @@
 
                 <!-- Bisa Dikustom -->
                 <label class="flex items-start gap-3 border border-stone-200 rounded-xl px-4 py-3 cursor-pointer hover:bg-stone-50 transition">
-                    <input type="checkbox" id="bisa_dikustom" name="bisa_dikustom" value="1" {{ old('bisa_dikustom') ? 'checked' : '' }} class="w-4 h-4 mt-0.5 shrink-0 accent-[#65BD5E]">
+                    <input type="checkbox" id="bisa_dikustom" name="bisa_dikustom" value="1" {{ old('bisa_dikustom') ? 'checked' : '' }} class="w-4 h-4 mt-0.5 shrink-0 accent-hamta-green">
                     <span>
-                        <span class="block text-sm font-semibold text-[#010101]">Bisa dikreasikan</span>
-                        <span class="block text-xs text-[#8A8A8A] mt-0.5">Muncul sebagai salad dasar di menu "Kreasikan Salad Sendiri" pada kasir.</span>
+                        <span class="block text-sm font-semibold text-hamta-black">Bisa dikreasikan</span>
+                        <span class="block text-xs text-hamta-gray mt-0.5">Muncul sebagai salad dasar di menu "Kreasikan Salad Sendiri" pada kasir.</span>
                     </span>
                 </label>
 
                 <!-- Tombol Aksi -->
                 <div class="flex items-center justify-end gap-2.5 pt-1">
-                    <button type="button" data-tutup-modal class="bg-[#E5E5E5] hover:bg-[#d9d9d9] text-[#010101] font-bold text-sm px-5 py-2 rounded-lg transition">
+                    <button type="button" data-tutup-modal class="bg-[#E5E5E5] hover:bg-[#d9d9d9] text-hamta-black font-bold text-sm px-5 py-2 rounded-lg transition">
                         Batal
                     </button>
-                    <button type="submit" class="bg-[#65BD5E] hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-lg transition">
+                    <button type="submit" class="bg-hamta-green hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-lg transition">
                         Simpan
                     </button>
                 </div>
@@ -355,7 +345,7 @@
 
         <!-- Panel Modal -->
         <div class="relative mx-auto mt-8 mb-8 w-[calc(100%-2rem)] max-w-[440px] bg-white rounded-2xl shadow-xl p-6 max-h-[calc(100vh-4rem)] overflow-y-auto">
-            <h3 id="judul-modal-edit" class="text-lg font-bold text-[#010101] mb-4">
+            <h3 id="judul-modal-edit" class="text-lg font-bold text-hamta-black mb-4">
                 Edit Menu
             </h3>
 
@@ -384,7 +374,7 @@
 
                 <!-- Nama Menu -->
                 <div>
-                    <label for="edit-nama_produk" class="block text-sm font-semibold text-[#010101] mb-1.5">Nama Menu</label>
+                    <label for="edit-nama_produk" class="block text-sm font-semibold text-hamta-black mb-1.5">Nama Menu</label>
                     <input 
                         type="text" 
                         id="edit-nama_produk" 
@@ -392,7 +382,7 @@
                         value="{{ old('nama_produk') }}" 
                         placeholder="Salad Sayur" 
                         required
-                        class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                        class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black placeholder-hamta-gray outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                     >
                     @error('nama_produk')
                         <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
@@ -401,14 +391,14 @@
 
                 <!-- Deskripsi -->
                 <div>
-                    <label for="edit-deskripsi" class="block text-sm font-semibold text-[#010101] mb-1.5">Deskripsi</label>
+                    <label for="edit-deskripsi" class="block text-sm font-semibold text-hamta-black mb-1.5">Deskripsi</label>
                     <input 
                         type="text" 
                         id="edit-deskripsi" 
                         name="deskripsi" 
                         value="{{ old('deskripsi') }}" 
                         placeholder="Salad sayur yang enak"
-                        class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                        class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black placeholder-hamta-gray outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                     >
                     @error('deskripsi')
                         <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
@@ -418,12 +408,12 @@
                 <!-- Kategori + Harga -->
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label for="edit-kategori" class="block text-sm font-semibold text-[#010101] mb-1.5">Kategori</label>
+                        <label for="edit-kategori" class="block text-sm font-semibold text-hamta-black mb-1.5">Kategori</label>
                         <select 
                             id="edit-kategori" 
                             name="kategori" 
                             required
-                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-[#010101] outline-none focus:border-[#65BD5E] focus:ring-1 focus:ring-[#65BD5E]"
+                            class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
                         >
                             <option value="Salad" {{ old('kategori') == 'Salad' ? 'selected' : '' }}>Salad</option>
                             <option value="Sandwich" {{ old('kategori') == 'Sandwich' ? 'selected' : '' }}>Sandwich</option>
@@ -434,9 +424,9 @@
                         @enderror
                     </div>
                     <div>
-                        <label for="edit-harga" class="block text-sm font-semibold text-[#010101] mb-1.5">Harga</label>
-                        <div class="flex items-center bg-white border border-stone-300 rounded-xl focus-within:border-[#65BD5E] focus-within:ring-1 focus-within:ring-[#65BD5E]">
-                            <span class="pl-4 pr-1.5 py-2.5 text-sm font-semibold text-[#8A8A8A] select-none">Rp.</span>
+                        <label for="edit-harga" class="block text-sm font-semibold text-hamta-black mb-1.5">Harga</label>
+                        <div class="flex items-center bg-white border border-stone-300 rounded-xl focus-within:border-hamta-green focus-within:ring-1 focus-within:ring-hamta-green">
+                            <span class="pl-4 pr-1.5 py-2.5 text-sm font-semibold text-hamta-gray select-none">Rp.</span>
                             <input 
                                 type="text" 
                                 id="edit-harga" 
@@ -445,7 +435,7 @@
                                 placeholder="15.000" 
                                 inputmode="numeric" 
                                 required
-                                class="w-full bg-transparent rounded-r-xl px-1 py-2.5 pr-4 text-sm text-[#010101] placeholder-[#8A8A8A] outline-none"
+                                class="w-full bg-transparent rounded-r-xl px-1 py-2.5 pr-4 text-sm text-hamta-black placeholder-hamta-gray outline-none"
                             >
                         </div>
                         @error('harga')
@@ -456,19 +446,19 @@
 
                 <!-- Bisa Dikustom -->
                 <label class="flex items-start gap-3 border border-stone-200 rounded-xl px-4 py-3 cursor-pointer hover:bg-stone-50 transition">
-                    <input type="checkbox" id="edit-bisa_dikustom" name="bisa_dikustom" value="1" {{ old('bisa_dikustom') ? 'checked' : '' }} class="w-4 h-4 mt-0.5 shrink-0 accent-[#65BD5E]">
+                    <input type="checkbox" id="edit-bisa_dikustom" name="bisa_dikustom" value="1" {{ old('bisa_dikustom') ? 'checked' : '' }} class="w-4 h-4 mt-0.5 shrink-0 accent-hamta-green">
                     <span>
-                        <span class="block text-sm font-semibold text-[#010101]">Bisa dikreasikan</span>
-                        <span class="block text-xs text-[#8A8A8A] mt-0.5">Muncul sebagai salad dasar di menu "Kreasikan Salad Sendiri" pada kasir.</span>
+                        <span class="block text-sm font-semibold text-hamta-black">Bisa dikreasikan</span>
+                        <span class="block text-xs text-hamta-gray mt-0.5">Muncul sebagai salad dasar di menu "Kreasikan Salad Sendiri" pada kasir.</span>
                     </span>
                 </label>
 
                 <!-- Tombol Aksi -->
                 <div class="flex items-center justify-end gap-2.5 pt-1">
-                    <button type="button" data-tutup-modal-edit class="bg-[#E5E5E5] hover:bg-[#d9d9d9] text-[#010101] font-bold text-sm px-5 py-2 rounded-lg transition">
+                    <button type="button" data-tutup-modal-edit class="bg-[#E5E5E5] hover:bg-[#d9d9d9] text-hamta-black font-bold text-sm px-5 py-2 rounded-lg transition">
                         Batal
                     </button>
-                    <button type="submit" class="bg-[#65BD5E] hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-lg transition">
+                    <button type="submit" class="bg-hamta-green hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-lg transition">
                         Simpan
                     </button>
                 </div>
@@ -485,7 +475,7 @@
 
         <!-- Panel Modal -->
         <div class="relative mx-auto mt-24 mb-8 w-[calc(100%-2rem)] max-w-[400px] bg-white rounded-2xl shadow-xl p-8 text-center">
-            <div class="mx-auto w-14 h-14 rounded-full bg-[#E05C5C]/15 flex items-center justify-center mb-4">
+            <div class="mx-auto w-14 h-14 rounded-full bg-hamta-red/15 flex items-center justify-center mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#E05C5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
                     <circle cx="12" cy="12" r="10"/>
                     <line x1="15" y1="9" x2="9" y2="15"/>
@@ -493,17 +483,17 @@
                 </svg>
             </div>
 
-            <p id="judul-modal-hapus" class="text-base font-semibold text-[#010101] mb-6">
+            <p id="judul-modal-hapus" class="text-base font-semibold text-hamta-black mb-6">
                 Yakin untuk menghapus menu ini?
             </p>
 
             <form id="form-hapus-menu" data-action="{{ route('admin.kelola_menu') }}" method="POST" class="flex items-center justify-center gap-3">
                 @csrf
                 @method('DELETE')
-                <button type="button" data-tutup-modal-hapus class="bg-white border border-stone-300 hover:bg-stone-50 text-[#010101] font-bold text-sm px-5 py-2 rounded-lg transition">
+                <button type="button" data-tutup-modal-hapus class="bg-white border border-stone-300 hover:bg-stone-50 text-hamta-black font-bold text-sm px-5 py-2 rounded-lg transition">
                     Batal
                 </button>
-                <button type="submit" class="bg-[#E05C5C] hover:bg-[#d04b4b] text-white font-bold text-sm px-5 py-2 rounded-lg transition">
+                <button type="submit" class="bg-hamta-red hover:bg-[#d04b4b] text-white font-bold text-sm px-5 py-2 rounded-lg transition">
                     Yakin, Hapus
                 </button>
             </form>
