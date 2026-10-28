@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\KasirController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PengaturanController;
@@ -20,9 +21,7 @@ Route::post('admin/logout', [AuthController::class, 'logout'])->name('admin.logo
 // ─── Admin (dilindungi middleware) ────────────────────────────────────────────
 Route::middleware('admin.auth')->group(function () {
 
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
     Route::get('/admin/kasir', [KasirController::class, 'index'])->name('admin.kasir');
     Route::post('/admin/kasir', [KasirController::class, 'store'])->name('admin.kasir.store');
