@@ -8,9 +8,17 @@ use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\PromoController;
+use App\Models\Produk;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome')->name('home');
+Route::get('/', function () {
+    $menus = Produk::where('status_aktif', true)
+        ->orderByDesc('id_produk')
+        ->limit(8)
+        ->get();
+
+    return view('welcome', ['menus' => $menus]);
+})->name('home');
 
 // ─── Customer (halaman statis, belum ada fungsionalitas) ──────────────────────
 Route::view('/daftar-menu', 'customer.daftar-menu')->name('customer.daftar_menu');
