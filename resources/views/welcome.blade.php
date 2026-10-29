@@ -6,18 +6,6 @@
     <title>Hamta — Eat Good, Feel Good</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        :root { --cream:#f7f2e7; --green:#0b412b; --lime:#65bd5e; --ink:#101010; }
-        * { box-sizing:border-box; }
-        html { scroll-behavior:smooth; }
-        body { margin:0; background:var(--cream); color:var(--ink); font-family:'Plus Jakarta Sans', sans-serif; }
-        .page { max-width:1180px; margin:auto; padding:26px 22px 0; overflow:hidden; }
-        .nav { display:flex; align-items:center; justify-content:space-between; padding:0 2px 24px; }
-        .brand { width:108px; height:auto; filter:brightness(0); }
-        .links { display:flex; align-items:center; gap:31px; font-size:15px; font-weight:600; }
-        .links a { color:var(--ink); text-decoration:none; transition:.2s; }
-        .links a:hover { color:var(--lime); }
-        .brand { filter:brightness(0); }
-        .bag { display:block; }
         .hero, .store { position:relative; border:3px solid var(--green); border-radius:13px; overflow:hidden; color:white; }
         .hero { min-height:calc(100vh - 110px); display:flex; align-items:center; padding:34px 9%; background:linear-gradient(90deg,rgba(5,46,31,.88),rgba(5,46,31,.35)), url('/images/hamta-background.png') center/cover; }
         .hero-row { position:relative; z-index:1; display:flex; align-items:center; gap:18px; }
@@ -56,18 +44,12 @@
         .slider { display:flex; align-items:center; justify-content:center; gap:25px; margin-bottom:48px; color:var(--green); font-size:28px; }
         .track { width:235px; height:8px; background:#b9ddb2; border-radius:9px; overflow:hidden; }
         .track span { display:block; width:29%; height:100%; background:var(--green); border-radius:9px; }
-        footer { margin:0 -22px; padding:72px 7% 32px; color:#fff; background:var(--green); display:grid; grid-template-columns:1.1fr 1fr 1fr; gap:25px; }
-        .wave { display:block; width:100%; height:110px; margin:48px 0 0; }
-        footer .brand { filter:brightness(0) invert(1); width:150px; margin-bottom:9px; }
-        footer h4 { margin:0 0 8px; font-size:15px; }
-        footer p { font-size:12px; line-height:1.25; margin:0; }
-        .map { height:115px; background:linear-gradient(135deg,#e8e1d0,#c6d5c1); border:5px solid white; color:#55836b; display:grid; place-items:center; font-size:12px; }
-        @media (max-width:700px) { .page{padding:19px 12px 0}.nav{padding-bottom:18px}.links{gap:13px;font-size:12px}.brand{width:83px}.hero{min-height:calc(100vh - 96px);padding:25px 7%;}.hero-row{flex-wrap:wrap;gap:10px}.hero-logo{width:150px}.hero h1{font-size:16px;width:190px}.hero h1{font-size:16px;width:190px}h2{font-size:22px;margin:20px 6px 12px}.catalog{padding:12px 9px 15px;gap:17px 9px}.product-name{font-size:9px;left:5px;bottom:5px}.price{font-size:11px;margin:7px 3px 5px}.btn{padding:7px 8px;font-size:10px}.event{min-height:180px;padding:20px 15px}.event-copy{width:58%}.event h3{font-size:20px}.event p{font-size:10px}.event-img{width:55%;right:-9%}.store{margin-top:35px;min-height:190px;padding:28px 24px}.store h3{font-size:19px}.quote{flex-basis:77%;min-height:190px}.testimonials{gap:12px}.slider{margin-bottom:35px}footer{margin:0 -12px;padding:48px 25px 28px;grid-template-columns:1fr 1fr;gap:25px 15px}.wave{height:55px;margin-top:28px}footer>div:first-child{grid-column:1/-1}footer .brand{width:120px}.map{height:85px} }
+        @media (max-width:700px) { .hero{min-height:calc(100vh - 96px);padding:25px 7%;}.hero-row{flex-wrap:wrap;gap:10px}.hero-logo{width:150px}.hero h1{font-size:16px;width:190px}.hero h1{font-size:16px;width:190px}h2{font-size:22px;margin:20px 6px 12px}.catalog{padding:12px 9px 15px;gap:17px 9px}.product-name{font-size:9px;left:5px;bottom:5px}.price{font-size:11px;margin:7px 3px 5px}.btn{padding:7px 8px;font-size:10px}.event{min-height:180px;padding:20px 15px}.event-copy{width:58%}.event h3{font-size:20px}.event p{font-size:10px}.event-img{width:55%;right:-9%}.store{margin-top:35px;min-height:190px;padding:28px 24px}.store h3{font-size:19px}.quote{flex-basis:77%;min-height:190px}.testimonials{gap:12px}.slider{margin-bottom:35px} }
     </style>
 </head>
 <body>
 <div class="page">
-    <nav class="nav"><a href="#home"><img class="brand" width="108" src="{{ asset('images/hamta-logo-white.png') }}" alt="Hamta"></a><div class="links"><a href="#home">Beranda</a><a href="#menu">Menu</a><a href="#kreasi">Kreasi</a><a href="#promo">Promo</a><a href="#menu" aria-label="Keranjang"><svg class="bag" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#101010" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></a></div></nav>
+    @include('customer.partials.header')
     <section class="hero" id="home"><div class="hero-row"><h1>Mau hidup sehat tapi gak boncos banyak? Yuk beli di</h1><img class="hero-logo" src="{{ asset('images/hamta-logo-white.png') }}" alt="Hamta"></div></section>
     <h2 id="menu">Menu / Katalog</h2>
     <section class="catalog">
@@ -86,7 +68,6 @@
     </section>
     <div class="slider"><span>‹</span><div class="track"><span></span></div><span>›</span></div>
 </div>
-<svg class="wave" viewBox="0 0 1440 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path fill="#0b412b" d="M0,160L48,149.3C96,139,192,117,288,96C384,75,480,53,576,53.3C672,53,768,75,864,101.3C960,128,1056,160,1152,149.3C1248,139,1344,85,1392,58.7L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"/></svg>
-<footer><div><img class="brand" src="{{ asset('images/hamta-logo-nobg.svg') }}" alt="Hamta"><p>Eat Good, Feel Good</p></div><div><h4>Lokasi Kita</h4><p>Lidah Kulon<br>Rumah Produksi,<br>Jl. Lidah Kulon Gg. 1, Lidah Kulon,<br>Kec. Lakarsantri,<br>Surabaya, Jawa Timur<br>60213</p></div><div><div class="map">Lidah Kulon • Surabaya</div></div><div><h4>Our Sosmed</h4></div><div><h4>Contact Us</h4></div></footer>
+@include('customer.partials.footer')
 </body>
 </html>
