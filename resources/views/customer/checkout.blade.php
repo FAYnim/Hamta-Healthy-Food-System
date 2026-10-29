@@ -35,12 +35,24 @@
         .co-item-name { margin:2px 0 0; font-size:17px; line-height:1.2; text-transform:uppercase; letter-spacing:-.2px; }
         .co-item-note { margin:7px 0 0; font-size:12.5px; line-height:1.4; max-width:520px; }
         .co-item-price { font-size:16px; font-weight:700; white-space:nowrap; }
+        .co-qty { display:flex; align-items:center; gap:12px; margin-top:10px; padding:5px 12px; border-radius:999px; background:#e9e6df; width:max-content; }
+        .co-qty-ctl { border:0; background:transparent; color:#6f6a5f; font-size:17px; line-height:1; cursor:pointer; padding:0 2px; }
+        .co-qty-ctl:hover { color:var(--green); }
+        .co-qty-num { min-width:10px; font-size:14px; font-weight:700; text-align:center; }
+        .co-remove { border:0; background:transparent; color:#c0392b; font:inherit; font-size:11px; font-weight:700; cursor:pointer; padding:0; margin-left:4px; }
 
         .co-pay-row { display:flex; justify-content:space-between; gap:14px; padding:6px 0; font-size:15px; }
         .co-pay-row span:last-child { white-space:nowrap; }
         .co-divider { height:1px; margin:12px 0; background:rgba(11,65,43,.22); }
         .co-pay-total { display:flex; justify-content:space-between; gap:14px; font-size:18px; font-weight:800; }
         .co-pay-note { margin:6px 0 0; text-align:right; font-size:11.5px; opacity:.7; }
+        .co-opt-group { display:grid; gap:10px; margin-top:12px; }
+        .co-opt { display:flex; align-items:center; gap:12px; padding:12px 14px; border:2px solid #d8e2d2; border-radius:11px; background:#fff; cursor:pointer; font-family:inherit; font-size:14px; font-weight:600; text-align:left; transition:border-color .15s, background .15s; }
+        .co-opt:hover { border-color:var(--green); }
+        .co-opt.is-selected { border-color:var(--green); background:#eef5ea; }
+        .co-opt-radio { flex:0 0 auto; width:20px; height:20px; border-radius:50%; border:2px solid var(--green); display:grid; place-items:center; }
+        .co-opt.is-selected .co-opt-radio:before { content:''; width:10px; height:10px; border-radius:50%; background:var(--green); }
+        .co-opt small { display:block; font-size:11.5px; font-weight:500; opacity:.7; }
 
         .co-info { display:grid; gap:14px; }
         .co-info-label { display:block; font-size:12px; opacity:.68; margin-bottom:3px; }
@@ -115,33 +127,46 @@
 
     <section class="co-card">
         <h2>Rincian Pesanan</h2>
-        <div class="co-item">
-            <div class="co-thumb"></div>
-            <div>
-                <p class="co-item-name">1x CAESAR WRAP</p>
-                <p class="co-item-note">Catatan : Romaine nya dikitin dan ayam bakar sama dressing nya banyakin yaa</p>
-            </div>
-            <div class="co-item-price">Rp. 25.000</div>
+        <div id="co-cart-list"></div>
+        <p id="co-cart-empty" class="co-item-note">Keranjang masih kosong. Yuk tambah menu dulu!</p>
+    </section>
+
+    <section class="co-card">
+        <h2>Metode Pembayaran</h2>
+        <div class="co-opt-group" role="radiogroup" aria-label="Metode pembayaran" style="margin-top:14px">
+            <button type="button" class="co-opt is-selected" data-pay="qris" aria-pressed="true">
+                <span class="co-opt-radio" aria-hidden="true"></span>
+                <span>QRIS<small>Bayar sekarang via QRIS</small></span>
+            </button>
+            <button type="button" class="co-opt" data-pay="tunai" aria-pressed="false">
+                <span class="co-opt-radio" aria-hidden="true"></span>
+                <span>Bayar di Tempat<small>Bayar tunai saat pickup</small></span>
+            </button>
         </div>
-        <div class="co-item">
-            <div class="co-thumb"></div>
-            <div>
-                <p class="co-item-name">1x CHICKEN SANDWICH</p>
-                <p class="co-item-note">Catatan : Telur nya banyakin yaa</p>
-            </div>
-            <div class="co-item-price">Rp. 25.000</div>
+    </section>
+
+    <section class="co-card">
+        <h2>Metode Pengiriman</h2>
+        <div class="co-opt-group" role="radiogroup" aria-label="Metode pengiriman" style="margin-top:14px">
+            <button type="button" class="co-opt is-selected" data-take="pickup" aria-pressed="true">
+                <span class="co-opt-radio" aria-hidden="true"></span>
+                <span>Pickup / Ambil di Tempat<small>Ambil sendiri pesananmu</small></span>
+            </button>
+            <button type="button" class="co-opt" data-take="delivery" aria-pressed="false">
+                <span class="co-opt-radio" aria-hidden="true"></span>
+                <span>Delivery / Diantar<small>Ongkir dikonfirmasi admin via WhatsApp</small></span>
+            </button>
         </div>
     </section>
 
     <section class="co-card">
         <h2>Rincian Pembayaran</h2>
         <div style="margin-top:12px">
-            <div class="co-pay-row"><span>Total Pemesanan (2 Menu)</span><span>Rp. 50.000</span></div>
-            <div class="co-pay-row"><span>Biaya Pengiriman</span><span>Rp. 10.000</span></div>
-            <div class="co-pay-row"><span>Biaya Layanan</span><span>Rp. 2.000</span></div>
-            <div class="co-pay-row"><span>Biaya Pengemasan</span><span>Rp. 1.000</span></div>
+            <div class="co-pay-row"><span id="co-total-label">Total Pemesanan (0 Menu)</span><span id="co-subtotal">Rp. 0</span></div>
+            <div class="co-pay-row"><span>Biaya Pengiriman</span><span id="co-ongkir">Rp. 0</span></div>
+            <div class="co-pay-row"><span>PPN 11%</span><span id="co-ppn">Rp. 0</span></div>
             <div class="co-divider"></div>
-            <div class="co-pay-total"><span>Total Pembayaran (QRIS)</span><span>Rp. 63.000</span></div>
+            <div class="co-pay-total"><span>Total Pembayaran</span><span id="co-total">Rp. 0</span></div>
             <p class="co-pay-note">Sudah termasuk pajak</p>
         </div>
     </section>
@@ -159,7 +184,136 @@
             </div>
         </div>
     </section>
-</div>
+<script>
+(function () {
+    var list = document.getElementById('co-cart-list');
+    var empty = document.getElementById('co-cart-empty');
+    if (!list) return;
+    var rupiah = function (n) { return 'Rp. ' + new Intl.NumberFormat('id-ID').format(Math.round(n)); };
+    function render() {
+        var cart = window.hamtaGetCart ? window.hamtaGetCart() : [];
+        list.textContent = '';
+        if (empty) empty.style.display = cart.length ? 'none' : '';
+        cart.forEach(function (item, index) {
+            var row = document.createElement('div');
+            row.className = 'co-item';
+            var thumb = document.createElement('div');
+            thumb.className = 'co-thumb';
+            if (item.foto) {
+                var img = document.createElement('img');
+                img.src = item.foto;
+                img.alt = item.nama || 'Menu';
+                img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover';
+                thumb.appendChild(img);
+            }
+            var mid = document.createElement('div');
+            var name = document.createElement('p');
+            name.className = 'co-item-name';
+            name.textContent = (item.nama || 'Menu').toUpperCase();
+            mid.appendChild(name);
+            if (item.komponen && item.komponen.length) {
+                var detail = document.createElement('p');
+                detail.className = 'co-item-note';
+                detail.style.marginTop = '2px';
+                detail.textContent = item.komponen.map(function (k) { return k.nama || k; }).join(', ');
+                mid.appendChild(detail);
+            }
+            var qty = document.createElement('div');
+            qty.className = 'co-qty';
+            qty.setAttribute('aria-label', 'Jumlah ' + item.jumlah);
+            var minus = document.createElement('button');
+            minus.type = 'button';
+            minus.className = 'co-qty-ctl';
+            minus.textContent = '-';
+            minus.setAttribute('aria-label', 'Kurangi jumlah');
+            minus.addEventListener('click', function () { step(index, -1); });
+            var num = document.createElement('span');
+            num.className = 'co-qty-num';
+            num.textContent = item.jumlah;
+            var plus = document.createElement('button');
+            plus.type = 'button';
+            plus.className = 'co-qty-ctl';
+            plus.textContent = '+';
+            plus.setAttribute('aria-label', 'Tambah jumlah');
+            plus.addEventListener('click', function () { step(index, 1); });
+            var remove = document.createElement('button');
+            remove.type = 'button';
+            remove.className = 'co-remove';
+            remove.textContent = 'Hapus';
+            remove.setAttribute('aria-label', 'Hapus item dari keranjang');
+            remove.addEventListener('click', function () {
+                var c = window.hamtaGetCart();
+                c.splice(index, 1);
+                window.hamtaSaveCart(c);
+                render();
+            });
+            qty.append(minus, num, plus, remove);
+            mid.appendChild(qty);
+            var price = document.createElement('div');
+            price.className = 'co-item-price';
+            price.textContent = rupiah((parseFloat(item.harga) || 0) * (parseInt(item.jumlah, 10) || 0));
+            row.append(thumb, mid, price);
+            list.appendChild(row);
+        });
+        var subtotal = cart.reduce(function (s, it) { return s + (parseFloat(it.harga) || 0) * (parseInt(it.jumlah, 10) || 0); }, 0);
+        var totalQty = cart.reduce(function (s, it) { return s + (parseInt(it.jumlah, 10) || 0); }, 0);
+        var isDelivery = currentTake() === 'delivery';
+        var ongkir = !cart.length ? 0 : (isDelivery ? 10000 : 0);
+        var ppn = Math.round((subtotal + ongkir) * 0.11);
+        document.getElementById('co-total-label').textContent = 'Total Pemesanan (' + totalQty + ' Menu)';
+        document.getElementById('co-subtotal').textContent = rupiah(subtotal);
+        document.getElementById('co-ongkir').textContent = rupiah(ongkir);
+        document.getElementById('co-ppn').textContent = rupiah(ppn);
+        document.getElementById('co-total').textContent = rupiah(subtotal + ongkir + ppn);
+    }
+    function step(index, delta) {
+        var cart = window.hamtaGetCart();
+        if (!cart[index]) return;
+        cart[index].jumlah = (parseInt(cart[index].jumlah, 10) || 0) + delta;
+        if (cart[index].jumlah < 1) cart.splice(index, 1);
+        window.hamtaSaveCart(cart);
+        render();
+    }
+    function currentTake() {
+        var sel = document.querySelector('[data-take].is-selected');
+        return sel ? sel.dataset.take : 'pickup';
+    }
+    document.querySelectorAll('[data-pay]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('[data-pay]').forEach(function (b) {
+                var on = b === btn;
+                b.classList.toggle('is-selected', on);
+                b.setAttribute('aria-pressed', on ? 'true' : 'false');
+            });
+            try { localStorage.setItem('hamta_pay', btn.dataset.pay); } catch (e) {}
+        });
+    });
+    document.querySelectorAll('[data-take]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('[data-take]').forEach(function (b) {
+                var on = b === btn;
+                b.classList.toggle('is-selected', on);
+                b.setAttribute('aria-pressed', on ? 'true' : 'false');
+            });
+            try { localStorage.setItem('hamta_take', btn.dataset.take); } catch (e) {}
+            render();
+        });
+    });
+    try {
+        var savedPay = localStorage.getItem('hamta_pay');
+        var savedTake = localStorage.getItem('hamta_take');
+        if (savedPay) {
+            var payBtn = document.querySelector('[data-pay="' + savedPay + '"]');
+            if (payBtn) payBtn.click();
+        }
+        if (savedTake) {
+            var takeBtn = document.querySelector('[data-take="' + savedTake + '"]');
+            if (takeBtn) takeBtn.click();
+        }
+    } catch (e) {}
+    render();
+})();
+</script>
 @include('customer.partials.footer')
 </body>
 </html>

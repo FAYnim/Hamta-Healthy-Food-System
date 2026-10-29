@@ -11,8 +11,80 @@
     .links a { color:var(--ink); text-decoration:none; transition:.2s; }
     .links a:hover { color:var(--lime); }
     .bag { display:block; }
+    .bag-wrap { position:relative; display:inline-block; }
     @media (max-width:700px) { :root{--page-pad:12px}.page{padding:19px var(--page-pad) 0}.nav{padding-bottom:18px}.links{gap:13px;font-size:12px}.brand{width:83px} }
+    .hamta-toast-wrap { position:fixed; top:18px; right:18px; z-index:9999; display:flex; flex-direction:column; gap:10px; max-width:min(340px, calc(100vw - 36px)); }
+    .hamta-toast { display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:10px; background:var(--green); color:#fff; font-size:13px; font-weight:600; box-shadow:0 8px 24px rgba(11,65,43,.3); animation:hamta-toast-in .25s ease-out; }
+    .hamta-toast svg { flex:0 0 auto; }
+    @keyframes hamta-toast-in { from { opacity:0; transform:translateX(20px); } to { opacity:1; transform:none; } }
+    @media (max-width:700px) { .hamta-toast-wrap { top:12px; right:12px; } .hamta-toast { font-size:12px; padding:10px 13px; } }
 </style>
+<div class="hamta-toast-wrap" id="hamta-toast-wrap" aria-live="polite"></div>
+<script>
+(function () {
+    var KEY = 'hamta_cart';
+    function getCart() {
+        try {
+            return JSON.parse(localStorage.getItem(KEY)) || [];
+        } catch (e) {
+            return [];
+        }
+    }
+    function showToast(msg) {
+        var wrap = document.getElementById('hamta-toast-wrap');
+        if (!wrap) return;
+        var el = document.createElement('div');
+        el.className = 'hamta-toast';
+        el.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span></span>';
+        el.querySelector('span').textContent = msg;
+        wrap.appendChild(el);
+        setTimeout(function () {
+            el.style.transition = 'opacity .3s, transform .3s';
+            el.style.opacity = '0';
+            el.style.transform = 'translateX(20px)';
+            setTimeout(function () { el.remove(); }, 320);
+        }, 2500);
+    }
+    window.hamtaToast = showToast;
+    window.hamtaGetCart = getCart;
+    window.hamtaSaveCart = function (cart) {
+        try {
+            localStorage.setItem(KEY, JSON.stringify(cart));
+            return true;
+        } catch (e) {
+            return false;
+        }
+    };
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-add-cart]');
+        if (!btn) return;
+        e.preventDefault();
+        var id = parseInt(btn.dataset.id, 10);
+        if (!id) return;
+        var cart = getCart();
+        var existing = cart.find(function (item) { return item.tipe === 'produk' && parseInt(item.id_produk, 10) === id; });
+        if (existing) {
+            existing.jumlah = (parseInt(existing.jumlah, 10) || 1) + 1;
+        } else {
+            cart.push({
+                tipe: 'produk',
+                id_produk: id,
+                nama: btn.dataset.nama || 'Produk',
+                harga: parseFloat(btn.dataset.harga) || 0,
+                foto: btn.dataset.foto || '',
+                jumlah: 1,
+            });
+        }
+        try {
+            localStorage.setItem(KEY, JSON.stringify(cart));
+        } catch (err) {
+            showToast('Keranjang penuh, gagal menyimpan.');
+            return;
+        }
+        showToast((btn.dataset.nama || 'Produk') + ' berhasil dimasukkan ke keranjang');
+    });
+})();
+</script>
 <nav class="nav">
     <a href="{{ route('home') }}#home"><img class="brand" width="108" src="{{ asset('images/hamta-logo-white.png') }}" alt="Hamta"></a>
     <div class="links">

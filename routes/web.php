@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\PromoController;
+use App\Models\KomponenSalad;
 use App\Models\Produk;
 use Illuminate\Support\Facades\Route;
 
@@ -20,9 +21,40 @@ Route::get('/', function () {
     return view('welcome', ['menus' => $menus]);
 })->name('home');
 
-// ─── Customer (halaman statis, belum ada fungsionalitas) ──────────────────────
-Route::view('/daftar-menu', 'customer.daftar-menu')->name('customer.daftar_menu');
-Route::view('/kreasikan-salad', 'customer.kreasikan-salad')->name('customer.kreasikan_salad');
+// ─── Customer ────────────────────────────────────────────────────────────────
+Route::get('/daftar-menu', function () {
+    $bestSellers = Produk::where('status_aktif', true)
+        ->withSum(['detailPesanan as terjual' => fn ($q) => $q->where('status_item', 'aktif')], 'jumlah')
+        ->orderByDesc('terjual')
+        ->orderByDesc('id_produk')
+        ->limit(4)
+        ->get();
+
+    $menus = Produk::where('status_aktif', true)
+        ->orderBy('nama_produk')
+        ->get();
+
+    return view('customer.daftar-menu', [
+        'bestSellers' => $bestSellers,
+        'menusByKategori' => $menus->groupBy('kategori'),
+        'kategoriUrutan' => ['Salad', 'Sandwich', 'Juice'],
+    ]);
+})->name('customer.daftar_menu');
+Route::get('/kreasikan-salad', function () {
+    $base = Produk::where('status_aktif', true)
+        ->where('bisa_dikustom', true)
+        ->orderBy('nama_produk')
+        ->get();
+    $komponen = KomponenSalad::where('status_aktif', true)
+        ->orderBy('nama_komponen')
+        ->get();
+
+    return view('customer.kreasikan-salad', [
+        'baseOptions' => $base,
+        'sayuran' => $komponen->where('jenis', 'sayuran')->values(),
+        'protein' => $komponen->where('jenis', 'protein')->values(),
+    ]);
+})->name('customer.kreasikan_salad');
 Route::view('/checkout', 'customer.checkout')->name('customer.checkout');
 Route::view('/alamat', 'customer.alamat')->name('customer.alamat');
 Route::view('/pembayaran', 'customer.pembayaran')->name('customer.pembayaran');

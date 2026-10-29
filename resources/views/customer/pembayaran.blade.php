@@ -95,20 +95,8 @@
     </section>
 
     <section class="by-card">
-        @foreach (['CAESAR WRAP', 'CHICKEN SANDWICH'] as $menu)
-            <div class="by-item">
-                <div class="by-thumb" aria-hidden="true"></div>
-                <div class="by-item-info">
-                    <span class="by-item-name">{{ $menu }}</span>
-                    <span class="by-item-price">Rp. 25.000</span>
-                </div>
-                <div class="by-qty" aria-label="Jumlah 1">
-                    <span class="by-qty-ctl" aria-hidden="true">-</span>
-                    <span class="by-qty-num">1</span>
-                    <span class="by-qty-ctl" aria-hidden="true">+</span>
-                </div>
-            </div>
-        @endforeach
+        <div id="by-cart-list"></div>
+        <p id="by-cart-empty" style="margin:6px 0 0;font-size:13px;font-weight:600;color:#5b5b5b">Keranjang masih kosong. Yuk tambah menu dulu!</p>
 
         <div class="by-divider"></div>
 
@@ -134,18 +122,124 @@
     </div>
 
     <section class="by-card by-sum">
-        <div class="by-sum-row"><span>Total Pemesanan (2 Menu)</span><span>Rp. 50.000</span></div>
-        <div class="by-sum-row"><span>Biaya Pengiriman</span><span>Rp. 10.000</span></div>
-        <div class="by-sum-row"><span>Biaya Layanan</span><span>Rp. 2.000</span></div>
-        <div class="by-sum-row"><span>Biaya Pengemasan</span><span>Rp. 1.000</span></div>
+        <div class="by-sum-row"><span id="by-total-label">Total Pemesanan (0 Menu)</span><span id="by-subtotal">Rp. 0</span></div>
+        <div class="by-sum-row"><span>Biaya Pengiriman</span><span id="by-ongkir">Rp. 10.000</span></div>
+        <div class="by-sum-row"><span>Biaya Layanan</span><span id="by-layanan">Rp. 2.000</span></div>
+        <div class="by-sum-row"><span>Biaya Pengemasan</span><span id="by-kemas">Rp. 1.000</span></div>
         <div class="by-divider"></div>
-        <div class="by-sum-total"><span>Total Pembayaran</span><span>Rp. 63.000</span></div>
+        <div class="by-sum-total"><span>Total Pembayaran</span><span id="by-total">Rp. 13.000</span></div>
         <p class="by-sum-note">Sudah termasuk pajak</p>
     </section>
 
     <div class="by-cta-wrap">
-        <a class="by-cta" href="#">Konfirmasi Pemesanan</a>
+        <a class="by-cta" href="#" id="by-confirm">Konfirmasi Pemesanan</a>
     </div>
+<script>
+(function () {
+    var list = document.getElementById('by-cart-list');
+    var empty = document.getElementById('by-cart-empty');
+    if (!list) return;
+    var rupiah = function (n) { return 'Rp. ' + new Intl.NumberFormat('id-ID').format(Math.round(n)); };
+    var escapeHtml = function (s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    };
+    function render() {
+        var cart = window.hamtaGetCart ? window.hamtaGetCart() : [];
+        list.textContent = '';
+        empty.style.display = cart.length ? 'none' : '';
+        cart.forEach(function (item, index) {
+            var row = document.createElement('div');
+            row.className = 'by-item';
+            var thumb = document.createElement('div');
+            thumb.className = 'by-thumb';
+            thumb.setAttribute('aria-hidden', 'true');
+            if (item.foto) {
+                var img = document.createElement('img');
+                img.src = item.foto;
+                img.alt = item.nama || 'Menu';
+                img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover';
+                thumb.appendChild(img);
+            }
+            var info = document.createElement('div');
+            info.className = 'by-item-info';
+            var name = document.createElement('span');
+            name.className = 'by-item-name';
+            name.textContent = (item.nama || 'Menu').toUpperCase();
+            var price = document.createElement('span');
+            price.className = 'by-item-price';
+            price.textContent = rupiah(item.harga) + ' x ' + item.jumlah;
+            info.append(name, price);
+            if (item.komponen && item.komponen.length) {
+                var detail = document.createElement('span');
+                detail.className = 'by-item-price';
+                detail.style.cssText = 'display:block;margin-top:2px;font-size:11px;font-weight:500;color:#6f6a5f';
+                detail.textContent = item.komponen.map(function (k) { return k.nama || k; }).join(', ');
+                info.appendChild(detail);
+            }
+            var qty = document.createElement('div');
+            qty.className = 'by-qty';
+            qty.setAttribute('aria-label', 'Jumlah ' + item.jumlah);
+            var minus = document.createElement('button');
+            minus.type = 'button';
+            minus.className = 'by-qty-ctl';
+            minus.textContent = '-';
+            minus.addEventListener('click', function () { step(index, -1); });
+            var num = document.createElement('span');
+            num.className = 'by-qty-num';
+            num.textContent = item.jumlah;
+            var plus = document.createElement('button');
+            plus.type = 'button';
+            plus.className = 'by-qty-ctl';
+            plus.textContent = '+';
+            plus.addEventListener('click', function () { step(index, 1); });
+            var remove = document.createElement('button');
+            remove.type = 'button';
+            remove.textContent = 'Hapus';
+            remove.style.cssText = 'border:0;background:transparent;color:#c0392b;font:inherit;font-size:11px;font-weight:700;cursor:pointer;padding:0';
+            remove.addEventListener('click', function () {
+                var c = window.hamtaGetCart();
+                c.splice(index, 1);
+                window.hamtaSaveCart(c);
+                render();
+            });
+            qty.append(minus, num, plus, remove);
+            row.append(thumb, info, qty);
+            list.appendChild(row);
+        });
+        var subtotal = cart.reduce(function (s, it) { return s + (parseFloat(it.harga) || 0) * (parseInt(it.jumlah, 10) || 0); }, 0);
+        var totalQty = cart.reduce(function (s, it) { return s + (parseInt(it.jumlah, 10) || 0); }, 0);
+        var ongkir = cart.length ? 10000 : 0;
+        var layanan = cart.length ? 2000 : 0;
+        var kemas = cart.length ? 1000 : 0;
+        document.getElementById('by-total-label').textContent = 'Total Pemesanan (' + totalQty + ' Menu)';
+        document.getElementById('by-subtotal').textContent = rupiah(subtotal);
+        document.getElementById('by-ongkir').textContent = rupiah(ongkir);
+        document.getElementById('by-layanan').textContent = rupiah(layanan);
+        document.getElementById('by-kemas').textContent = rupiah(kemas);
+        document.getElementById('by-total').textContent = rupiah(subtotal + ongkir + layanan + kemas);
+    }
+    function step(index, delta) {
+        var cart = window.hamtaGetCart();
+        if (!cart[index]) return;
+        cart[index].jumlah = (parseInt(cart[index].jumlah, 10) || 0) + delta;
+        if (cart[index].jumlah < 1) cart.splice(index, 1);
+        window.hamtaSaveCart(cart);
+        render();
+    }
+    document.getElementById('by-confirm').addEventListener('click', function (e) {
+        e.preventDefault();
+        var cart = window.hamtaGetCart();
+        if (!cart.length) {
+            if (window.hamtaToast) window.hamtaToast('Keranjang masih kosong.');
+            return;
+        }
+        window.location.href = "{{ route('customer.checkout') }}";
+    });
+    render();
+})();
+</script>
 </div>
 @include('customer.partials.footer')
 </body>

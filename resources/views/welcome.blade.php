@@ -66,7 +66,7 @@
                     <span class="product-name">{{ strtoupper($menu->nama_produk) }}</span>
                 </div>
                 <div class="price">Rp. {{ number_format($menu->harga_online, 0, ',', '.') }}</div>
-                <a class="btn" href="#menu">+ Add to Cart</a>
+                <a class="btn" href="#" data-add-cart data-id="{{ $menu->id_produk }}" data-nama="{{ $menu->nama_produk }}" data-harga="{{ $menu->harga_online }}" @if($menu->foto) data-foto="{{ asset('storage/' . $menu->foto) }}" @endif>+ Add to Cart</a>
             </article>
         @empty
             <p class="catalog-empty">Belum ada menu tersedia saat ini.</p>

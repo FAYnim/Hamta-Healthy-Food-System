@@ -21,7 +21,9 @@
         .kreasi-title svg { width:26px; height:26px; flex:0 0 auto; }
 
         .kreasi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
-        .kreasi-opt { margin:0; min-width:0; border:1px solid #e2ddcf; border-radius:9px; background:#fff; overflow:hidden; }
+        .kreasi-opt { margin:0; min-width:0; border:1px solid #e2ddcf; border-radius:9px; background:#fff; overflow:hidden; cursor:pointer; transition:border-color .15s, box-shadow .15s; }
+        .kreasi-opt:hover { border-color:var(--lime); }
+        .kreasi-opt.is-checked { border-color:var(--lime); box-shadow:0 0 0 1px var(--lime); }
         .kreasi-tile { position:relative; aspect-ratio:1.75; background:#e9e9e9; display:grid; place-items:center; overflow:hidden; }
         .kreasi-label { margin:0; padding:9px 6px; text-align:center; font-size:14px; font-weight:600; }
 
@@ -84,22 +86,37 @@
     </div>
 
     @php
-        $sayuran = [
-            ['Lettuce', 'f-lettuce', true],
-            ['Romaine', 'f-romaine', false],
-            ['Purple Cabbage', 'f-purple-cabbage', false],
-            ['Tomato', 'f-tomato', false],
-            ['Cucumber', 'f-cucumber', true],
-            ['Green Peas', 'f-green-peas', false],
-            ['Mixed Vegetable', 'f-mixed', false],
-        ];
-        $protein = [
-            ['Chicken Patty', 'f-chicken', true],
-            ['Beef Patty', 'f-beef', false],
-            ['Ayam Panggang', 'f-ayam', false],
-            ['Telur Rebus', 'f-telur', false],
-        ];
+        $foodClass = function ($nama, $jenis) {
+            $n = strtolower($nama);
+            if (str_contains($n, 'romaine')) return 'f-romaine';
+            if (str_contains($n, 'selada') || str_contains($n, 'lettuce')) return 'f-lettuce';
+            if (str_contains($n, 'kol') || str_contains($n, 'cabbage') || str_contains($n, 'ungu')) return 'f-purple-cabbage';
+            if (str_contains($n, 'tomat') || str_contains($n, 'tomato')) return 'f-tomato';
+            if (str_contains($n, 'timun') || str_contains($n, 'cucumber')) return 'f-cucumber';
+            if (str_contains($n, 'polong') || str_contains($n, 'peas')) return 'f-green-peas';
+            if (str_contains($n, 'mix')) return 'f-mixed';
+            if (str_contains($n, 'beef')) return 'f-beef';
+            if (str_contains($n, 'telur') || str_contains($n, 'egg')) return 'f-telur';
+            if (str_contains($n, 'ayam') || str_contains($n, 'grill')) return 'f-ayam';
+            if (str_contains($n, 'chicken') || str_contains($n, 'patty')) return 'f-chicken';
+            return $jenis === 'protein' ? 'f-chicken' : 'f-mixed';
+        };
+        $rupiah = fn ($n) => 'Rp. ' . number_format((float) $n, 0, ',', '.');
     @endphp
+
+    <section class="kreasi-block">
+        <h2 class="kreasi-title">Salad Dasar</h2>
+        @if ($baseOptions->isEmpty())
+            <p style="font-size:14px;font-weight:600">Belum ada salad dasar yang bisa dikustom.</p>
+        @else
+            <select id="kreasi-base" style="width:100%;padding:12px 14px;border:1.5px solid #426a57;border-radius:11px;font:inherit;font-size:14px;font-weight:600;background:#fff">
+                <option value="" data-harga="0" data-nama="" data-foto="" selected>Pilih salad dasar</option>
+                @foreach ($baseOptions as $base)
+                    <option value="{{ $base->id_produk }}" data-harga="{{ (float) $base->harga_online }}" data-nama="{{ $base->nama_produk }}" data-foto="{{ $base->foto ? asset('storage/' . $base->foto) : '' }}">{{ $base->nama_produk }} — {{ $rupiah($base->harga_online) }}</option>
+                @endforeach
+            </select>
+        @endif
+    </section>
 
     <section class="kreasi-block">
         <h2 class="kreasi-title">
@@ -107,15 +124,21 @@
             Pilih Sayuran
         </h2>
         <div class="kreasi-grid">
-            @foreach ($sayuran as [$name, $food, $checked])
-                <article class="kreasi-opt {{ $checked ? 'is-checked' : '' }}">
+            @forelse ($sayuran as $item)
+                <article class="kreasi-opt" data-komponen-id="{{ $item->id_komponen }}" data-nama="{{ $item->nama_komponen }}" data-harga="{{ (float) $item->harga_tambahan }}" role="button" tabindex="0" aria-pressed="false">
                     <div class="kreasi-tile">
-                        <span class="kreasi-food {{ $food }}"></span>
+                        @if ($item->foto)
+                            <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama_komponen }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" loading="lazy">
+                        @else
+                            <span class="kreasi-food {{ $foodClass($item->nama_komponen, 'sayuran') }}"></span>
+                        @endif
                         <span class="kreasi-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
                     </div>
-                    <p class="kreasi-label">{{ $name }}</p>
+                    <p class="kreasi-label">{{ $item->nama_komponen }}@if ((float) $item->harga_tambahan > 0)<br><small>+{{ $rupiah($item->harga_tambahan) }}</small>@endif</p>
                 </article>
-            @endforeach
+            @empty
+                <p style="font-size:13px;font-weight:600">Belum ada sayuran.</p>
+            @endforelse
         </div>
     </section>
 
@@ -125,25 +148,115 @@
             Pilih Protein
         </h2>
         <div class="kreasi-grid">
-            @foreach ($protein as [$name, $food, $checked])
-                <article class="kreasi-opt {{ $checked ? 'is-checked' : '' }}">
+            @forelse ($protein as $item)
+                <article class="kreasi-opt" data-komponen-id="{{ $item->id_komponen }}" data-nama="{{ $item->nama_komponen }}" data-harga="{{ (float) $item->harga_tambahan }}" role="button" tabindex="0" aria-pressed="false">
                     <div class="kreasi-tile">
-                        <span class="kreasi-food {{ $food }}"></span>
+                        @if ($item->foto)
+                            <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama_komponen }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" loading="lazy">
+                        @else
+                            <span class="kreasi-food {{ $foodClass($item->nama_komponen, 'protein') }}"></span>
+                        @endif
                         <span class="kreasi-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
                     </div>
-                    <p class="kreasi-label">{{ $name }}</p>
+                    <p class="kreasi-label">{{ $item->nama_komponen }}@if ((float) $item->harga_tambahan > 0)<br><small>+{{ $rupiah($item->harga_tambahan) }}</small>@endif</p>
                 </article>
-            @endforeach
+            @empty
+                <p style="font-size:13px;font-weight:600">Belum ada protein.</p>
+            @endforelse
         </div>
     </section>
 
     <div class="kreasi-summary">
         <span class="kreasi-count">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 7v6c0 4 3.4 7 8 8 4.6-1 8-4 8-8V7Z"/><path d="M9 12l2 2 4-4"/></svg>
-            2 bahan dipilih
+            <span id="kreasi-count">0 bahan dipilih</span>
+            <span id="kreasi-price" style="font-weight:800"></span>
         </span>
-        <a class="kreasi-add" href="#">+ Add to Cart</a>
+        <a class="kreasi-add" href="#" id="kreasi-add">+ Add to Cart</a>
     </div>
+<script>
+(function () {
+    var base = document.getElementById('kreasi-base');
+    var count = document.getElementById('kreasi-count');
+    var price = document.getElementById('kreasi-price');
+    var add = document.getElementById('kreasi-add');
+    var rupiah = function (n) { return 'Rp. ' + new Intl.NumberFormat('id-ID').format(Math.round(n)); };
+    function selected() {
+        return Array.prototype.slice.call(document.querySelectorAll('.kreasi-opt.is-checked'));
+    }
+    function state() {
+        var opt = base && base.selectedOptions ? base.selectedOptions[0] : null;
+        var baseId = opt && opt.value ? parseInt(opt.value, 10) : null;
+        var baseHarga = opt && opt.value ? parseFloat(opt.dataset.harga) || 0 : 0;
+        var komponen = selected().map(function (el) {
+            return { id: parseInt(el.dataset.komponenId, 10), nama: el.dataset.nama || '', harga: parseFloat(el.dataset.harga) || 0 };
+        });
+        return {
+            baseId: baseId,
+            baseNama: opt && opt.value ? (opt.dataset.nama || '') : '',
+            baseFoto: opt && opt.value ? (opt.dataset.foto || '') : '',
+            harga: baseHarga + komponen.reduce(function (s, k) { return s + k.harga; }, 0),
+            komponen: komponen,
+        };
+    }
+    function refresh() {
+        var s = state();
+        if (count) count.textContent = s.komponen.length + ' bahan dipilih';
+        if (price) price.textContent = s.baseId ? rupiah(s.harga) : '';
+    }
+    document.querySelectorAll('.kreasi-opt').forEach(function (el) {
+        var toggle = function () {
+            el.classList.toggle('is-checked');
+            el.setAttribute('aria-pressed', el.classList.contains('is-checked') ? 'true' : 'false');
+            refresh();
+        };
+        el.addEventListener('click', toggle);
+        el.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+        });
+    });
+    if (base) base.addEventListener('change', refresh);
+    if (add) add.addEventListener('click', function (e) {
+        e.preventDefault();
+        var s = state();
+        if (!s.baseId) {
+            if (window.hamtaToast) window.hamtaToast('Pilih salad dasar dulu.');
+            return;
+        }
+        if (!s.komponen.length) {
+            if (window.hamtaToast) window.hamtaToast('Pilih minimal satu komponen.');
+            return;
+        }
+        var cart = window.hamtaGetCart ? window.hamtaGetCart() : [];
+        var key = function (ids) { return ids.slice().sort(function (a, b) { return a - b; }).join(','); };
+        var ids = s.komponen.map(function (k) { return k.id; });
+        var existing = null;
+        for (var i = 0; i < cart.length; i++) {
+            if (cart[i].tipe !== 'custom') continue;
+            if (parseInt(cart[i].id_produk, 10) !== s.baseId) continue;
+            var cur = cart[i].id_komponen || (cart[i].komponen || []).map(function (k) { return k.id; });
+            if (key(cur.map(Number)) === key(ids.map(Number))) { existing = cart[i]; break; }
+        }
+        if (existing) {
+            existing.jumlah = (parseInt(existing.jumlah, 10) || 1) + 1;
+        } else {
+            cart.push({
+                tipe: 'custom',
+                id_produk: s.baseId,
+                id_komponen: ids,
+                nama: 'Kreasikan Salad Sendiri (' + s.baseNama + ')',
+                harga: s.harga,
+                foto: s.baseFoto,
+                jumlah: 1,
+                komponen: s.komponen,
+            });
+        }
+        if (window.hamtaSaveCart) window.hamtaSaveCart(cart);
+        if (window.hamtaToast) window.hamtaToast('Kreasi salad berhasil dimasukkan ke keranjang');
+    });
+    refresh();
+})();
+</script>
 </div>
 @include('customer.partials.footer')
 </body>
