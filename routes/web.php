@@ -10,9 +10,14 @@ use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\PromoController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'welcome')->name('home');
+
+// ─── Customer (halaman statis, belum ada fungsionalitas) ──────────────────────
+Route::view('/daftar-menu', 'customer.daftar-menu')->name('customer.daftar_menu');
+Route::view('/kreasikan-salad', 'customer.kreasikan-salad')->name('customer.kreasikan_salad');
+Route::view('/checkout', 'customer.checkout')->name('customer.checkout');
+Route::view('/alamat', 'customer.alamat')->name('customer.alamat');
+Route::view('/pembayaran', 'customer.pembayaran')->name('customer.pembayaran');
 
 // ─── Auth (tidak perlu middleware) ────────────────────────────────────────────
 Route::get('admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
