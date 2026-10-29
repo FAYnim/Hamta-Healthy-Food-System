@@ -1,7 +1,9 @@
 {{-- Partial footer customer: wave + kolom footer. Include di akhir setiap halaman customer. --}}
 <style>
-    footer { margin:0; padding:72px 7% 32px; color:#fff; background:var(--green, #0b412b); display:grid; grid-template-columns:1.1fr 1fr 1fr; gap:25px; }
-    .wave { display:block; width:100%; height:110px; margin:48px 0 0; }
+    html, body { overflow-x:clip; }
+    footer { width:100vw; max-width:100vw; position:relative; left:50%; margin:0 -50vw; padding:72px max(7%, calc((100% - 1180px) / 2 + 22px)) 32px; color:#fff; background:var(--green, #0b412b); display:grid; grid-template-columns:1.1fr 1fr 1fr; gap:25px; }
+    .wave { display:block; width:100vw; max-width:100vw; height:110px; margin:48px -50vw 0; position:relative; left:50%; }
+    .wave path { fill:var(--green, #0b412b); }
     footer .brand { filter:brightness(0) invert(1); width:150px; margin-bottom:9px; }
     footer h4 { margin:0 0 8px; font-size:15px; }
     footer p { font-size:12px; line-height:1.25; margin:0; }

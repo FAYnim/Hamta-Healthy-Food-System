@@ -314,6 +314,7 @@
     render();
 })();
 </script>
+</div>
 @include('customer.partials.footer')
 </body>
 </html>
