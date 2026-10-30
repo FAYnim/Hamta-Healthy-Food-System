@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Hamta — Rincian Pesananmu</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
@@ -126,6 +127,15 @@
     </section>
 
     <section class="co-card">
+        <h2>Alamat Pengiriman</h2>
+        <p class="co-sub" id="co-address-text">Belum ada alamat dipilih. Atur alamat pengirimanmu dulu.</p>
+        <a class="co-opt" href="{{ route('customer.alamat') }}" style="margin-top:12px;text-decoration:none;color:inherit">
+            <span class="co-opt-radio" aria-hidden="true"></span>
+            <span>Atur Alamat<small>Pilih atau tambah alamat pengiriman</small></span>
+        </a>
+    </section>
+
+    <section class="co-card">
         <h2>Rincian Pesanan</h2>
         <div id="co-cart-list"></div>
         <p id="co-cart-empty" class="co-item-note">Keranjang masih kosong. Yuk tambah menu dulu!</p>
@@ -176,16 +186,27 @@
         <div class="co-info" style="margin-top:14px">
             <div>
                 <span class="co-info-label">No. Pesanan</span>
-                <span class="co-info-value"><span>1234567890123456789</span><span class="co-copy">SALIN</span></span>
+                <span class="co-info-value"><span id="co-order-code">—</span><button type="button" class="co-copy" id="co-copy">SALIN</button></span>
             </div>
             <div>
                 <span class="co-info-label">Waktu Pemesanan</span>
-                <span class="co-info-value"><span>18 Oktober 2026 14:04</span></span>
+                <span class="co-info-value"><span id="co-order-time">—</span></span>
             </div>
         </div>
+        <p class="co-sub" id="co-order-msg" role="status" style="display:none"></p>
+        <button type="button" class="co-opt is-selected" id="co-submit" style="margin-top:12px;width:100%;justify-content:center">
+            <span id="co-submit-label">Buat Pesanan</span>
+        </button>
     </section>
 <script>
 (function () {
+    var addressText = document.getElementById('co-address-text');
+    try {
+        var saved = JSON.parse(localStorage.getItem('hamta_address') || 'null');
+        if (saved && addressText) {
+            addressText.textContent = [saved.nama, saved.telepon, saved.alamat].filter(Boolean).join(' • ');
+        }
+    } catch (e) {}
     var list = document.getElementById('co-cart-list');
     var empty = document.getElementById('co-cart-empty');
     if (!list) return;
@@ -311,6 +332,102 @@
             if (takeBtn) takeBtn.click();
         }
     } catch (e) {}
+    function currentPay() {
+        var sel = document.querySelector('[data-pay].is-selected');
+        return sel ? sel.dataset.pay : 'qris';
+    }
+    function showMsg(text, isError) {
+        var el = document.getElementById('co-order-msg');
+        if (!el) return;
+        el.style.display = '';
+        el.style.color = isError ? '#c0392b' : '';
+        el.textContent = text;
+    }
+    var copyBtn = document.getElementById('co-copy');
+    if (copyBtn) copyBtn.addEventListener('click', function () {
+        var code = (document.getElementById('co-order-code') || {}).textContent || '';
+        if (!code || code === '—') return;
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code);
+            }
+            if (window.hamtaToast) window.hamtaToast('Kode pesanan disalin');
+        } catch (e) {}
+    });
+    var submitBtn = document.getElementById('co-submit');
+    var submitLabel = document.getElementById('co-submit-label');
+    if (submitBtn) submitBtn.addEventListener('click', function () {
+        var cart = window.hamtaGetCart ? window.hamtaGetCart() : [];
+        if (!cart.length) {
+            showMsg('Keranjang masih kosong. Yuk tambah menu dulu!', true);
+            if (window.hamtaToast) window.hamtaToast('Keranjang masih kosong.');
+            return;
+        }
+        var take = currentTake();
+        var savedAddr = null;
+        try { savedAddr = JSON.parse(localStorage.getItem('hamta_address') || 'null'); } catch (e) {}
+        if (take === 'delivery' && (!savedAddr || !savedAddr.alamat)) {
+            showMsg('Alamat delivery belum dipilih. Atur alamat pengiriman dulu ya.', true);
+            if (window.hamtaToast) window.hamtaToast('Pilih alamat pengiriman dulu.');
+            window.location.href = "{{ route('customer.alamat') }}";
+            return;
+        }
+        var token = (document.querySelector('meta[name="csrf-token"]') || {}).content || '';
+        var payloadCart = cart.map(function (it) {
+            var ids = it.id_komponen || (it.komponen || []).map(function (k) { return k.id; });
+            return {
+                tipe: it.tipe === 'custom' ? 'custom' : 'produk',
+                id_produk: parseInt(it.id_produk, 10),
+                id_komponen: (ids || []).map(function (id) { return parseInt(id, 10); }).filter(Boolean),
+                jumlah: parseInt(it.jumlah, 10) || 1,
+            };
+        });
+        var payload = {
+            nama_pelanggan: (savedAddr && savedAddr.nama) || null,
+            no_whatsapp: (savedAddr && savedAddr.telepon) || null,
+            metode_ambil: take,
+            alamat_delivery: take === 'delivery' && savedAddr
+                ? [savedAddr.alamat, savedAddr.patokan].filter(Boolean).join(' — ')
+                : null,
+            metode_bayar: currentPay(),
+            cart: payloadCart,
+        };
+        submitBtn.disabled = true;
+        if (submitLabel) submitLabel.textContent = 'Memproses...';
+        fetch("{{ route('customer.checkout.store') }}", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': token },
+            body: JSON.stringify(payload),
+        }).then(function (res) {
+            return res.json().then(function (body) { return { ok: res.ok, body: body }; });
+        }).then(function (out) {
+            submitBtn.disabled = false;
+            if (submitLabel) submitLabel.textContent = 'Buat Pesanan';
+            if (!out.ok) {
+                var firstErr = out.body && out.body.errors
+                    ? Object.values(out.body.errors).flat()[0]
+                    : null;
+                showMsg(firstErr || (out.body && out.body.message) || 'Gagal membuat pesanan. Coba lagi.', true);
+                return;
+            }
+            var codeEl = document.getElementById('co-order-code');
+            var timeEl = document.getElementById('co-order-time');
+            if (codeEl) codeEl.textContent = out.body.kode_pesanan || '—';
+            if (timeEl) {
+                try {
+                    timeEl.textContent = new Intl.DateTimeFormat('id-ID', { dateStyle: 'long', timeStyle: 'short' }).format(new Date());
+                } catch (e) { timeEl.textContent = 'Baru saja'; }
+            }
+            showMsg('Pesanan berhasil dibuat! Kode: ' + out.body.kode_pesanan, false);
+            if (window.hamtaToast) window.hamtaToast('Pesanan ' + out.body.kode_pesanan + ' berhasil dibuat');
+            window.hamtaSaveCart([]);
+            render();
+        }).catch(function () {
+            submitBtn.disabled = false;
+            if (submitLabel) submitLabel.textContent = 'Buat Pesanan';
+            showMsg('Gagal membuat pesanan. Periksa koneksi lalu coba lagi.', true);
+        });
+    });
     render();
 })();
 </script>

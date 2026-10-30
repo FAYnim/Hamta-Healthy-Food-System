@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\PromoController;
+use App\Http\Controllers\Customer\CheckoutController;
 use App\Models\KomponenSalad;
 use App\Models\Produk;
 use Illuminate\Support\Facades\Route;
@@ -56,6 +57,7 @@ Route::get('/kreasikan-salad', function () {
     ]);
 })->name('customer.kreasikan_salad');
 Route::view('/checkout', 'customer.checkout')->name('customer.checkout');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('customer.checkout.store');
 Route::view('/alamat', 'customer.alamat')->name('customer.alamat');
 Route::view('/pembayaran', 'customer.pembayaran')->name('customer.pembayaran');
 
