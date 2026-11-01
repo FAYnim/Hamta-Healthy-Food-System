@@ -87,11 +87,11 @@
 
     <section class="by-card by-address">
         <div>
-            <strong>Brendata Najwa Firki Hid...</strong>
-            <span>(+62) 823-3112-9819</span>
-            <p>Jl. Lidah Kulon Gg. 1, Lidah Kulon, Kec. Lakarsantri, Surabaya</p>
+            <strong id="by-addr-name">Brendata Najwa</strong>
+            <span id="by-addr-phone">(+62) 823-3112-9819</span>
+            <p id="by-addr-detail">Jl. Lidah Kulon Gg. 1, Lidah Kulon, Kec. Lakarsantri, Surabaya</p>
         </div>
-        <a class="by-ubah" href="#">Ubah</a>
+        <a class="by-ubah" href="{{ route('customer.alamat') }}">Ubah</a>
     </section>
 
     <section class="by-card">
@@ -145,6 +145,14 @@
             .replace(/&/g, '&amp;').replace(/</g, '&lt;')
             .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     };
+    try {
+        var savedAddr = JSON.parse(localStorage.getItem('hamta_address') || 'null');
+        if (savedAddr) {
+            if (savedAddr.nama) document.getElementById('by-addr-name').textContent = savedAddr.nama;
+            if (savedAddr.telepon) document.getElementById('by-addr-phone').textContent = savedAddr.telepon;
+            if (savedAddr.alamat) document.getElementById('by-addr-detail').textContent = [savedAddr.alamat, savedAddr.patokan].filter(Boolean).join(' (Patokan: ') + (savedAddr.patokan ? ')' : '');
+        }
+    } catch (e) {}
     function render() {
         var cart = window.hamtaGetCart ? window.hamtaGetCart() : [];
         list.textContent = '';

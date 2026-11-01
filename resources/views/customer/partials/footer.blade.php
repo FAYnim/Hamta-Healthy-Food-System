@@ -1,14 +1,160 @@
-{{-- Partial footer customer: wave + kolom footer. Include di akhir setiap halaman customer. --}}
-<style>
-    html, body { overflow-x:clip; }
-    footer { width:100vw; max-width:100vw; position:relative; left:50%; margin:0 -50vw; padding:72px max(7%, calc((100% - 1180px) / 2 + 22px)) 32px; color:#fff; background:var(--green, #0b412b); display:grid; grid-template-columns:1.1fr 1fr 1fr; gap:25px; }
-    .wave { display:block; width:100vw; max-width:100vw; height:110px; margin:48px -50vw 0; position:relative; left:50%; }
-    .wave path { fill:var(--green, #0b412b); }
-    footer .brand { filter:brightness(0) invert(1); width:150px; margin-bottom:9px; }
-    footer h4 { margin:0 0 8px; font-size:15px; }
-    footer p { font-size:12px; line-height:1.25; margin:0; }
-    .map { height:115px; background:linear-gradient(135deg,#e8e1d0,#c6d5c1); border:5px solid white; color:#55836b; display:grid; place-items:center; font-size:12px; }
-    @media (max-width:700px) { footer{padding:48px 25px 28px;grid-template-columns:1fr 1fr;gap:25px 15px}.wave{height:55px;margin-top:28px}footer>div:first-child{grid-column:1/-1}footer .brand{width:120px}.map{height:85px} }
-</style>
-<svg class="wave" viewBox="0 0 1440 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path fill="#0b412b" d="M0,160L48,149.3C96,139,192,117,288,96C384,75,480,53,576,53.3C672,53,768,75,864,101.3C960,128,1056,160,1152,149.3C1248,139,1344,85,1392,58.7L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"/></svg>
-<footer><div><img class="brand" src="{{ asset('images/hamta-logo-nobg.svg') }}" alt="Hamta"><p>Eat Good, Feel Good</p></div><div><h4>Lokasi Kita</h4><p>Lidah Kulon<br>Rumah Produksi,<br>Jl. Lidah Kulon Gg. 1, Lidah Kulon,<br>Kec. Lakarsantri,<br>Surabaya, Jawa Timur<br>60213</p></div><div><div class="map">Lidah Kulon • Surabaya</div></div><div><h4>Our Sosmed</h4></div><div><h4>Contact Us</h4></div></footer>
+{{-- Partial footer customer: wave + kolom footer + switcher cabang. --}}
+<!-- ─── FOOTER WITH WAVE & BRANCH SWITCHER ─────────────────────────── -->
+<div class="relative w-full overflow-hidden leading-none mt-16">
+    <!-- SVG Wave Transisi -->
+    <svg class="block w-full h-12 md:h-20 text-[#0B412B] fill-current" viewBox="0 0 1440 120" preserveAspectRatio="none">
+        <path d="M0,32L60,42.7C120,53,240,75,360,74.7C480,75,600,53,720,48C840,43,960,53,1080,64C1200,75,1320,85,1380,90.7L1440,96L1440,120L1380,120C1320,120,1200,120,1080,120C960,120,840,120,720,120C600,120,480,120,360,120C240,120,120,120,60,120L0,120Z"></path>
+    </svg>
+</div>
+
+<footer id="lokasi" class="bg-[#0B412B] text-white pt-6 pb-14 px-4 sm:px-6">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12">
+        <!-- Kolom 1: Brand & Identitas -->
+        <div class="md:col-span-4 flex flex-col justify-between">
+            <div>
+                <a href="{{ route('home') }}" class="inline-block">
+                    <img 
+                        src="{{ asset('images/hamta-logo-white.png') }}" 
+                        alt="Brand Logo" 
+                        class="h-10 w-auto brightness-0 invert"
+                    >
+                </a>
+                <p class="text-emerald-300 font-bold text-sm tracking-wide mt-2">
+                    Eat Good, Feel Good
+                </p>
+                <p class="text-gray-300 text-xs mt-3 leading-relaxed">
+                    Menyajikan aneka salad segar, wrap, sandwich sehat, dan fresh juice berkualitas dengan harga terjangkau di Surabaya.
+                </p>
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-white/10">
+                <p class="text-[11px] text-gray-400">
+                    &copy; {{ date('Y') }} Hamta Healthy Food. All rights reserved.
+                </p>
+            </div>
+        </div>
+
+        <!-- Kolom 2: Cabang dengan Switcher Tab Interaktif -->
+        <div class="md:col-span-5">
+            <h4 class="text-sm font-bold uppercase tracking-wider text-emerald-400 mb-3">
+                Cabang & Lokasi Kami
+            </h4>
+            
+            <!-- Tombol Switcher Tab -->
+            <div class="flex gap-2 p-1 bg-white/10 rounded-xl mb-4 text-xs font-bold">
+                <button 
+                    type="button" 
+                    id="btn-cabang-1"
+                    onclick="pilihCabangFooter(1)" 
+                    class="flex-1 py-1.5 px-3 rounded-lg bg-[#65BD5E] text-[#0B412B] transition-all cursor-pointer"
+                >
+                    Lidah Kulon
+                </button>
+                <button 
+                    type="button" 
+                    id="btn-cabang-2"
+                    onclick="pilihCabangFooter(2)" 
+                    class="flex-1 py-1.5 px-3 rounded-lg text-white hover:bg-white/10 transition-all cursor-pointer"
+                >
+                    MERR (Bale Hinggil)
+                </button>
+            </div>
+
+            <!-- Detail Cabang 1: Lidah Kulon -->
+            <div id="content-cabang-1" class="space-y-2 text-xs leading-relaxed text-gray-200">
+                <div class="p-3.5 rounded-xl bg-white/5 border border-white/10">
+                    <span class="inline-block px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-semibold text-[10px] mb-1">
+                        Dapur Produksi & Online Order
+                    </span>
+                    <p class="font-bold text-white text-[13px]">Cabang Lidah Kulon</p>
+                    <p class="text-gray-300 mt-1">
+                        Rumah Produksi, Jl. Lidah Kulon Gg. 1, Lakarsantri, Surabaya, Jawa Timur 60213
+                    </p>
+                    <p class="text-[11px] text-emerald-200 mt-2 font-medium">
+                        🕒 Buka: 09.00 - 21.00 WIB (Pickup & Delivery)
+                    </p>
+                </div>
+            </div>
+
+            <!-- Detail Cabang 2: MERR -->
+            <div id="content-cabang-2" class="hidden space-y-2 text-xs leading-relaxed text-gray-200">
+                <div class="p-3.5 rounded-xl bg-white/5 border border-white/10">
+                    <span class="inline-block px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-semibold text-[10px] mb-1">
+                        Dine-in & Takeaway Langsung
+                    </span>
+                    <p class="font-bold text-white text-[13px]">Cabang MERR (Apartemen Bale Hinggil)</p>
+                    <p class="text-gray-300 mt-1">
+                        Bale Hinggil Apartment (Jl. Dr. Ir. H. Soekarno / MERR), Rungkut, Surabaya
+                    </p>
+                    <p class="text-[11px] text-emerald-200 mt-2 font-medium">
+                        🕒 Buka: 09.00 - 21.00 WIB setiap hari (Dine-in & Pickup)
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kolom 3: Kontak & Media Sosial -->
+        <div class="md:col-span-3 space-y-4">
+            <div>
+                <h4 class="text-sm font-bold uppercase tracking-wider text-emerald-400 mb-2">
+                    Hubungi Kami
+                </h4>
+                <p class="text-xs text-gray-300">
+                    Punya pertanyaan seputar katering sehat atau pesanan partai besar?
+                </p>
+                <div class="mt-3 flex flex-col gap-2">
+                    <a 
+                        href="{{ route('customer.riwayat_pesanan') }}" 
+                        class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-[#65BD5E] hover:text-[#0B412B] text-xs font-bold transition-all text-white"
+                    >
+                        <span>📋 Riwayat Pemesanan</span>
+                    </a>
+                    <a 
+                        href="{{ route('customer.status_pesanan') }}" 
+                        class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-[#65BD5E] hover:text-[#0B412B] text-xs font-bold transition-all text-white"
+                    >
+                        <span>🔍 Lacak Status Pesanan</span>
+                    </a>
+                    <a 
+                        href="https://wa.me/6281234567890" 
+                        target="_blank" 
+                        class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-[#65BD5E] hover:text-[#0B412B] text-xs font-bold transition-all text-white"
+                    >
+                        <span>💬 WhatsApp: 0812-3456-7890</span>
+                    </a>
+                    <a 
+                        href="https://instagram.com/hamtash.salad" 
+                        target="_blank" 
+                        class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-[#65BD5E] hover:text-[#0B412B] text-xs font-bold transition-all text-white"
+                    >
+                        <span>📸 Instagram: @hamtash.salad</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- JavaScript Switcher Cabang Footer -->
+<script>
+    function pilihCabangFooter(id) {
+        const btn1 = document.getElementById('btn-cabang-1');
+        const btn2 = document.getElementById('btn-cabang-2');
+        const content1 = document.getElementById('content-cabang-1');
+        const content2 = document.getElementById('content-cabang-2');
+
+        if (!btn1 || !btn2 || !content1 || !content2) return;
+
+        if (id === 1) {
+            btn1.className = 'flex-1 py-1.5 px-3 rounded-lg bg-[#65BD5E] text-[#0B412B] transition-all cursor-pointer';
+            btn2.className = 'flex-1 py-1.5 px-3 rounded-lg text-white hover:bg-white/10 transition-all cursor-pointer';
+            content1.classList.remove('hidden');
+            content2.classList.add('hidden');
+        } else {
+            btn2.className = 'flex-1 py-1.5 px-3 rounded-lg bg-[#65BD5E] text-[#0B412B] transition-all cursor-pointer';
+            btn1.className = 'flex-1 py-1.5 px-3 rounded-lg text-white hover:bg-white/10 transition-all cursor-pointer';
+            content2.classList.remove('hidden');
+            content1.classList.add('hidden');
+        }
+    }
+</script>

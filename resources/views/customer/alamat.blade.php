@@ -48,6 +48,15 @@
         .al-btn { flex:1; padding:12px 14px; border-radius:11px; border:2px solid var(--green); font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; }
         .al-btn-cancel { background:transparent; color:var(--green); }
         .al-btn-save { background:var(--green); color:#fff; }
+
+        .al-badge-selected { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:var(--green); background:#eef5ea; border:1px solid rgba(101,189,94,.5); padding:2px 8px; border-radius:6px; }
+        .al-card-footer { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; padding-top:10px; border-top:1px dashed rgba(11,65,43,.15); flex-wrap:wrap; }
+        .al-use-btn { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:8px; border:1.5px solid var(--green); background:var(--green); color:#fff; font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; transition:all .15s; }
+        .al-use-btn:hover { background:#16613f; }
+        .al-use-btn-secondary { background:transparent; color:var(--green); border-color:var(--green); }
+        .al-use-btn-secondary:hover { background:#eef5ea; }
+        .al-checkout-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; margin:16px 0 8px; padding:14px 18px; border:2px solid var(--green); border-radius:13px; background:var(--green); color:#fff; font-family:inherit; font-size:15px; font-weight:700; cursor:pointer; transition:all .15s; box-sizing:border-box; text-decoration:none; }
+        .al-checkout-btn:hover { background:#16613f; }
         @media (max-width:700px) {
             .al-head { gap:10px; margin-bottom:16px; }
             .al-back { width:34px; height:34px; }
@@ -79,6 +88,11 @@
     </div>
 
     <div class="al-list" id="al-list"></div>
+
+    <button type="button" class="al-checkout-btn" id="al-checkout-btn" style="display:none">
+        <span>Gunakan Alamat Terpilih &amp; Lanjut Checkout</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </button>
 
     <div class="al-empty" id="al-empty" hidden>
         <p>Belum ada alamat tersimpan</p>
@@ -125,6 +139,7 @@
     var ACTIVE_KEY = 'hamta_address';
     var list = document.getElementById('al-list');
     var empty = document.getElementById('al-empty');
+    var checkoutBtn = document.getElementById('al-checkout-btn');
     var addBtn = document.getElementById('al-add');
     var modal = document.getElementById('al-modal');
     var modalTitle = document.getElementById('al-modal-title');
@@ -165,14 +180,21 @@
     function render() {
         var items = loadList();
         var sel = activeId();
+        if (items.length > 0 && (!sel || !items.some(function (it) { return it.id === sel; }))) {
+            sel = items[0].id;
+            try { localStorage.setItem(ACTIVE_KEY, JSON.stringify(items[0])); } catch (e) {}
+        }
         list.textContent = '';
         empty.hidden = items.length > 0;
+        if (checkoutBtn) checkoutBtn.style.display = items.length > 0 ? 'flex' : 'none';
+
         items.forEach(function (item) {
+            var isSel = item.id === sel;
             var card = document.createElement('article');
-            card.className = 'al-card' + (item.id === sel ? ' is-selected' : '');
+            card.className = 'al-card' + (isSel ? ' is-selected' : '');
             card.setAttribute('role', 'button');
             card.setAttribute('tabindex', '0');
-            card.setAttribute('aria-pressed', item.id === sel ? 'true' : 'false');
+            card.setAttribute('aria-pressed', isSel ? 'true' : 'false');
             card.dataset.id = item.id;
 
             var radio = document.createElement('span');
@@ -215,9 +237,35 @@
             if (item.patokan) {
                 var region = document.createElement('p');
                 region.className = 'al-region';
-                region.textContent = item.patokan;
+                region.textContent = 'Patokan: ' + item.patokan;
                 body.appendChild(region);
             }
+
+            var cardFooter = document.createElement('div');
+            cardFooter.className = 'al-card-footer';
+
+            if (isSel) {
+                var badge = document.createElement('span');
+                badge.className = 'al-badge-selected';
+                badge.textContent = '✓ Alamat Terpilih';
+
+                var useBtn = document.createElement('button');
+                useBtn.type = 'button';
+                useBtn.className = 'al-use-btn';
+                useBtn.dataset.act = 'use';
+                useBtn.textContent = 'Gunakan untuk Checkout →';
+
+                cardFooter.append(badge, useBtn);
+            } else {
+                var pickBtn = document.createElement('button');
+                pickBtn.type = 'button';
+                pickBtn.className = 'al-use-btn al-use-btn-secondary';
+                pickBtn.dataset.act = 'use';
+                pickBtn.textContent = 'Pilih & Gunakan Alamat Ini';
+
+                cardFooter.append(pickBtn);
+            }
+            body.appendChild(cardFooter);
 
             card.append(radio, body);
 
@@ -225,17 +273,17 @@
                 var act = e.target && e.target.dataset ? e.target.dataset.act : null;
                 if (act === 'edit') { openModal(item.id); return; }
                 if (act === 'del') { removeItem(item.id); return; }
-                selectItem(item.id);
+                selectItem(item.id, true);
             });
             card.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectItem(item.id); }
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectItem(item.id, true); }
             });
 
             list.appendChild(card);
         });
     }
 
-    function selectItem(id) {
+    function selectItem(id, andReturn) {
         var items = loadList();
         var found = null;
         items.forEach(function (item) { if (item.id === id) found = item; });
@@ -243,6 +291,11 @@
         try { localStorage.setItem(ACTIVE_KEY, JSON.stringify(found)); } catch (e) {}
         render();
         toast('Alamat pengiriman dipilih');
+        if (andReturn) {
+            setTimeout(function () {
+                window.location.href = "{{ route('customer.checkout') }}";
+            }, 300);
+        }
     }
 
     function removeItem(id) {
@@ -306,6 +359,10 @@
                     ? { id: item.id, nama: nama, telepon: telepon, alamat: alamat, patokan: patokan }
                     : item;
             });
+            var updated = items.find(function(it) { return it.id === editingId; });
+            if (activeId() === editingId && updated) {
+                try { localStorage.setItem(ACTIVE_KEY, JSON.stringify(updated)); } catch (e) {}
+            }
         } else {
             var entry = {
                 id: 'addr-' + Date.now().toString(36),
@@ -325,8 +382,22 @@
         }
         closeModal();
         render();
-        toast('Alamat tersimpan');
+        toast('Alamat tersimpan! Mengalihkan ke checkout...');
+        setTimeout(function () {
+            window.location.href = "{{ route('customer.checkout') }}";
+        }, 350);
     });
+
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', function () {
+            var active = loadActive();
+            if (!active && loadList().length > 0) {
+                selectItem(loadList()[0].id, true);
+            } else {
+                window.location.href = "{{ route('customer.checkout') }}";
+            }
+        });
+    }
 
     addBtn.addEventListener('click', function () { openModal(null); });
     document.getElementById('al-cancel').addEventListener('click', closeModal);

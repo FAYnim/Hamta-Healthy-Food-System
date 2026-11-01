@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\PromoController;
 use App\Http\Controllers\Customer\CheckoutController;
+use App\Http\Controllers\Customer\RiwayatPesananController;
+use App\Http\Controllers\Customer\StatusPesananController;
 use App\Models\KomponenSalad;
 use App\Models\Produk;
 use Illuminate\Support\Facades\Route;
@@ -60,6 +62,10 @@ Route::view('/checkout', 'customer.checkout')->name('customer.checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('customer.checkout.store');
 Route::view('/alamat', 'customer.alamat')->name('customer.alamat');
 Route::view('/pembayaran', 'customer.pembayaran')->name('customer.pembayaran');
+Route::get('/status-pesanan/{kode?}', [StatusPesananController::class, 'show'])->name('customer.status_pesanan');
+Route::get('/api/pesanan/{kode}/status', [StatusPesananController::class, 'cek'])->name('customer.pesanan.api_status');
+Route::get('/riwayat-pesanan', [RiwayatPesananController::class, 'index'])->name('customer.riwayat_pesanan');
+Route::post('/api/pesanan/riwayat', [RiwayatPesananController::class, 'fetchHistory'])->name('customer.pesanan.api_riwayat');
 
 // ─── Auth (tidak perlu middleware) ────────────────────────────────────────────
 Route::get('admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
@@ -91,6 +97,8 @@ Route::middleware('admin.auth')->group(function () {
         ->name('admin.daftar_pesanan.show');
     Route::patch('/admin/daftar-pesanan/{id}/status', [PesananController::class, 'updateStatus'])
         ->name('admin.daftar_pesanan.status');
+    Route::patch('/admin/daftar-pesanan/{id}/pembayaran', [PesananController::class, 'updatePembayaran'])
+        ->name('admin.daftar_pesanan.pembayaran');
     Route::patch('/admin/daftar-pesanan/{id}/ongkir', [PesananController::class, 'konfirmasiOngkir'])
         ->name('admin.daftar_pesanan.ongkir');
     Route::patch('/admin/daftar-pesanan/item/{id}/batal', [PesananController::class, 'batalkanItem'])

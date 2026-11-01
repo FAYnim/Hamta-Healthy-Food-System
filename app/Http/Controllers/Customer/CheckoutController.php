@@ -20,6 +20,14 @@ class CheckoutController extends Controller
 {
     public function store(Request $request): JsonResponse
     {
+        // Decode cart jika dikirim via FormData multipart sebagai string JSON
+        if (is_string($request->input('cart'))) {
+            $decoded = json_decode($request->input('cart'), true);
+            if (is_array($decoded)) {
+                $request->merge(['cart' => $decoded]);
+            }
+        }
+
         // Validasi input checkout guest (tanpa auth, alamat hanya snapshot string).
         // Nama & WA nullable mengikuti kolom DB (pickup tanpa alamat tersimpan tetap bisa order).
         $data = $request->validate([
@@ -28,6 +36,7 @@ class CheckoutController extends Controller
             'metode_ambil' => ['required', Rule::in(['pickup', 'delivery'])],
             'alamat_delivery' => ['required_if:metode_ambil,delivery', 'nullable', 'string', 'max:255'],
             'metode_bayar' => ['required', Rule::in(['qris', 'tunai'])],
+            'bukti_bayar' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
             'cart' => ['required', 'array', 'min:1'],
             'cart.*.tipe' => ['required', Rule::in(['produk', 'custom'])],
             'cart.*.id_produk' => ['required', 'integer'],
@@ -35,6 +44,11 @@ class CheckoutController extends Controller
             'cart.*.id_komponen.*' => ['integer'],
             'cart.*.jumlah' => ['required', 'integer', 'min:1'],
         ]);
+
+        $buktiBayarPath = null;
+        if ($request->hasFile('bukti_bayar')) {
+            $buktiBayarPath = $request->file('bukti_bayar')->store('bukti_bayar', 'public');
+        }
 
         // ponytail: belum ada pilihan cabang di UI checkout, pakai cabang pertama
         // sebagai fallback sementara; ganti dengan pilihan cabang / cabang terdekat bila sudah ada.
@@ -47,7 +61,7 @@ class CheckoutController extends Controller
         }
 
         // Bungkus simpan pesanan + detail dalam 1 transaksi DB (pola sama seperti KasirController@store)
-        $pesanan = DB::transaction(function () use ($data, $cabang) {
+        $pesanan = DB::transaction(function () use ($data, $cabang, $buktiBayarPath) {
             // Kumpulkan id produk & id komponen dari keranjang supaya master cukup di-query 1x
             $produkIds = collect($data['cart'])->pluck('id_produk')->unique()->values();
             $komponenIds = collect($data['cart'])->pluck('id_komponen')->flatten()->unique()->values();
@@ -137,7 +151,7 @@ class CheckoutController extends Controller
                 // Total sementara = subtotal (sebelum promo); ongkir delivery menyusul konfirmasi admin
                 'total_bayar' => round($subtotal, 2),
                 'metode_bayar' => $data['metode_bayar'],
-                'bukti_bayar' => null,
+                'bukti_bayar' => $buktiBayarPath,
                 'status_pembayaran' => 'menunggu_verifikasi',
                 'status_pesanan' => 'diproses',
                 'id_admin' => null,
@@ -175,6 +189,17 @@ class CheckoutController extends Controller
         return response()->json([
             'kode_pesanan' => $pesanan->kode_pesanan,
             'id_pesanan' => $pesanan->id_pesanan,
+            'total_bayar' => (float) $pesanan->total_bayar,
+            'subtotal' => (float) $pesanan->subtotal,
+            'total_diskon' => (float) $pesanan->total_diskon,
+            'metode_bayar' => $pesanan->metode_bayar,
+            'metode_ambil' => $pesanan->metode_ambil,
+            'nama_pelanggan' => $pesanan->nama_pelanggan,
+            'no_whatsapp' => $pesanan->no_whatsapp,
+            'alamat_delivery' => $pesanan->alamat_delivery,
+            'status_pesanan' => $pesanan->status_pesanan,
+            'status_pembayaran' => $pesanan->status_pembayaran,
+            'created_at' => $pesanan->created_at?->format('d M Y, H:i') ?? now()->format('d M Y, H:i'),
         ], 201);
     }
 
