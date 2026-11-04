@@ -53,7 +53,7 @@
             <div class="relative z-10 max-w-2xl px-6 sm:px-12 py-10 text-white">
                 <!-- Top Badge -->
                 <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#65BD5E]/20 text-[#65BD5E] border border-[#65BD5E]/40 text-xs font-extrabold uppercase tracking-widest mb-4 backdrop-blur-xs">
-                    🥗 Solusi Makan Sehat Hemat Surabaya
+                    <x-lucide-salad class="w-3.5 h-3.5 inline-block text-[#65BD5E]" /> Solusi Makan Sehat Hemat Surabaya
                 </span>
 
                 <!-- Main Title -->
@@ -82,23 +82,24 @@
                         href="{{ route('customer.kreasikan_salad') }}" 
                         class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 text-white border border-white/25 font-bold text-sm sm:text-base transition-all duration-200 backdrop-blur-xs flex items-center gap-2"
                     >
-                        <span>✨ Kreasikan Salad Sendiri</span>
+                        <x-lucide-sparkles class="w-4 h-4 text-[#65BD5E]" />
+                        <span>Kreasikan Salad Sendiri</span>
                     </a>
                 </div>
 
                 <!-- Micro Features -->
                 <div class="mt-8 pt-6 border-t border-white/15 grid grid-cols-3 gap-4 text-xs font-medium text-gray-200">
                     <div class="flex items-center gap-2">
-                        <span class="text-base">🥬</span>
+                        <x-lucide-leaf class="w-4 h-4 text-[#65BD5E]" />
                         <span>100% Sayur Segar</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="text-base">💸</span>
+                        <x-lucide-badge-percent class="w-4 h-4 text-[#65BD5E]" />
                         <span>Harga Lebih Murah</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="text-base">⚡</span>
-                        <span>Pickup & Delivery</span>
+                        <x-lucide-zap class="w-4 h-4 text-[#65BD5E]" />
+                        <span>Pickup &amp; Delivery</span>
                     </div>
                 </div>
             </div>
@@ -126,7 +127,13 @@
     </div>
     <h2 id="kreasi">Event Terbaru dari Hamta Salad</h2>
     <section class="event"><div class="event-copy"><h3>Coba kreasi salad bareng teman-teman!</h3><p>Bingung mau ngapain bareng temen-temen? Mending kreasi Salad kalian dan makan bareng-bareng!</p><a class="btn" href="{{ route('customer.kreasikan_salad') }}">Coba Sekarang!</a></div><img class="event-img" src="{{ asset('images/salad-1-clean.webp') }}" alt="Salad segar Hamta"></section>
-    <section class="store" id="promo"><div><h3>Penasaran cerita di balik usaha Hamta Salad?</h3><p>Cuss kepoin!</p><a class="btn" href="#promo">Kepoin sekarang!</a></div></section>
+    <section class="store" id="cerita">
+        <div>
+            <h3>Penasaran cerita di balik usaha Hamta Salad?</h3>
+            <p>Dari impian makan sehat terjangkau hingga menghadirkan salad segar higienis untuk Surabaya. Cuss kepoin kisah kami!</p>
+            <a class="btn" href="{{ route('customer.cerita') }}">Kepoin Sekarang ➔</a>
+        </div>
+    </section>
     <!-- ─── TESTIMONI CUSTOMER SECTION ─────────────────────────────────── -->
     <section class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
         <!-- Header Section -->
@@ -140,7 +147,11 @@
                 </h2>
             </div>
             <div class="flex items-center gap-1 text-amber-500 font-bold text-sm">
-                <span>★★★★★</span>
+                <span class="flex items-center gap-0.5 text-amber-400">
+                    @for ($i = 0; $i < 5; $i++)
+                        <x-lucide-star class="w-4 h-4 fill-current text-amber-400" />
+                    @endfor
+                </span>
                 <span class="text-[#010101] text-xs ml-1">4.9 / 5.0 dari 500+ porsi terjual</span>
             </div>
         </div>
@@ -160,13 +171,17 @@
                                 <span class="text-[11px] text-[#8A8A8A]">Pelanggan Cabang MERR</span>
                             </div>
                         </div>
-                        <span class="text-amber-400 text-sm">★★★★★</span>
+                        <span class="flex items-center gap-0.5 text-amber-400">
+                            @for ($i = 0; $i < 5; $i++)
+                                <x-lucide-star class="w-3.5 h-3.5 fill-current text-amber-400" />
+                            @endfor
+                        </span>
                     </div>
                     <p class="text-xs text-[#010101] leading-relaxed">
                         "Saladnya juara! Bahan-bahannya super fresh dan garing banget waktu dikunyah. Dressing-nya pas gak enek. Fix jadi langganan makan siang sehat di kantor."
                     </p>
                 </div>
-                <span class="mt-4 text-[10px] text-[#8A8A8A] font-semibold">Pesanan: Chef Salad & Jus Wortel</span>
+                <span class="mt-4 text-[10px] text-[#8A8A8A] font-semibold">Pesanan: Chef Salad &amp; Jus Wortel</span>
             </div>
 
             <!-- Testimoni 2 -->
@@ -182,7 +197,11 @@
                                 <span class="text-[11px] text-[#8A8A8A]">Pelanggan Lidah Kulon</span>
                             </div>
                         </div>
-                        <span class="text-amber-400 text-sm">★★★★★</span>
+                        <span class="flex items-center gap-0.5 text-amber-400">
+                            @for ($i = 0; $i < 5; $i++)
+                                <x-lucide-star class="w-3.5 h-3.5 fill-current text-amber-400" />
+                            @endfor
+                        </span>
                     </div>
                     <p class="text-xs text-[#010101] leading-relaxed">
                         "Fitur kreasikan saladnya ngebantu banget! Saya yang lagi diet defisit kalori bisa atur takaran sayur dan protein sendiri tanpa takut kebanyakan saus."
@@ -204,13 +223,17 @@
                                 <span class="text-[11px] text-[#8A8A8A]">Pelanggan Pickup</span>
                             </div>
                         </div>
-                        <span class="text-amber-400 text-sm">★★★★★</span>
+                        <span class="flex items-center gap-0.5 text-amber-400">
+                            @for ($i = 0; $i < 5; $i++)
+                                <x-lucide-star class="w-3.5 h-3.5 fill-current text-amber-400" />
+                            @endfor
+                        </span>
                     </div>
                     <p class="text-xs text-[#010101] leading-relaxed">
                         "Chicken sandwich-nya padat dan ngenyangin! Harganya masuk akal banget untuk kualitas bahan fresh kayak gini. Checkout di website juga cepet langsung scan QRIS."
                     </p>
                 </div>
-                <span class="mt-4 text-[10px] text-[#8A8A8A] font-semibold">Pesanan: Chicken Sandwich & Jus Alpukat</span>
+                <span class="mt-4 text-[10px] text-[#8A8A8A] font-semibold">Pesanan: Chicken Sandwich &amp; Jus Alpukat</span>
             </div>
         </div>
     </section>

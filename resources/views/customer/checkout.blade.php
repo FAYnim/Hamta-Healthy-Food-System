@@ -354,14 +354,14 @@
                     <li>Buka aplikasi <strong>BCA Mobile, Mandiri Livin, BRImo, BNI, GoPay, OVO, ShopeePay, DANA</strong>, atau perbankan lainnya.</li>
                     <li>Pilih menu <strong>Scan QRIS</strong> dan arahkan kamera ke barcode di atas.</li>
                     <li>Pastikan nama merchant tertera <strong>HAMTA HEALTHY FOOD</strong> dan masukkan nominal persis <strong id="qris-steps-nominal">Rp. 0</strong>.</li>
-                    <li>Selesaikan pembayaran, simpan screenshot bukti transfer, lalu unggah bukti di bawah (opsional).</li>
+                    <li>Selesaikan pembayaran, simpan screenshot bukti transfer, lalu unggah bukti di bawah <strong style="color:#c0392b">(WAJIB)</strong>.</li>
                 </ol>
 
                 <!-- Area Upload Bukti Transfer -->
                 <div class="qris-upload-box">
                     <label for="co-bukti-input" class="qris-upload-label" id="co-bukti-upload-area">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                        <span style="font-weight:700;font-size:13px;color:var(--green)">+ Unggah Bukti Transfer / Screenshot Pembayaran</span>
+                        <span style="font-weight:700;font-size:13px;color:var(--green)">+ Unggah Bukti Transfer / Screenshot QRIS <span style="color:#c0392b;font-weight:800;font-size:11px">*(Wajib)</span></span>
                         <small style="color:#7a8a80">Format JPG, PNG, WEBP (Maksimal 5MB)</small>
                     </label>
                     <input type="file" id="co-bukti-input" accept="image/png,image/jpeg,image/webp" style="display:none">
@@ -379,7 +379,9 @@
             <!-- Card Tunai -->
             <div class="tunai-card" id="tunai-box" style="display:none">
                 <div style="display:flex;align-items:flex-start;gap:12px">
-                    <span style="font-size:24px">💵</span>
+                    <div style="width:38px;height:38px;border-radius:10px;background:#e9f5e6;display:flex;align-items:center;justify-content:center;color:var(--green);flex-shrink:0">
+                        <x-lucide-banknote class="w-6 h-6" />
+                    </div>
                     <div>
                         <h4 style="margin:0;font-size:14px;font-weight:700;color:var(--green)">Bayar di Tempat (Tunai)</h4>
                         <p style="margin:4px 0 0;font-size:12.5px;color:#4a5a52;line-height:1.4">
@@ -418,7 +420,7 @@
             <div class="co-success-icon">
                 <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
             </div>
-            <h1 class="co-success-title">Hore! Pesanan Berhasil Dibuat 🎉</h1>
+            <h1 class="co-success-title flex items-center justify-center gap-2"><span>Hore! Pesanan Berhasil Dibuat</span> <x-lucide-party-popper class="w-7 h-7 text-emerald-700" /></h1>
             <p class="co-success-sub">Terima kasih telah memesan menu sehat di Hamta Healthy Food Surabaya.</p>
         </section>
 
@@ -933,12 +935,36 @@
                 if (window.hamtaToast) window.hamtaToast('Keranjang masih kosong.');
                 return;
             }
-            var take = currentTake();
+            // Validasi 1: Alamat wajib ada
             var savedAddr = getActiveAddress();
-            if (take === 'delivery' && (!savedAddr || !savedAddr.alamat)) {
-                showMsg('Alamat delivery belum dipilih. Atur alamat pengiriman dulu ya.', true);
-                if (window.hamtaToast) window.hamtaToast('Pilih alamat pengiriman dulu.');
-                window.location.href = "{{ route('customer.alamat') }}";
+            if (!savedAddr || !savedAddr.alamat || !savedAddr.nama) {
+                showMsg('Silakan atur dan pilih alamat pengiriman terlebih dahulu sebelum membuat pesanan.', true);
+                if (window.hamtaToast) window.hamtaToast('Tambahkan alamat pengiriman terlebih dahulu.');
+                var addrSec = document.getElementById('co-address-section');
+                if (addrSec) {
+                    addrSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    addrSec.style.boxShadow = '0 0 0 3px #c0392b';
+                    setTimeout(function () { addrSec.style.boxShadow = ''; }, 3000);
+                }
+                return;
+            }
+
+            // Validasi 2: Bukti transfer QRIS wajib ada jika bayar via QRIS
+            var take = currentTake();
+            var pay = currentPay();
+            if (pay === 'qris' && !selectedBuktiFile) {
+                showMsg('Bukti pembayaran QRIS wajib diunggah sebelum membuat pesanan.', true);
+                if (window.hamtaToast) window.hamtaToast('Unggah bukti pembayaran QRIS terlebih dahulu.');
+                var buktiArea = document.getElementById('co-bukti-upload-area');
+                if (buktiArea) {
+                    buktiArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    buktiArea.style.borderColor = '#c0392b';
+                    buktiArea.style.backgroundColor = '#fef2f2';
+                    setTimeout(function () {
+                        buktiArea.style.borderColor = '';
+                        buktiArea.style.backgroundColor = '';
+                    }, 3000);
+                }
                 return;
             }
 
@@ -960,7 +986,7 @@
             if (take === 'delivery' && savedAddr) {
                 formData.append('alamat_delivery', [savedAddr.alamat, savedAddr.patokan].filter(Boolean).join(' — '));
             }
-            formData.append('metode_bayar', currentPay());
+            formData.append('metode_bayar', pay);
             formData.append('cart', JSON.stringify(payloadCart));
             if (selectedBuktiFile) {
                 formData.append('bukti_bayar', selectedBuktiFile);
@@ -999,13 +1025,6 @@
                         items: cartSnapshot,
                         timestamp: Date.now()
                     }));
-
-                    // Tambahkan ke riwayat pesanan pelanggan di browser
-                    var hist = JSON.parse(localStorage.getItem('hamta_order_history') || '[]');
-                    if (!Array.isArray(hist)) hist = [];
-                    hist = hist.filter(function (code) { return code !== orderData.kode_pesanan; });
-                    hist.unshift(orderData.kode_pesanan);
-                    localStorage.setItem('hamta_order_history', JSON.stringify(hist.slice(0, 50)));
                 } catch (e) {}
 
                 window.hamtaSaveCart([]);

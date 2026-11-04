@@ -91,8 +91,8 @@
         <a href="{{ route('home') }}#home">Beranda</a>
         <a href="{{ route('customer.daftar_menu') }}">Menu</a>
         <a href="{{ route('customer.kreasikan_salad') }}">Kreasi</a>
+        <a href="{{ route('customer.cerita') }}">Cerita</a>
         <a href="{{ route('customer.status_pesanan') }}">Status</a>
-        <a href="{{ route('customer.riwayat_pesanan') }}">Riwayat</a>
         <a href="{{ url('/') }}#promo">Promo</a>
         <a href="{{ route('customer.checkout') }}" aria-label="Keranjang"><svg class="bag" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#101010" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></a>
     </div>

@@ -9,7 +9,6 @@ use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\PromoController;
 use App\Http\Controllers\Customer\CheckoutController;
-use App\Http\Controllers\Customer\RiwayatPesananController;
 use App\Http\Controllers\Customer\StatusPesananController;
 use App\Models\KomponenSalad;
 use App\Models\Produk;
@@ -64,8 +63,7 @@ Route::view('/alamat', 'customer.alamat')->name('customer.alamat');
 Route::view('/pembayaran', 'customer.pembayaran')->name('customer.pembayaran');
 Route::get('/status-pesanan/{kode?}', [StatusPesananController::class, 'show'])->name('customer.status_pesanan');
 Route::get('/api/pesanan/{kode}/status', [StatusPesananController::class, 'cek'])->name('customer.pesanan.api_status');
-Route::get('/riwayat-pesanan', [RiwayatPesananController::class, 'index'])->name('customer.riwayat_pesanan');
-Route::post('/api/pesanan/riwayat', [RiwayatPesananController::class, 'fetchHistory'])->name('customer.pesanan.api_riwayat');
+Route::view('/cerita-kami', 'customer.cerita')->name('customer.cerita');
 
 // ─── Auth (tidak perlu middleware) ────────────────────────────────────────────
 Route::get('admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');

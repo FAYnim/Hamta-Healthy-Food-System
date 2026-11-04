@@ -146,9 +146,9 @@
                 <select name="status_pembayaran"
                         onchange="this.form.requestSubmit()"
                         class="w-56 bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm font-medium text-hamta-black outline-none cursor-pointer">
-                    <option value="menunggu_verifikasi" @selected($pesanan->status_pembayaran === 'menunggu_verifikasi')>⏳ Menunggu Verifikasi</option>
-                    <option value="terverifikasi" @selected($pesanan->status_pembayaran === 'terverifikasi')>✅ Terverifikasi (Lunas)</option>
-                    <option value="ditolak" @selected($pesanan->status_pembayaran === 'ditolak')>❌ Ditolak</option>
+                    <option value="menunggu_verifikasi" @selected($pesanan->status_pembayaran === 'menunggu_verifikasi')>Menunggu Verifikasi</option>
+                    <option value="terverifikasi" @selected($pesanan->status_pembayaran === 'terverifikasi')>Terverifikasi (Lunas)</option>
+                    <option value="ditolak" @selected($pesanan->status_pembayaran === 'ditolak')>Ditolak</option>
                 </select>
             </form>
         </div>

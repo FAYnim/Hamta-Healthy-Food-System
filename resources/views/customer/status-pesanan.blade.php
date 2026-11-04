@@ -101,7 +101,11 @@
         @if (! $pesanan)
             <!-- Form Cari Kode Pesanan jika belum ada di URL -->
             <section class="tr-card" style="text-align:center;padding:36px 20px">
-                <div style="font-size:36px;margin-bottom:8px">🥗</div>
+                <div class="flex justify-center mb-3">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-100/60 flex items-center justify-center text-[#0B412B]">
+                        <x-lucide-salad class="w-8 h-8" />
+                    </div>
+                </div>
                 <h2 style="font-size:20px;font-weight:800;color:var(--green);margin:0 0 6px">Cari Pesanan Anda</h2>
                 <p style="font-size:13.5px;color:#6f6a5f;max-width:440px;margin:0 auto 20px">
                     Masukkan nomor/kode pesanan yang Anda terima setelah checkout (contoh: <code>ORD-xxxxxx</code>) untuk melihat status terkini.
@@ -201,8 +205,9 @@
                         </div>
                     </div>
                 @else
-                    <div style="margin-top:16px;padding:10px 14px;border-radius:10px;background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.4);font-size:13px;color:#fecaca">
-                        ⚠️ Pesanan ini berstatus <strong>Dibatalkan</strong>.
+                    <div class="flex items-center gap-2" style="margin-top:16px;padding:10px 14px;border-radius:10px;background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.4);font-size:13px;color:#fecaca">
+                        <x-lucide-alert-triangle class="w-4 h-4 shrink-0 text-red-300" />
+                        <span>Pesanan ini berstatus <strong>Dibatalkan</strong>.</span>
                     </div>
                 @endif
             </section>
@@ -216,13 +221,13 @@
                         <span class="tr-box-label">Status Pembayaran</span>
                         <div style="margin-top:6px" id="tr-pay-badge-wrap">
                             @if ($pesanan->metode_bayar === 'tunai')
-                                <span class="tr-status-pill tr-pill-siap">💵 Bayar di Tempat (Tunai)</span>
+                                <span class="tr-status-pill tr-pill-siap inline-flex items-center gap-1.5"><x-lucide-banknote class="w-3.5 h-3.5" /> <span>Bayar di Tempat (Tunai)</span></span>
                             @elseif ($pesanan->status_pembayaran === 'terverifikasi')
-                                <span class="tr-status-pill tr-pill-pay-terverifikasi">✅ QRIS — Terverifikasi (Lunas)</span>
+                                <span class="tr-status-pill tr-pill-pay-terverifikasi inline-flex items-center gap-1.5"><x-lucide-check-circle class="w-3.5 h-3.5" /> <span>QRIS — Terverifikasi (Lunas)</span></span>
                             @elseif ($pesanan->status_pembayaran === 'ditolak')
-                                <span class="tr-status-pill tr-pill-pay-ditolak">❌ Pembayaran Ditolak</span>
+                                <span class="tr-status-pill tr-pill-pay-ditolak inline-flex items-center gap-1.5"><x-lucide-x-circle class="w-3.5 h-3.5" /> <span>Pembayaran Ditolak</span></span>
                             @else
-                                <span class="tr-status-pill tr-pill-pay-menunggu">⏳ QRIS — Menunggu Verifikasi Admin</span>
+                                <span class="tr-status-pill tr-pill-pay-menunggu inline-flex items-center gap-1.5"><x-lucide-clock class="w-3.5 h-3.5" /> <span>QRIS — Menunggu Verifikasi Admin</span></span>
                             @endif
                         </div>
                         <div style="margin-top:6px;font-size:12px;color:#6f6a5f">
@@ -232,8 +237,14 @@
 
                     <div class="tr-box">
                         <span class="tr-box-label">Metode Pengambilan</span>
-                        <div class="tr-box-val" id="tr-take-val">
-                            {{ $pesanan->metode_ambil === 'delivery' ? '🛵 Delivery (Diantar Kurir)' : '🏪 Pickup (Ambil di Outlet)' }}
+                        <div class="tr-box-val flex items-center gap-1.5" id="tr-take-val">
+                            @if ($pesanan->metode_ambil === 'delivery')
+                                <x-lucide-truck class="w-4 h-4 text-emerald-700" />
+                                <span>Delivery (Diantar Kurir)</span>
+                            @else
+                                <x-lucide-store class="w-4 h-4 text-emerald-700" />
+                                <span>Pickup (Ambil di Outlet)</span>
+                            @endif
                         </div>
                         <div style="margin-top:6px;font-size:12.5px;color:#4a5a52" id="tr-take-dest">
                             @if ($pesanan->metode_ambil === 'delivery')
@@ -282,8 +293,9 @@
                                     </div>
                                 @endif
                                 @if ($isItemCanceled)
-                                    <div style="font-size:11px;color:#c0392b;font-weight:700;margin-top:2px">
-                                        ⚠️ Dibatalkan resto (stok habis)
+                                    <div class="flex items-center gap-1" style="font-size:11px;color:#c0392b;font-weight:700;margin-top:2px">
+                                        <x-lucide-alert-circle class="w-3.5 h-3.5 text-red-600 shrink-0" />
+                                        <span>Dibatalkan resto (stok habis)</span>
                                     </div>
                                 @endif
                             </div>
@@ -398,13 +410,13 @@
         var payWrap = document.getElementById('tr-pay-badge-wrap');
         if (payWrap) {
             if (data.metode_bayar === 'tunai') {
-                payWrap.innerHTML = '<span class="tr-status-pill tr-pill-siap">💵 Bayar di Tempat (Tunai)</span>';
+                payWrap.innerHTML = '<span class="tr-status-pill tr-pill-siap inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/></svg><span>Bayar di Tempat (Tunai)</span></span>';
             } else if (data.status_pembayaran === 'terverifikasi') {
-                payWrap.innerHTML = '<span class="tr-status-pill tr-pill-pay-terverifikasi">✅ QRIS — Terverifikasi (Lunas)</span>';
+                payWrap.innerHTML = '<span class="tr-status-pill tr-pill-pay-terverifikasi inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>QRIS — Terverifikasi (Lunas)</span></span>';
             } else if (data.status_pembayaran === 'ditolak') {
-                payWrap.innerHTML = '<span class="tr-status-pill tr-pill-pay-ditolak">❌ Pembayaran Ditolak</span>';
+                payWrap.innerHTML = '<span class="tr-status-pill tr-pill-pay-ditolak inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span>Pembayaran Ditolak</span></span>';
             } else {
-                payWrap.innerHTML = '<span class="tr-status-pill tr-pill-pay-menunggu">⏳ QRIS — Menunggu Verifikasi Admin</span>';
+                payWrap.innerHTML = '<span class="tr-status-pill tr-pill-pay-menunggu inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>QRIS — Menunggu Verifikasi Admin</span></span>';
             }
         }
 

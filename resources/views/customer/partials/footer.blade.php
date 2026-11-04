@@ -70,8 +70,9 @@
                     <p class="text-gray-300 mt-1">
                         Rumah Produksi, Jl. Lidah Kulon Gg. 1, Lakarsantri, Surabaya, Jawa Timur 60213
                     </p>
-                    <p class="text-[11px] text-emerald-200 mt-2 font-medium">
-                        🕒 Buka: 09.00 - 21.00 WIB (Pickup & Delivery)
+                    <p class="text-[11px] text-emerald-200 mt-2 font-medium flex items-center gap-1.5">
+                        <x-lucide-clock class="w-3.5 h-3.5 text-emerald-300 shrink-0" />
+                        <span>Buka: 09.00 - 21.00 WIB (Pickup &amp; Delivery)</span>
                     </p>
                 </div>
             </div>
@@ -80,14 +81,15 @@
             <div id="content-cabang-2" class="hidden space-y-2 text-xs leading-relaxed text-gray-200">
                 <div class="p-3.5 rounded-xl bg-white/5 border border-white/10">
                     <span class="inline-block px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-semibold text-[10px] mb-1">
-                        Dine-in & Takeaway Langsung
+                        Dine-in &amp; Takeaway Langsung
                     </span>
                     <p class="font-bold text-white text-[13px]">Cabang MERR (Apartemen Bale Hinggil)</p>
                     <p class="text-gray-300 mt-1">
                         Bale Hinggil Apartment (Jl. Dr. Ir. H. Soekarno / MERR), Rungkut, Surabaya
                     </p>
-                    <p class="text-[11px] text-emerald-200 mt-2 font-medium">
-                        🕒 Buka: 09.00 - 21.00 WIB setiap hari (Dine-in & Pickup)
+                    <p class="text-[11px] text-emerald-200 mt-2 font-medium flex items-center gap-1.5">
+                        <x-lucide-clock class="w-3.5 h-3.5 text-emerald-300 shrink-0" />
+                        <span>Buka: 09.00 - 21.00 WIB setiap hari (Dine-in &amp; Pickup)</span>
                     </p>
                 </div>
             </div>
@@ -104,30 +106,27 @@
                 </p>
                 <div class="mt-3 flex flex-col gap-2">
                     <a 
-                        href="{{ route('customer.riwayat_pesanan') }}" 
-                        class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-[#65BD5E] hover:text-[#0B412B] text-xs font-bold transition-all text-white"
-                    >
-                        <span>📋 Riwayat Pemesanan</span>
-                    </a>
-                    <a 
                         href="{{ route('customer.status_pesanan') }}" 
                         class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-[#65BD5E] hover:text-[#0B412B] text-xs font-bold transition-all text-white"
                     >
-                        <span>🔍 Lacak Status Pesanan</span>
+                        <x-lucide-search class="w-4 h-4 text-emerald-300" />
+                        <span>Lacak Status Pesanan</span>
                     </a>
                     <a 
                         href="https://wa.me/6281234567890" 
                         target="_blank" 
                         class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-[#65BD5E] hover:text-[#0B412B] text-xs font-bold transition-all text-white"
                     >
-                        <span>💬 WhatsApp: 0812-3456-7890</span>
+                        <x-lucide-message-circle class="w-4 h-4 text-emerald-300" />
+                        <span>WhatsApp: 0812-3456-7890</span>
                     </a>
                     <a 
                         href="https://instagram.com/hamtash.salad" 
                         target="_blank" 
                         class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-[#65BD5E] hover:text-[#0B412B] text-xs font-bold transition-all text-white"
                     >
-                        <span>📸 Instagram: @hamtash.salad</span>
+                        <x-lucide-instagram class="w-4 h-4 text-emerald-300" />
+                        <span>Instagram: @hamtash.salad</span>
                     </a>
                 </div>
             </div>

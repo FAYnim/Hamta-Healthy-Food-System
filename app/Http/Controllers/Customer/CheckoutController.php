@@ -28,21 +28,29 @@ class CheckoutController extends Controller
             }
         }
 
-        // Validasi input checkout guest (tanpa auth, alamat hanya snapshot string).
-        // Nama & WA nullable mengikuti kolom DB (pickup tanpa alamat tersimpan tetap bisa order).
+        // Validasi input checkout guest (alamat & bukti bayar QRIS wajib diisi)
         $data = $request->validate([
-            'nama_pelanggan' => ['nullable', 'string', 'max:100'],
-            'no_whatsapp' => ['nullable', 'string', 'max:20'],
+            'nama_pelanggan' => ['required', 'string', 'max:100'],
+            'no_whatsapp' => ['required', 'string', 'max:20'],
             'metode_ambil' => ['required', Rule::in(['pickup', 'delivery'])],
             'alamat_delivery' => ['required_if:metode_ambil,delivery', 'nullable', 'string', 'max:255'],
             'metode_bayar' => ['required', Rule::in(['qris', 'tunai'])],
-            'bukti_bayar' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
+            'bukti_bayar' => ['required_if:metode_bayar,qris', 'nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
             'cart' => ['required', 'array', 'min:1'],
             'cart.*.tipe' => ['required', Rule::in(['produk', 'custom'])],
             'cart.*.id_produk' => ['required', 'integer'],
             'cart.*.id_komponen' => ['nullable', 'array'],
             'cart.*.id_komponen.*' => ['integer'],
             'cart.*.jumlah' => ['required', 'integer', 'min:1'],
+        ], [
+            'nama_pelanggan.required' => 'Silakan atur dan pilih alamat pengiriman terlebih dahulu.',
+            'no_whatsapp.required' => 'Nomor WhatsApp pemesan wajib terisi dari alamat.',
+            'alamat_delivery.required_if' => 'Alamat pengiriman wajib diisi untuk pesanan delivery.',
+            'bukti_bayar.required_if' => 'Bukti pembayaran transfer QRIS wajib diunggah sebelum membuat pesanan.',
+            'bukti_bayar.image' => 'File bukti transfer harus berupa gambar.',
+            'bukti_bayar.mimes' => 'Format file bukti transfer harus JPG, PNG, atau WEBP.',
+            'bukti_bayar.max' => 'Ukuran file bukti transfer maksimal 5MB.',
+            'cart.required' => 'Keranjang pesanan masih kosong.',
         ]);
 
         $buktiBayarPath = null;
