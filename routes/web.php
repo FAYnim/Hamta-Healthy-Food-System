@@ -8,11 +8,62 @@ use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\PromoController;
+use App\Http\Controllers\Customer\CheckoutController;
+use App\Http\Controllers\Customer\StatusPesananController;
+use App\Models\KomponenSalad;
+use App\Models\Produk;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    $menus = Produk::where('status_aktif', true)
+        ->orderByDesc('id_produk')
+        ->limit(8)
+        ->get();
+
+    return view('welcome', ['menus' => $menus]);
+})->name('home');
+
+// ─── Customer ────────────────────────────────────────────────────────────────
+Route::get('/daftar-menu', function () {
+    $bestSellers = Produk::where('status_aktif', true)
+        ->withSum(['detailPesanan as terjual' => fn ($q) => $q->where('status_item', 'aktif')], 'jumlah')
+        ->orderByDesc('terjual')
+        ->orderByDesc('id_produk')
+        ->limit(4)
+        ->get();
+
+    $menus = Produk::where('status_aktif', true)
+        ->orderBy('nama_produk')
+        ->get();
+
+    return view('customer.daftar-menu', [
+        'bestSellers' => $bestSellers,
+        'menusByKategori' => $menus->groupBy('kategori'),
+        'kategoriUrutan' => ['Salad', 'Sandwich', 'Juice'],
+    ]);
+})->name('customer.daftar_menu');
+Route::get('/kreasikan-salad', function () {
+    $base = Produk::where('status_aktif', true)
+        ->where('bisa_dikustom', true)
+        ->orderBy('nama_produk')
+        ->get();
+    $komponen = KomponenSalad::where('status_aktif', true)
+        ->orderBy('nama_komponen')
+        ->get();
+
+    return view('customer.kreasikan-salad', [
+        'baseOptions' => $base,
+        'sayuran' => $komponen->where('jenis', 'sayuran')->values(),
+        'protein' => $komponen->where('jenis', 'protein')->values(),
+    ]);
+})->name('customer.kreasikan_salad');
+Route::view('/checkout', 'customer.checkout')->name('customer.checkout');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('customer.checkout.store');
+Route::view('/alamat', 'customer.alamat')->name('customer.alamat');
+Route::view('/pembayaran', 'customer.pembayaran')->name('customer.pembayaran');
+Route::get('/status-pesanan/{kode?}', [StatusPesananController::class, 'show'])->name('customer.status_pesanan');
+Route::get('/api/pesanan/{kode}/status', [StatusPesananController::class, 'cek'])->name('customer.pesanan.api_status');
+Route::view('/cerita-kami', 'customer.cerita')->name('customer.cerita');
 
 // ─── Auth (tidak perlu middleware) ────────────────────────────────────────────
 Route::get('admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
@@ -44,6 +95,8 @@ Route::middleware('admin.auth')->group(function () {
         ->name('admin.daftar_pesanan.show');
     Route::patch('/admin/daftar-pesanan/{id}/status', [PesananController::class, 'updateStatus'])
         ->name('admin.daftar_pesanan.status');
+    Route::patch('/admin/daftar-pesanan/{id}/pembayaran', [PesananController::class, 'updatePembayaran'])
+        ->name('admin.daftar_pesanan.pembayaran');
     Route::patch('/admin/daftar-pesanan/{id}/ongkir', [PesananController::class, 'konfirmasiOngkir'])
         ->name('admin.daftar_pesanan.ongkir');
     Route::patch('/admin/daftar-pesanan/item/{id}/batal', [PesananController::class, 'batalkanItem'])
