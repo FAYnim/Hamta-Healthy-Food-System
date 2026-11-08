@@ -11,6 +11,9 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 
+    <!-- Google reCAPTCHA v2 -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <style>
         @keyframes slideInFromLeft {
             0% {
@@ -87,7 +90,7 @@
         <!-- ========================================== -->
         <div class="w-full lg:w-[44%] bg-hamta-dark lg:bg-transparent min-h-screen flex flex-col justify-center items-center px-6 sm:px-12 py-12 relative">
 
-            <div class="w-full max-w-[300px] sm:max-w-[320px] mx-auto">
+            <div class="w-full max-w-[320px] sm:max-w-[340px] mx-auto">
 
                 <!-- Brand Wordmark Logo -->
                 <div class="mb-7 flex justify-center">
@@ -98,7 +101,7 @@
                     >
                 </div>
 
-                <!-- Flash Messages -->
+                <!-- Flash Messages & Validation Errors -->
                 @if (session('error'))
                     <div class="mb-4 bg-red-100 border border-red-300 text-red-700 text-sm rounded-xl px-4 py-2.5"> 
                         {{ session('error') }}
@@ -108,6 +111,14 @@
                 @if (session('success'))
                     <div class="mb-4 bg-green-100 border border-green-300 text-green-700 text-sm rounded-xl px-4 py-2.5"> 
                         {{ session('success') }}
+                    </div>
+                @endif
+
+                @if ($errors->any())
+                    <div class="mb-4 bg-red-100 border border-red-300 text-red-700 text-xs sm:text-sm rounded-xl px-4 py-2.5 space-y-1">
+                        @foreach ($errors->all() as $err)
+                            <p>• {{ $err }}</p>
+                        @endforeach
                     </div>
                 @endif
 
@@ -142,27 +153,9 @@
                         >
                     </div>
 
-                    <!-- reCAPTCHA v2 Box -->
-                    <div class="bg-white rounded-xl px-4 py-2.5 sm:py-3 flex items-center justify-between shadow-sm border border-stone-200">
-                        <div class="flex items-center gap-3">
-                            <div class="w-6 h-6 rounded border-2 border-stone-300 flex items-center justify-center bg-white">
-                                <svg class="w-4 h-4 text-hamta-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </div>
-                            <span class="text-xs sm:text-sm font-medium text-hamta-black">I'm not a robot</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="w-7 h-7 flex items-center justify-center">
-                                <svg class="w-6 h-6 text-[#1A73E8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-                                    <path d="M3 3v5h5"/>
-                                    <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
-                                    <path d="M16 21h5v-5"/>
-                                </svg>
-                            </div>
-                            <span class="text-[9px] text-hamta-gray leading-tight">reCAPTCHA</span>
-                        </div>
+                    <!-- Google reCAPTCHA v2 Widget -->
+                    <div class="flex flex-col items-center justify-center my-2">
+                        <div class="g-recaptcha flex justify-center overflow-hidden rounded-lg shadow-sm" data-sitekey="{{ config('services.recaptcha.site_key') ?? env('RECAPTCHA_SITE_KEY') }}"></div>
                     </div>
 
                     <!-- Submit Button: Masuk -->
