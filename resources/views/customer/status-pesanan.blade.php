@@ -6,7 +6,7 @@
     <title>Status Pesanan — Hamta Healthy Food</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        .tr-wrap { max-width: 820px; margin: 0 auto; padding-bottom: 48px; }
+        .tr-wrap { width: 100%; padding-bottom: 48px; }
         .tr-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 8px 0 24px; flex-wrap: wrap; }
         .tr-title-group { display: flex; align-items: center; gap: 14px; }
         .tr-back { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #fff; border: 1.5px solid rgba(11,65,43,.15); color: var(--green); text-decoration: none; transition: all .2s; }
@@ -83,18 +83,10 @@
     <div class="tr-wrap">
         <div class="tr-head">
             <div class="tr-title-group">
-                <a class="tr-back" href="{{ route('home') }}" aria-label="Kembali ke Beranda">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-                </a>
                 <div>
                     <h1>Status Pesanan</h1>
                     <span style="font-size:12.5px;color:#6f6a5f">Pantau perkembangan pesanan Anda secara live</span>
                 </div>
-            </div>
-
-            <div class="tr-live-badge">
-                <span class="tr-live-dot"></span>
-                <span>Terkoneksi (Live Update)</span>
             </div>
         </div>
 

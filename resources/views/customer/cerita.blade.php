@@ -44,11 +44,6 @@
 
             <!-- Right: Opening Story Paragraph -->
             <div class="md:col-span-7 space-y-4 text-center md:text-left">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#65BD5E]/20 text-[#65BD5E] border border-[#65BD5E]/30 text-xs font-bold uppercase tracking-wider">
-                    <x-lucide-leaf class="w-3.5 h-3.5" />
-                    <span>Perjalanan Kami</span>
-                </span>
-                
                 <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white leading-snug">
                     Cerita di Balik Usaha <br class="hidden sm:inline">
                     <span class="text-[#65BD5E]">Hamta Healthy Food</span>
