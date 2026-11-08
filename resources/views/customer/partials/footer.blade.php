@@ -63,9 +63,6 @@
             <!-- Detail Cabang 1: Lidah Kulon -->
             <div id="content-cabang-1" class="space-y-2 text-xs leading-relaxed text-gray-200">
                 <div class="p-3.5 rounded-xl bg-white/5 border border-white/10">
-                    <span class="inline-block px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-semibold text-[10px] mb-1">
-                        Dapur Produksi & Online Order
-                    </span>
                     <p class="font-bold text-white text-[13px]">Cabang Lidah Kulon</p>
                     <p class="text-gray-300 mt-1">
                         Rumah Produksi, Jl. Lidah Kulon Gg. 1, Lakarsantri, Surabaya, Jawa Timur 60213
@@ -80,9 +77,6 @@
             <!-- Detail Cabang 2: MERR -->
             <div id="content-cabang-2" class="hidden space-y-2 text-xs leading-relaxed text-gray-200">
                 <div class="p-3.5 rounded-xl bg-white/5 border border-white/10">
-                    <span class="inline-block px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-semibold text-[10px] mb-1">
-                        Dine-in &amp; Takeaway Langsung
-                    </span>
                     <p class="font-bold text-white text-[13px]">Cabang MERR (Apartemen Bale Hinggil)</p>
                     <p class="text-gray-300 mt-1">
                         Bale Hinggil Apartment (Jl. Dr. Ir. H. Soekarno / MERR), Rungkut, Surabaya
@@ -121,12 +115,12 @@
                         <span>WhatsApp: 0812-3456-7890</span>
                     </a>
                     <a 
-                        href="https://instagram.com/hamtash.salad" 
+                        href="https://instagram.com/hamta.sby" 
                         target="_blank" 
                         class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-[#65BD5E] hover:text-[#0B412B] text-xs font-bold transition-all text-white"
                     >
                         <x-lucide-instagram class="w-4 h-4 text-emerald-300" />
-                        <span>Instagram: @hamtash.salad</span>
+                        <span>Instagram: @hamtash.sby</span>
                     </a>
                 </div>
             </div>
