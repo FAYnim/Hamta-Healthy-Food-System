@@ -244,19 +244,22 @@
                         @endphp
 
                         <!-- Wadah QRIS Otomatis Midtrans -->
-                        <div id="tr-midtrans-qr-wrap" style="display: {{ $showQr ? 'block' : 'none' }}; margin: 12px 0 16px; text-align: center; padding: 16px; background: #fff; border: 2px solid var(--green); border-radius: 14px; box-shadow: 0 4px 12px rgba(11,65,43,.08);">
-                            <span style="display:block;font-size:12px;font-weight:800;color:var(--green);letter-spacing:.6px;margin-bottom:8px">SCAN UNTUK MEMBAYAR (QRIS)</span>
+                        <div id="tr-midtrans-qr-wrap" style="display: {{ $showQr ? 'block' : 'none' }}; margin: 12px 0 16px; text-align: center; padding: 18px 16px; background: #fff; border: 2px solid var(--green); border-radius: 14px; box-shadow: 0 4px 12px rgba(11,65,43,.08);">
+                            <span style="display:block;font-size:12px;font-weight:800;color:var(--green);letter-spacing:.6px;margin-bottom:12px">SCAN UNTUK MEMBAYAR (QRIS)</span>
                             
-                            <!-- Countdown Badge -->
-                            <div id="tr-expiry-badge" style="display:inline-flex;align-items:center;gap:6px;background:#fef2f2;border:1px solid #fecaca;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;color:#991b1b;margin-bottom:12px">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                <span>Kedaluwarsa dalam: <span id="tr-expiry-countdown">--:--</span></span>
+                            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;margin:0 auto">
+                                <!-- Countdown Badge -->
+                                <div id="tr-expiry-badge" style="display:inline-flex;align-items:center;gap:6px;background:#fef2f2;border:1px solid #fecaca;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;color:#991b1b">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    <span>Kedaluwarsa dalam: <span id="tr-expiry-countdown">--:--</span></span>
+                                </div>
+
+                                <div style="display:inline-block;padding:12px;background:#fbf8f0;border-radius:14px;border:1px dashed rgba(11,65,43,.3);box-shadow:0 2px 8px rgba(0,0,0,.04)">
+                                    <img id="tr-midtrans-qr-img" src="{{ $qrUrl ?? '' }}" alt="QRIS Midtrans" style="width:200px;height:200px;display:block;margin:0 auto;object-fit:contain;" />
+                                </div>
                             </div>
 
-                            <div style="display:inline-block;padding:10px;background:#fbf8f0;border-radius:12px;border:1px dashed rgba(11,65,43,.3);">
-                                <img id="tr-midtrans-qr-img" src="{{ $qrUrl ?? '' }}" alt="QRIS Midtrans" style="width:200px;height:200px;display:block;margin:0 auto;object-fit:contain;" />
-                            </div>
-                            <p style="margin:10px 0 0;font-size:11.5px;color:#4a5a52;line-height:1.4">
+                            <p style="margin:12px 0 0;font-size:11.5px;color:#4a5a52;line-height:1.4">
                                 Buka aplikasi e-wallet (GoPay, OVO, Dana) atau m-Banking Anda, lalu scan QR di atas.<br>
                                 <strong>Status pembayaran akan diverifikasi otomatis tanpa perlu upload bukti transfer.</strong>
                             </p>

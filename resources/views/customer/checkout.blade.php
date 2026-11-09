@@ -492,19 +492,22 @@
             </div>
 
             <!-- QRIS Midtrans (Jika Ada) -->
-            <div id="success-midtrans-qr-box" style="display:none;margin:16px 0;padding:16px;background:#fff;border:2px solid var(--green);border-radius:12px;text-align:center">
-                <span style="display:block;font-size:12px;font-weight:800;color:var(--green);letter-spacing:.6px;margin-bottom:8px">SCAN QRIS UNTUK MEMBAYAR</span>
+            <div id="success-midtrans-qr-box" style="display:none;margin:16px 0;padding:20px 16px;background:#fff;border:2px solid var(--green);border-radius:12px;text-align:center">
+                <span style="display:block;font-size:12px;font-weight:800;color:var(--green);letter-spacing:.6px;margin-bottom:12px">SCAN QRIS UNTUK MEMBAYAR</span>
                 
-                <!-- Countdown Timer -->
-                <div id="success-expiry-badge" style="display:inline-flex;align-items:center;gap:6px;background:#fef2f2;border:1px solid #fecaca;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;color:#991b1b;margin-bottom:12px">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    <span>Sisa Waktu Pembayaran: <span id="success-expiry-countdown">--:--</span></span>
+                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;margin:0 auto">
+                    <!-- Countdown Timer -->
+                    <div id="success-expiry-badge" style="display:inline-flex;align-items:center;gap:6px;background:#fef2f2;border:1px solid #fecaca;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;color:#991b1b">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>Sisa Waktu Pembayaran: <span id="success-expiry-countdown">--:--</span></span>
+                    </div>
+
+                    <div style="display:inline-block;padding:12px;background:#fbf8f0;border-radius:14px;border:1px dashed rgba(11,65,43,.3);box-shadow:0 2px 8px rgba(0,0,0,.04)">
+                        <img id="success-midtrans-qr-img" src="" alt="QRIS Midtrans" style="width:200px;height:200px;display:block;margin:0 auto;object-fit:contain" />
+                    </div>
                 </div>
 
-                <div style="display:inline-block;padding:10px;background:#fbf8f0;border-radius:12px;border:1px dashed rgba(11,65,43,.3)">
-                    <img id="success-midtrans-qr-img" src="" alt="QRIS Midtrans" style="width:200px;height:200px;display:block;margin:0 auto;object-fit:contain" />
-                </div>
-                <p style="margin:10px 0 0;font-size:12px;color:#4a5a52">Scan dengan aplikasi e-wallet atau m-Banking Anda. Pembayaran akan terverifikasi secara otomatis.</p>
+                <p style="margin:12px 0 0;font-size:12px;color:#4a5a52">Scan dengan aplikasi e-wallet atau m-Banking Anda. Pembayaran akan terverifikasi secara otomatis.</p>
             </div>
 
             <!-- Wadah Jika QRIS Expired di Checkout -->
