@@ -1,4 +1,4 @@
-# AGENTS.md — Hamta Healthy Food (Hamtash Salad)
+# AGENTS.md — Hamta Healthy Food (Hamta Salad)
 
 ## Setup Awal (Laravel Application)
 
@@ -46,7 +46,7 @@ Boost akan menggantikan instruksi bootstrap ini dengan guidelines yang disesuaik
 ---
 
 ## Tentang Proyek
-Website + sistem kasir (POS) all-in-one untuk UMKM Hamtash Salad (brand "Hamta Healthy Food").
+Website + sistem kasir (POS) all-in-one untuk UMKM Hamta Salad (brand "Hamta Healthy Food").
 Proyek Project Based Learning (PjBL) kelas XI RPL 1, Kelompok 2, SMK Negeri 1 Surabaya.
 Owner/klien: Kak Yunita.
 

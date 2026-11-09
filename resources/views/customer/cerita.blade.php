@@ -35,7 +35,7 @@
                 <div class="relative w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 rounded-full overflow-hidden p-1.5 bg-gradient-to-tr from-[#65BD5E] to-white/40 shadow-2xl">
                     <img 
                         src="{{ asset('images/cerita/cerita-salad-bowl.png') }}" 
-                        alt="Hamtash Salad Bowl Segar" 
+                        alt="Hamta Salad Bowl Segar" 
                         class="w-full h-full object-cover rounded-full"
                         onerror="this.onerror=null;this.src='{{ asset('images/salad-1-clean.webp') }}'"
                     >
@@ -50,7 +50,7 @@
                 </h1>
 
                 <p class="text-xs sm:text-sm text-gray-200 leading-relaxed font-normal">
-                    Keluarga kami berkumpul dengan satu impian bersama — cara makan yang lebih sadar, bernutrisi tinggi, dan benar-benar <strong>BAIK</strong> untuk tubuh. Hamtash Salad (Hamta Healthy Food) didirikan dengan tujuan membawa dimensi baru pada salad segar dan pendekatan inovatif untuk <em>healthy fast food</em> berkualitas di Surabaya.
+                    Keluarga kami berkumpul dengan satu impian bersama — cara makan yang lebih sadar, bernutrisi tinggi, dan benar-benar <strong>BAIK</strong> untuk tubuh. Hamta Salad (Hamta Healthy Food) didirikan dengan tujuan membawa dimensi baru pada salad segar dan pendekatan inovatif untuk <em>healthy fast food</em> berkualitas di Surabaya.
                 </p>
 
                 <p class="text-xs sm:text-sm text-gray-200 leading-relaxed font-normal">

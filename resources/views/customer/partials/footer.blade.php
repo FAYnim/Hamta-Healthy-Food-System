@@ -120,7 +120,7 @@
                         class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-[#65BD5E] hover:text-[#0B412B] text-xs font-bold transition-all text-white"
                     >
                         <x-lucide-instagram class="w-4 h-4 text-emerald-300" />
-                        <span>Instagram: @hamtash.sby</span>
+                        <span>Instagram: @hamta.sby</span>
                     </a>
                 </div>
             </div>

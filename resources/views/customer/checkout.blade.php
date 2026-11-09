@@ -258,7 +258,7 @@
 
                 <div class="qris-merchant">
                     <h3 class="qris-merchant-name">HAMTA HEALTHY FOOD</h3>
-                    <p class="qris-merchant-sub">Hamtash Salad &amp; Healthy Eatery Surabaya</p>
+                    <p class="qris-merchant-sub">Hamta Salad &amp; Healthy Eatery Surabaya</p>
                     <p class="qris-nmid">NMID: ID1024398129038</p>
                 </div>
 

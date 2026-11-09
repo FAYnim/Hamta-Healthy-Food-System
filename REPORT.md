@@ -1,7 +1,7 @@
 # Laporan Audit & Eksplorasi Codebase Laravel — Hamta Healthy Food
 
 **Tanggal Audit**: 8 November 2026  
-**Repositori**: Hamta Healthy Food (Hamtash Salad) — Monolith Laravel 13 + Blade + Tailwind CSS  
+**Repositori**: Hamta Healthy Food (Hamta Salad) — Monolith Laravel 13 + Blade + Tailwind CSS  
 **Tujuan**: Pemetaan menyeluruh status Git, Skema & Migrasi Database, Alur Pembayaran, Routes, Views, Konfigurasi, dan Kesiapan Integrasi Payment Gateway (Midtrans).
 
 ---

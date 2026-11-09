@@ -1,4 +1,4 @@
-# PRD — Hamta Healthy Food (Hamtash Salad)
+# PRD — Hamta Healthy Food (Hamta Salad)
 **Project Based Learning (PjBL) — Jurusan RPL, SMK Negeri 1 Surabaya**
 Kelas XI RPL 1, Kelompok 2 | Tahun 2026
 
@@ -6,18 +6,18 @@ Kelas XI RPL 1, Kelompok 2 | Tahun 2026
 
 ## 1. Latar Belakang
 
-Hamtash Salad (Hamta Healthy Food) adalah UMKM kuliner sehat yang berfokus pada salad, sandwich, dan wrap, dengan dua cabang: **Lidah Kulon** (dapur produksi & pemrosesan order online) dan **MERR/Apartemen Bale Hinggil** (dine-in & take-away langsung, buka 09.00–21.00 WIB setiap hari).
+Hamta Salad (Hamta Healthy Food) adalah UMKM kuliner sehat yang berfokus pada salad, sandwich, dan wrap, dengan dua cabang: **Lidah Kulon** (dapur produksi & pemrosesan order online) dan **MERR/Apartemen Bale Hinggil** (dine-in & take-away langsung, buka 09.00–21.00 WIB setiap hari).
 
-Saat ini Hamtash menjalankan operasionalnya secara manual dan tersebar di berbagai kanal (WhatsApp, GoFood, GrabFood, ShopeeFood), tanpa sistem katalog atau pemesanan terpusat. Hal ini memunculkan dua masalah utama yang menjadi dasar kebutuhan proyek ini:
+Saat ini Hamta menjalankan operasionalnya secara manual dan tersebar di berbagai kanal (WhatsApp, GoFood, GrabFood, ShopeeFood), tanpa sistem katalog atau pemesanan terpusat. Hal ini memunculkan dua masalah utama yang menjadi dasar kebutuhan proyek ini:
 
 1. **Beban komunikasi berulang** — Pelanggan terus-menerus menanyakan katalog dan harga via WhatsApp meskipun informasi tersebut sudah tersedia di katalog WhatsApp Business, menunjukkan katalog yang ada kurang mudah diakses/dieksplorasi.
-2. **Tekanan margin akibat komisi platform** — Karena belum memiliki kurir internal, Hamtash bergantung penuh pada platform pihak ketiga (GoFood, GrabFood, ShopeeFood) untuk pengiriman, sehingga komisi platform memotong signifikan keuntungan mereka — terutama karena volume penjualan harian yang sudah cukup besar (puluhan porsi/hari).
+2. **Tekanan margin akibat komisi platform** — Karena belum memiliki kurir internal, Hamta bergantung penuh pada platform pihak ketiga (GoFood, GrabFood, ShopeeFood) untuk pengiriman, sehingga komisi platform memotong signifikan keuntungan mereka — terutama karena volume penjualan harian yang sudah cukup besar (puluhan porsi/hari).
 
 Sesuai ketentuan juknis PjBL RPL, aplikasi yang dibangun **wajib memiliki alur transaksi mandiri** dan tidak boleh sekadar redirect ke WhatsApp atau berupa landing page statis setara proyek jurusan Bisnis Digital.
 
 ## 2. Tujuan Produk
 
-Membangun website **all-in-one** untuk Hamtash Salad yang:
+Membangun website **all-in-one** untuk Hamta Salad yang:
 - Menyediakan katalog digital interaktif dan transparan sehingga pelanggan tidak perlu lagi bertanya manual via WhatsApp.
 - Menyediakan sistem pemesanan dan checkout mandiri (termasuk pembayaran QRIS) tanpa redirect ke WhatsApp.
 - Mereplikasi fitur andalan "Kreasikan Salad Sendiri" yang sebelumnya hanya tersedia di aplikasi ordering pihak ketiga.
@@ -44,7 +44,7 @@ Membangun website **all-in-one** untuk Hamtash Salad yang:
 | Peran | Deskripsi |
 |---|---|
 | **Customer** | Pelanggan umum yang memesan via website, tanpa perlu akun/login (guest checkout) |
-| **Admin** | Pemilik/staf Hamtash yang mengelola menu, pesanan (online & offline/kasir), promo, laporan, dan pengaturan toko. Admin dan Kasir digabung jadi satu peran untuk simplicity |
+| **Admin** | Pemilik/staf Hamta yang mengelola menu, pesanan (online & offline/kasir), promo, laporan, dan pengaturan toko. Admin dan Kasir digabung jadi satu peran untuk simplicity |
 
 ## 5. Kebutuhan Fungsional
 
@@ -136,7 +136,7 @@ Logo: wordmark "hamta" dengan ikon daun hijau. Referensi gaya: SaladStop!.
 
 ## 11. Asumsi & Batasan
 
-- Target konsumen Hamtash bukan pelaku diet ketat → info kalori/nutrisi sengaja tidak ditampilkan.
+- Target konsumen Hamta bukan pelaku diet ketat → info kalori/nutrisi sengaja tidak ditampilkan.
 - Pengiriman delivery tetap bergantung pihak ketiga (Shopee Express/ojol) untuk saat ini; website hanya menangani sisi pemesanan & pembayaran, bukan logistik fisik.
 - Mayoritas pelanggan pickup datang ke outlet (cabang MERR), bukan ke dapur produksi (Lidah Kulon) — relevan untuk default/pengurutan pilihan cabang pickup.
 - Sistem kasir sebelumnya (buatan mahasiswa, bukan sistem komersial) digantikan sepenuhnya oleh admin panel baru ini.

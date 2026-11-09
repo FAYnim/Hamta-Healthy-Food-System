@@ -1,5 +1,5 @@
 -- =========================================================
--- Hamta Healthy Food (Hamtash Salad) — schema.sql
+-- Hamta Healthy Food (Hamta Salad) — schema.sql
 -- Database: MySQL
 -- Berdasarkan ERD hasil UML/ERD stage (use case, class diagram, sequence diagram)
 -- =========================================================
