@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -88,6 +88,28 @@
                         <div class="flex items-center justify-end gap-3 mt-6">
                             <button type="reset" class="bg-hamta-gray hover:bg-stone-500 text-white font-semibold text-sm px-5 py-2 rounded-xl transition">Batal</button>
                             <button type="submit" class="bg-hamta-green hover:bg-[#58a851] text-white font-semibold text-sm px-5 py-2 rounded-xl shadow-sm transition">Simpan</button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="bg-white rounded-2xl p-6 md:p-7 shadow-sm border border-stone-100 md:col-span-2">
+                    <h3 class="text-lg font-bold mb-1">Tarif Pengiriman (Delivery)</h3>
+                    <p class="text-xs text-hamta-gray mb-4">Tentukan tarif flat ongkos kirim standar untuk semua pesanan delivery di website.</p>
+                    @if ($errors->has('tarif_ongkir'))
+                        <div role="alert" class="text-sm text-red-600 mb-3">{{ $errors->first('tarif_ongkir') }}</div>
+                    @endif
+                    <form id="form-pengiriman" method="POST" action="{{ route('admin.pengaturan.pengiriman') }}">
+                        @csrf
+                        <div class="max-w-md">
+                            <label for="tarif_ongkir" class="block text-sm font-semibold mb-1.5">Tarif Ongkos Kirim (Rp)</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-stone-500">Rp</span>
+                                <input id="tarif_ongkir" name="tarif_ongkir" type="number" step="500" min="0" value="{{ old('tarif_ongkir', (int) ($pengaturan->tarif_ongkir ?? 2000)) }}" class="w-full bg-white border border-stone-300 rounded-xl pl-12 pr-4 py-2.5 text-sm font-bold outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green">
+                            </div>
+                            <span class="block text-xs text-stone-500 mt-1.5">Default: Rp 2.000. Pelanggan delivery akan langsung dikenakan biaya ini saat checkout tanpa menunggu konfirmasi manual.</span>
+                        </div>
+                        <div class="flex items-center justify-end gap-3 mt-6">
+                            <button type="submit" class="bg-hamta-green hover:bg-[#58a851] text-white font-semibold text-sm px-5 py-2 rounded-xl shadow-sm transition">Simpan Tarif</button>
                         </div>
                     </form>
                 </section>

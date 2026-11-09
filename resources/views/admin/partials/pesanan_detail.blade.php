@@ -102,6 +102,10 @@
     <div class="text-sm text-hamta-black space-y-4 py-1">
         <p><span class="font-bold">Metode Pembayaran:</span> {{ strtoupper($pesanan->metode_bayar) }}</p>
 
+        @if ($pesanan->midtrans_order_id)
+            <p><span class="font-bold">Midtrans Order ID:</span> <code class="text-xs bg-stone-100 px-2 py-0.5 rounded text-emerald-800">{{ $pesanan->midtrans_order_id }}</code></p>
+        @endif
+
         @if ($pesanan->bukti_bayar)
             <div class="flex items-center gap-2">
                 <span class="font-bold">Bukti Transfer:</span>
@@ -120,22 +124,7 @@
         @endif
 
         @if ($pesanan->metode_ambil === 'delivery')
-            @if ($pesanan->status_ongkir === 'menunggu_konfirmasi')
-                <div>
-                    <p class="font-bold mb-1.5">Konfirmasi Ongkir:</p>
-                    <form method="POST" action="{{ route('admin.daftar_pesanan.ongkir', $pesanan->id_pesanan) }}" class="loker-form flex items-center gap-2">
-                        @csrf
-                        @method('PATCH')
-                        <input type="number" name="ongkir" step="0.01" min="0" required
-                               value="{{ $pesanan->ongkir ?? '' }}"
-                               placeholder="Nominal ongkir"
-                               class="w-40 bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black outline-none focus:border-hamta-green">
-                        <button type="submit" class="px-4 py-2.5 rounded-xl bg-hamta-green text-white text-sm font-bold hover:opacity-90 transition">Konfirmasi</button>
-                    </form>
-                </div>
-            @elseif ($pesanan->status_ongkir === 'terkonfirmasi')
-                <p><span class="font-bold">Ongkir:</span> {{ $rp($pesanan->ongkir) }}</p>
-            @endif
+            <p><span class="font-bold">Ongkir:</span> {{ $rp($pesanan->ongkir) }} <span class="text-xs text-emerald-700 font-bold ml-1">✓ Terkonfirmasi</span></p>
         @endif
 
         <div>
@@ -147,8 +136,12 @@
                         onchange="this.form.requestSubmit()"
                         class="w-56 bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm font-medium text-hamta-black outline-none cursor-pointer">
                     <option value="menunggu_verifikasi" @selected($pesanan->status_pembayaran === 'menunggu_verifikasi')>Menunggu Verifikasi</option>
+                    <option value="pending" @selected($pesanan->status_pembayaran === 'pending')>Pending (Menunggu Bayar)</option>
                     <option value="terverifikasi" @selected($pesanan->status_pembayaran === 'terverifikasi')>Terverifikasi (Lunas)</option>
+                    <option value="settlement" @selected($pesanan->status_pembayaran === 'settlement')>Settlement (Lunas Midtrans)</option>
                     <option value="ditolak" @selected($pesanan->status_pembayaran === 'ditolak')>Ditolak</option>
+                    <option value="expired" @selected($pesanan->status_pembayaran === 'expired')>Expired</option>
+                    <option value="gagal" @selected($pesanan->status_pembayaran === 'gagal')>Gagal</option>
                 </select>
             </form>
         </div>

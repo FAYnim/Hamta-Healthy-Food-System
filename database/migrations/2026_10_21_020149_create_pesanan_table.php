@@ -51,14 +51,14 @@ return new class extends Migration
             // Total tagihan akhir yang wajib dibayarkan pelanggan
             $table->decimal('total_bayar', 10, 2)->comment('dihitung di backend untuk validasi');
 
-            // Metode pembayaran: QRIS statis atau tunai di kasir
-            $table->enum('metode_bayar', ['qris', 'tunai'])->default('qris');
+            // Metode pembayaran: QRIS statis, tunai di kasir, atau Midtrans QRIS
+            $table->enum('metode_bayar', ['qris', 'qris_statis', 'tunai', 'midtrans'])->default('qris');
 
             // File path penyimpanan bukti transfer/pembayaran QRIS
             $table->string('bukti_bayar', 255)->nullable()->comment('path upload bukti bayar QRIS');
 
-            // Status verifikasi pembayaran oleh kasir/admin
-            $table->enum('status_pembayaran', ['menunggu_verifikasi', 'terverifikasi', 'ditolak'])->default('menunggu_verifikasi');
+            // Status verifikasi pembayaran oleh kasir/admin / gateway
+            $table->enum('status_pembayaran', ['menunggu_verifikasi', 'terverifikasi', 'ditolak', 'pending', 'settlement', 'expired', 'gagal'])->default('menunggu_verifikasi');
 
             // Status alur pengerjaan pesanan
             $table->enum('status_pesanan', ['diproses', 'siap', 'selesai', 'batal'])->default('diproses');

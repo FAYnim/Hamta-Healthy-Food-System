@@ -10,7 +10,9 @@ use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\PromoController;
 use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\StatusPesananController;
+use App\Http\Controllers\MidtransNotificationController;
 use App\Models\KomponenSalad;
+use App\Models\Pengaturan;
 use App\Models\Produk;
 use Illuminate\Support\Facades\Route;
 
@@ -57,12 +59,18 @@ Route::get('/kreasikan-salad', function () {
         'protein' => $komponen->where('jenis', 'protein')->values(),
     ]);
 })->name('customer.kreasikan_salad');
-Route::view('/checkout', 'customer.checkout')->name('customer.checkout');
+Route::get('/checkout', function () {
+    return view('customer.checkout', [
+        'tarifOngkir' => Pengaturan::getTarifOngkir(),
+    ]);
+})->name('customer.checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('customer.checkout.store');
 Route::view('/alamat', 'customer.alamat')->name('customer.alamat');
 Route::view('/pembayaran', 'customer.pembayaran')->name('customer.pembayaran');
 Route::get('/status-pesanan/{kode?}', [StatusPesananController::class, 'show'])->name('customer.status_pesanan');
+Route::post('/status-pesanan/{kode}/upload-bukti', [StatusPesananController::class, 'uploadBukti'])->name('customer.status_pesanan.upload_bukti');
 Route::get('/api/pesanan/{kode}/status', [StatusPesananController::class, 'cek'])->name('customer.pesanan.api_status');
+Route::post('/midtrans/notification', [MidtransNotificationController::class, 'handle'])->name('midtrans.notification');
 Route::view('/cerita-kami', 'customer.cerita')->name('customer.cerita');
 
 // ─── Auth (tidak perlu middleware) ────────────────────────────────────────────
@@ -108,6 +116,8 @@ Route::middleware('admin.auth')->group(function () {
         ->name('admin.pengaturan.identitas');
     Route::post('/admin/pengaturan/kontak', [PengaturanController::class, 'updateKontak'])
         ->name('admin.pengaturan.kontak');
+    Route::post('/admin/pengaturan/pengiriman', [PengaturanController::class, 'updatePengiriman'])
+        ->name('admin.pengaturan.pengiriman');
     Route::post('/admin/pengaturan/cabang', [PengaturanController::class, 'storeCabang'])
         ->name('admin.pengaturan.cabang.store');
     Route::patch('/admin/pengaturan/cabang/{cabang}', [PengaturanController::class, 'updateCabang'])

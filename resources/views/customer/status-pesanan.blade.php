@@ -211,19 +211,128 @@
                 <div class="tr-grid">
                     <div class="tr-box">
                         <span class="tr-box-label">Status Pembayaran</span>
+
+                        @php
+                            $qrUrl = null;
+                            if (! empty($pesanan->midtrans_response['qr_url'])) {
+                                $qrUrl = $pesanan->midtrans_response['qr_url'];
+                            } elseif (! empty($pesanan->midtrans_response['actions'])) {
+                                foreach ($pesanan->midtrans_response['actions'] as $act) {
+                                    if (($act['name'] ?? '') === 'generate-qr-code') {
+                                        $qrUrl = $act['url'] ?? null;
+                                        break;
+                                    }
+                                }
+                            }
+                            $isPendingOrMenunggu = in_array($pesanan->status_pembayaran, ['menunggu_verifikasi', 'pending']);
+                            $isMidtrans = $pesanan->metode_bayar === 'midtrans';
+                            $showQr = $isPendingOrMenunggu && $isMidtrans && ! empty($qrUrl);
+                            $needUploadBukti = $pesanan->status_pembayaran === 'menunggu_verifikasi'
+                                && in_array($pesanan->metode_bayar, ['qris_statis', 'qris'])
+                                && empty($pesanan->bukti_bayar);
+                        @endphp
+
+                        <!-- Wadah QRIS Otomatis Midtrans -->
+                        <div id="tr-midtrans-qr-wrap" style="display: {{ $showQr ? 'block' : 'none' }}; margin: 12px 0 16px; text-align: center; padding: 16px; background: #fff; border: 2px solid var(--green); border-radius: 14px; box-shadow: 0 4px 12px rgba(11,65,43,.08);">
+                            <span style="display:block;font-size:12px;font-weight:800;color:var(--green);letter-spacing:.6px;margin-bottom:8px">SCAN UNTUK MEMBAYAR (QRIS)</span>
+                            <div style="display:inline-block;padding:10px;background:#fbf8f0;border-radius:12px;border:1px dashed rgba(11,65,43,.3);">
+                                <img id="tr-midtrans-qr-img" src="{{ $qrUrl ?? '' }}" alt="QRIS Midtrans" style="width:200px;height:200px;display:block;margin:0 auto;object-fit:contain;" />
+                            </div>
+                            <p style="margin:10px 0 0;font-size:11.5px;color:#4a5a52;line-height:1.4">
+                                Buka aplikasi e-wallet (GoPay, OVO, Dana) atau m-Banking Anda, lalu scan QR di atas.<br>
+                                <strong>Status pembayaran akan diverifikasi otomatis tanpa perlu upload bukti transfer.</strong>
+                            </p>
+                        </div>
+
+                        <!-- Wadah Form Upload Bukti QRIS Statis (Jika Belum Upload) -->
+                        <div id="tr-qris-statis-upload-wrap" style="display: {{ $needUploadBukti ? 'block' : 'none' }}; margin: 12px 0 16px; padding: 16px; background: #fff; border: 2px dashed #f59e0b; border-radius: 14px; text-align: center;">
+                            <span style="display:block;font-size:12px;font-weight:800;color:#b45309;letter-spacing:.6px;margin-bottom:8px">PEMBAYARAN QRIS MANUAL (STATIS)</span>
+                            <p style="margin:0 0 12px;font-size:12px;color:#4a5a52;line-height:1.4">
+                                Silakan scan QRIS Hamta di bawah ini dan unggah foto/screenshot bukti transfer agar pesanan dapat segera diproses:
+                            </p>
+
+                            <div style="display:inline-block;padding:10px;background:#fbf8f0;border-radius:12px;border:1px solid rgba(11,65,43,.2);margin-bottom:12px">
+                                <svg width="180" height="180" viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:8px;background:#fff;padding:8px">
+                                    <rect x="20" y="20" width="56" height="56" rx="8" fill="#0B412B"/>
+                                    <rect x="28" y="28" width="40" height="40" rx="4" fill="#fff"/>
+                                    <rect x="36" y="36" width="24" height="24" rx="3" fill="#0B412B"/>
+                                    <rect x="184" y="20" width="56" height="56" rx="8" fill="#0B412B"/>
+                                    <rect x="192" y="28" width="40" height="40" rx="4" fill="#fff"/>
+                                    <rect x="200" y="36" width="24" height="24" rx="3" fill="#0B412B"/>
+                                    <rect x="20" y="184" width="56" height="56" rx="8" fill="#0B412B"/>
+                                    <rect x="28" y="192" width="40" height="40" rx="4" fill="#fff"/>
+                                    <rect x="36" y="200" width="24" height="24" rx="3" fill="#0B412B"/>
+                                    <rect x="84" y="44" width="8" height="8" fill="#0B412B"/>
+                                    <rect x="100" y="44" width="8" height="8" fill="#0B412B"/>
+                                    <rect x="116" y="44" width="8" height="8" fill="#0B412B"/>
+                                    <rect x="44" y="84" width="8" height="8" fill="#0B412B"/>
+                                    <rect x="44" y="100" width="8" height="8" fill="#0B412B"/>
+                                    <rect x="88" y="24" width="12" height="12" fill="#0B412B"/>
+                                    <rect x="108" y="24" width="12" height="12" fill="#0B412B"/>
+                                    <rect x="136" y="24" width="12" height="12" fill="#0B412B"/>
+                                    <rect x="20" y="88" width="12" height="12" fill="#0B412B"/>
+                                    <rect x="64" y="88" width="12" height="12" fill="#0B412B"/>
+                                    <rect x="88" y="88" width="12" height="12" fill="#0B412B"/>
+                                    <rect x="168" y="88" width="12" height="12" fill="#0B412B"/>
+                                    <rect x="228" y="88" width="12" height="12" fill="#0B412B"/>
+                                    <rect x="24" y="108" width="12" height="12" fill="#0B412B"/>
+                                    <rect x="60" y="108" width="16" height="8" fill="#0B412B"/>
+                                    <rect x="84" y="108" width="12" height="12" fill="#0B412B"/>
+                                    <rect x="164" y="108" width="12" height="12" fill="#0B412B"/>
+                                    <rect x="216" y="108" width="24" height="12" fill="#0B412B"/>
+                                    <rect x="20" y="128" width="12" height="12" fill="#0B412B"/>
+                                    <rect x="60" y="128" width="16" height="8" fill="#0B412B"/>
+                                    <rect x="164" y="128" width="16" height="16" fill="#0B412B"/>
+                                    <rect x="24" y="148" width="12" height="12" fill="#0B412B"/>
+                                    <rect x="64" y="148" width="12" height="12" fill="#0B412B"/>
+                                    <rect x="88" y="148" width="12" height="12" fill="#0B412B"/>
+                                    <rect x="164" y="148" width="12" height="12" fill="#0B412B"/>
+                                    <rect x="228" y="148" width="12" height="12" fill="#0B412B"/>
+                                    <circle cx="130" cy="130" r="24" fill="#0B412B"/>
+                                    <path d="M124 135c0-6 6-11 12-11 0 6-6 11-12 11Z" fill="#65BD5E"/>
+                                    <path d="M136 135c0-6-6-11-12-11 0 6 6 11 12 11Z" fill="#A8E6A1"/>
+                                </svg>
+                                <span style="display:block;font-size:11px;font-weight:700;color:var(--green);margin-top:4px">NMID: ID1024398129038</span>
+                            </div>
+
+                            <form id="tr-upload-bukti-form" method="POST" action="{{ route('customer.status_pesanan.upload_bukti', $pesanan->kode_pesanan) }}" enctype="multipart/form-data">
+                                @csrf
+                                <div style="margin-bottom:10px">
+                                    <input type="file" name="bukti_bayar" id="tr-bukti-file" accept="image/png,image/jpeg,image/webp" required style="font-size:12px;max-width:240px;margin:0 auto;display:block" />
+                                    <small style="color:#7a8a80;font-size:11px">Format: JPG, PNG, WEBP (maks. 5MB)</small>
+                                </div>
+                                <button type="submit" id="tr-submit-bukti-btn" style="padding:8px 16px;background:var(--green);color:#fff;border-radius:10px;font-size:12px;font-weight:700;border:none;cursor:pointer">
+                                    Unggah Bukti Transfer
+                                </button>
+                            </form>
+                            <div id="tr-upload-bukti-msg" style="display:none;margin-top:10px;font-size:12px;font-weight:700;color:var(--green)"></div>
+                        </div>
+
+                        <!-- Notifikasi Bukti Sudah Diunggah -->
+                        <div id="tr-bukti-uploaded-wrap" style="display: {{ (!empty($pesanan->bukti_bayar) && $pesanan->status_pembayaran === 'menunggu_verifikasi') ? 'block' : 'none' }}; margin: 10px 0 14px; padding: 12px; border-radius: 10px; background: #ecfdf5; border: 1px solid #a7f3d0; font-size: 12px; color: #065f46;">
+                            ✓ <strong>Bukti transfer telah diunggah:</strong> Menunggu verifikasi tim kasir Hamta.
+                            @if (!empty($pesanan->bukti_bayar))
+                                <div style="margin-top:6px">
+                                    <a href="{{ asset('storage/'.$pesanan->bukti_bayar) }}" target="_blank" style="color:var(--green);font-weight:700;text-decoration:underline">Lihat Foto Bukti Transfer ↗</a>
+                                </div>
+                            @endif
+                        </div>
+
                         <div style="margin-top:6px" id="tr-pay-badge-wrap">
                             @if ($pesanan->metode_bayar === 'tunai')
                                 <span class="tr-status-pill tr-pill-siap inline-flex items-center gap-1.5"><x-lucide-banknote class="w-3.5 h-3.5" /> <span>Bayar di Tempat (Tunai)</span></span>
-                            @elseif ($pesanan->status_pembayaran === 'terverifikasi')
-                                <span class="tr-status-pill tr-pill-pay-terverifikasi inline-flex items-center gap-1.5"><x-lucide-check-circle class="w-3.5 h-3.5" /> <span>QRIS — Terverifikasi (Lunas)</span></span>
-                            @elseif ($pesanan->status_pembayaran === 'ditolak')
-                                <span class="tr-status-pill tr-pill-pay-ditolak inline-flex items-center gap-1.5"><x-lucide-x-circle class="w-3.5 h-3.5" /> <span>Pembayaran Ditolak</span></span>
+                            @elseif (in_array($pesanan->status_pembayaran, ['terverifikasi', 'settlement']))
+                                <span class="tr-status-pill tr-pill-pay-terverifikasi inline-flex items-center gap-1.5"><x-lucide-check-circle class="w-3.5 h-3.5" /> <span>{{ $pesanan->metode_bayar === 'midtrans' ? 'QRIS Otomatis — Lunas' : 'QRIS — Terverifikasi (Lunas)' }}</span></span>
+                            @elseif (in_array($pesanan->status_pembayaran, ['ditolak', 'expired', 'gagal']))
+                                <span class="tr-status-pill tr-pill-pay-ditolak inline-flex items-center gap-1.5"><x-lucide-x-circle class="w-3.5 h-3.5" /> <span>Pembayaran Ditolak / Kedaluwarsa</span></span>
+                            @elseif ($pesanan->metode_bayar === 'midtrans')
+                                <span class="tr-status-pill tr-pill-pay-menunggu inline-flex items-center gap-1.5"><x-lucide-clock class="w-3.5 h-3.5" /> <span>QRIS Otomatis — Menunggu Pembayaran</span></span>
                             @else
                                 <span class="tr-status-pill tr-pill-pay-menunggu inline-flex items-center gap-1.5"><x-lucide-clock class="w-3.5 h-3.5" /> <span>QRIS — Menunggu Verifikasi Admin</span></span>
                             @endif
                         </div>
                         <div style="margin-top:6px;font-size:12px;color:#6f6a5f">
-                            Metode: {{ strtoupper($pesanan->metode_bayar) }}
+                            Metode: {{ $pesanan->metode_bayar === 'midtrans' ? 'QRIS Otomatis (Midtrans)' : ($pesanan->metode_bayar === 'qris_statis' || $pesanan->metode_bayar === 'qris' ? 'QRIS Manual (Statis)' : 'Tunai') }}
                         </div>
                     </div>
 
@@ -398,15 +507,53 @@
             }
         }
 
+        // Update QRIS Midtrans
+        var qrWrap = document.getElementById('tr-midtrans-qr-wrap');
+        var qrImg = document.getElementById('tr-midtrans-qr-img');
+
+        var isPendingPay = (data.status_pembayaran === 'menunggu_verifikasi' || data.status_pembayaran === 'pending');
+        var isMidtransPay = (data.metode_bayar === 'midtrans');
+
+        if (qrWrap) {
+            if (isPendingPay && isMidtransPay && data.qr_url) {
+                if (qrImg) qrImg.src = data.qr_url;
+                qrWrap.style.display = 'block';
+            } else {
+                qrWrap.style.display = 'none';
+            }
+        }
+
+        // Update Wadah Upload QRIS Statis
+        var uploadWrap = document.getElementById('tr-qris-statis-upload-wrap');
+        var uploadedWrap = document.getElementById('tr-bukti-uploaded-wrap');
+        var isQrisStatis = (data.metode_bayar === 'qris_statis' || data.metode_bayar === 'qris');
+        if (uploadWrap && uploadedWrap) {
+            if (data.status_pembayaran === 'menunggu_verifikasi' && isQrisStatis && !data.bukti_bayar) {
+                uploadWrap.style.display = 'block';
+                uploadedWrap.style.display = 'none';
+            } else if (data.status_pembayaran === 'menunggu_verifikasi' && isQrisStatis && data.bukti_bayar) {
+                uploadWrap.style.display = 'none';
+                uploadedWrap.style.display = 'block';
+            } else {
+                uploadWrap.style.display = 'none';
+                if (data.status_pembayaran === 'terverifikasi' || data.status_pembayaran === 'settlement') {
+                    uploadedWrap.style.display = 'none';
+                }
+            }
+        }
+
         // Update Badge Pembayaran
         var payWrap = document.getElementById('tr-pay-badge-wrap');
         if (payWrap) {
             if (data.metode_bayar === 'tunai') {
                 payWrap.innerHTML = '<span class="tr-status-pill tr-pill-siap inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/></svg><span>Bayar di Tempat (Tunai)</span></span>';
-            } else if (data.status_pembayaran === 'terverifikasi') {
-                payWrap.innerHTML = '<span class="tr-status-pill tr-pill-pay-terverifikasi inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>QRIS — Terverifikasi (Lunas)</span></span>';
-            } else if (data.status_pembayaran === 'ditolak') {
-                payWrap.innerHTML = '<span class="tr-status-pill tr-pill-pay-ditolak inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span>Pembayaran Ditolak</span></span>';
+            } else if (data.status_pembayaran === 'terverifikasi' || data.status_pembayaran === 'settlement') {
+                var labelPay = data.metode_bayar === 'midtrans' ? 'QRIS Otomatis — Lunas' : 'QRIS — Terverifikasi (Lunas)';
+                payWrap.innerHTML = '<span class="tr-status-pill tr-pill-pay-terverifikasi inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>' + labelPay + '</span></span>';
+            } else if (data.status_pembayaran === 'ditolak' || data.status_pembayaran === 'expired' || data.status_pembayaran === 'gagal') {
+                payWrap.innerHTML = '<span class="tr-status-pill tr-pill-pay-ditolak inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span>Pembayaran Ditolak / Kedaluwarsa</span></span>';
+            } else if (data.metode_bayar === 'midtrans') {
+                payWrap.innerHTML = '<span class="tr-status-pill tr-pill-pay-menunggu inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>QRIS Otomatis — Menunggu Pembayaran</span></span>';
             } else {
                 payWrap.innerHTML = '<span class="tr-status-pill tr-pill-pay-menunggu inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>QRIS — Menunggu Verifikasi Admin</span></span>';
             }
@@ -435,6 +582,47 @@
 
     // Polling setiap 4 detik untuk koneksi live ke admin
     var intervalId = setInterval(pollStatus, 4000);
+
+    var uploadForm = document.getElementById('tr-upload-bukti-form');
+    if (uploadForm) {
+        uploadForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var btn = document.getElementById('tr-submit-bukti-btn');
+            var msg = document.getElementById('tr-upload-bukti-msg');
+            var fileInput = document.getElementById('tr-bukti-file');
+            if (!fileInput || !fileInput.files || !fileInput.files[0]) {
+                alert('Pilih file bukti transfer terlebih dahulu.');
+                return;
+            }
+            var formData = new FormData(uploadForm);
+            if (btn) { btn.disabled = true; btn.textContent = 'Mengunggah...'; }
+            fetch(uploadForm.action, {
+                method: 'POST',
+                headers: { 'Accept': 'application/json' },
+                body: formData
+            })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                if (data.ok) {
+                    uploadForm.style.display = 'none';
+                    if (msg) {
+                        msg.style.display = 'block';
+                        msg.textContent = 'Bukti berhasil diunggah, menunggu verifikasi kasir.';
+                    }
+                    var uploadedWrap = document.getElementById('tr-bukti-uploaded-wrap');
+                    if (uploadedWrap) uploadedWrap.style.display = 'block';
+                    if (window.hamtaToast) window.hamtaToast('Bukti transfer berhasil diunggah!');
+                } else {
+                    alert(data.message || 'Gagal mengunggah bukti.');
+                    if (btn) { btn.disabled = false; btn.textContent = 'Unggah Bukti Transfer'; }
+                }
+            })
+            .catch(function () {
+                alert('Terjadi kesalahan koneksi.');
+                if (btn) { btn.disabled = false; btn.textContent = 'Unggah Bukti Transfer'; }
+            });
+        });
+    }
 
     var refreshBtn = document.getElementById('tr-manual-refresh');
     if (refreshBtn) {

@@ -24,6 +24,8 @@ class Pesanan extends Model
         'total_diskon',
         'total_bayar',
         'metode_bayar',
+        'midtrans_order_id',
+        'midtrans_response',
         'bukti_bayar',
         'status_pembayaran',
         'status_pesanan',
@@ -39,6 +41,7 @@ class Pesanan extends Model
         'total_bayar' => 'decimal:2',
         'id_cabang' => 'integer',
         'id_admin' => 'integer',
+        'midtrans_response' => 'array',
     ];
 
     // Pesanan ini dilayani oleh satu cabang

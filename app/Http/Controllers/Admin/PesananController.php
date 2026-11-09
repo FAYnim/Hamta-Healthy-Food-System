@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\DetailPesanan;
 use App\Models\Pesanan;
+use App\Services\MidtransService;
 use App\Services\PromoService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class PesananController extends Controller
@@ -69,6 +71,31 @@ class PesananController extends Controller
         // Promo gratis ongkir baru ada nilainya di sini, karena tarif ongkir
         // baru diketahui setelah admin mengonfirmasi.
         app(PromoService::class)->terapkanUlang($pesanan);
+        $pesanan->refresh();
+
+        // ALUR DELIVERY MIDTRANS: jika metode_bayar='qris' atau 'midtrans', panggil chargeQris setelah total_bayar final dihitung ulang
+        if (in_array($pesanan->metode_bayar, ['qris', 'midtrans'])) {
+            try {
+                $midtransOrderId = $pesanan->kode_pesanan.'-'.time();
+                $charge = app(MidtransService::class)->chargeQris($midtransOrderId, (int) round($pesanan->total_bayar));
+
+                $pesanan->update([
+                    'metode_bayar' => 'midtrans',
+                    'midtrans_order_id' => $midtransOrderId,
+                    'midtrans_response' => $charge,
+                    'status_pembayaran' => 'pending',
+                ]);
+            } catch (\Throwable $e) {
+                Log::error('Midtrans delivery charge failed: '.$e->getMessage(), [
+                    'kode_pesanan' => $pesanan->kode_pesanan,
+                ]);
+
+                $pesanan->update([
+                    'metode_bayar' => 'qris_statis',
+                    'status_pembayaran' => 'menunggu_verifikasi',
+                ]);
+            }
+        }
 
         // Dari loker (ajax) → balik partial segar supaya panel tetap terbuka
         if ($request->ajax()) {
@@ -106,7 +133,7 @@ class PesananController extends Controller
     public function updatePembayaran(Request $request, $id)
     {
         $data = $request->validate([
-            'status_pembayaran' => ['required', Rule::in(['menunggu_verifikasi', 'terverifikasi', 'ditolak'])],
+            'status_pembayaran' => ['required', Rule::in(['menunggu_verifikasi', 'terverifikasi', 'ditolak', 'pending', 'settlement', 'expired', 'gagal'])],
         ]);
 
         $pesanan = Pesanan::findOrFail($id);

@@ -74,6 +74,28 @@ class PengaturanController extends Controller
             ->with('success', 'Kontak dan media sosial berhasil diperbarui.');
     }
 
+    public function updatePengiriman(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'tarif_ongkir' => ['required', 'numeric', 'min:0'],
+        ], [
+            'tarif_ongkir.required' => 'Tarif ongkos kirim wajib diisi.',
+            'tarif_ongkir.numeric' => 'Tarif ongkos kirim harus berupa angka.',
+            'tarif_ongkir.min' => 'Tarif ongkos kirim minimal Rp 0.',
+        ]);
+
+        Pengaturan::firstOrCreate([], [
+            'whatsapp' => '+6285812345678',
+            'instagram' => '@hamta.sby',
+            'tarif_ongkir' => 2000,
+        ])->update([
+            'tarif_ongkir' => $data['tarif_ongkir'],
+        ]);
+
+        return redirect()->route('admin.pengaturan')
+            ->with('success', 'Tarif ongkos kirim berhasil diperbarui.');
+    }
+
     public function storeCabang(Request $request): RedirectResponse
     {
         $data = $request->validate($this->rulesCabang());

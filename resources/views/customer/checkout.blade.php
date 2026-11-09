@@ -218,16 +218,36 @@
             <div class="co-opt-group" role="radiogroup" aria-label="Metode pembayaran" style="margin-top:14px">
                 <button type="button" class="co-opt is-selected" data-pay="qris" aria-pressed="true">
                     <span class="co-opt-radio" aria-hidden="true"></span>
-                    <span>QRIS (Statis)<small>Bayar sekarang via e-wallet / m-banking</small></span>
+                    <span>QRIS<small>Bayar instan via GoPay, OVO, Dana, BCA &amp; m-Banking</small></span>
                 </button>
                 <button type="button" class="co-opt" data-pay="tunai" aria-pressed="false">
                     <span class="co-opt-radio" aria-hidden="true"></span>
-                    <span>Bayar di Tempat<small>Bayar tunai saat pickup</small></span>
+                    <span>Bayar di Tempat (Tunai)<small>Bayar langsung saat mengambil pesanan di outlet</small></span>
                 </button>
             </div>
 
+            <!-- Banner Fallback jika Midtrans gagal/down -->
+            <div id="co-fallback-banner" style="display:none;margin-top:14px;padding:12px 14px;background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;color:#92400e;font-size:12.5px;line-height:1.4">
+                <strong>Pemberitahuan:</strong>
+                <span id="co-fallback-text">Layanan QRIS otomatis sedang tidak dapat dijangkau. Silakan lakukan pembayaran via QRIS statis di bawah ini dan unggah bukti transfer.</span>
+            </div>
+
+            <!-- Info Box QRIS -->
+            <div class="qris-card" id="qris-info-box" style="margin-top:14px;border:1.5px solid var(--green)">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <span class="qris-badge" style="font-size:18px">QRIS</span>
+                    <span style="font-size:13px;font-weight:700;color:var(--green)">Pembayaran Bebas Biaya Admin</span>
+                </div>
+                <p id="qris-info-text" style="margin:10px 0 0;font-size:12.5px;color:#4a5a52;line-height:1.5">
+                    Setelah tombol pesanan ditekan, kode QRIS akan langsung diterbitkan untuk pembayaran instan tanpa perlu unggah bukti transfer. Cukup scan dengan GoPay, OVO, Dana, ShopeePay, BCA, atau m-Banking apa saja.
+                </p>
+                <div id="qris-delivery-hint" style="display:none;margin-top:10px;padding:10px 12px;border-radius:8px;background:#f0fdf4;border:1px solid #bbf7d0;font-size:11.5px;color:#166534">
+                    <strong>Tarif Pengiriman Flat:</strong> Biaya ongkir flat Rp {{ number_format($tarifOngkir ?? 2000, 0, ',', '.') }} langsung ditambahkan ke total tagihan. Kode QRIS instan akan langsung terbit saat pesanan dibuat.
+                </div>
+            </div>
+
             <!-- Card QRIS Statis Hamta Healthy Food -->
-            <div class="qris-card" id="qris-box">
+            <div class="qris-card" id="qris-box" style="display:none">
                 <div class="qris-header">
                     <div class="qris-logo-wrap">
                         <span class="qris-badge">QRIS</span>
@@ -486,6 +506,15 @@
                 <span id="success-order-total" style="font-size:20px;font-weight:800;color:var(--green)">Rp. 0</span>
             </div>
 
+            <!-- QRIS Midtrans (Jika Ada) -->
+            <div id="success-midtrans-qr-box" style="display:none;margin:16px 0;padding:16px;background:#fff;border:2px solid var(--green);border-radius:12px;text-align:center">
+                <span style="display:block;font-size:12px;font-weight:800;color:var(--green);letter-spacing:.6px;margin-bottom:8px">SCAN QRIS UNTUK MEMBAYAR</span>
+                <div style="display:inline-block;padding:10px;background:#fbf8f0;border-radius:12px;border:1px dashed rgba(11,65,43,.3)">
+                    <img id="success-midtrans-qr-img" src="" alt="QRIS Midtrans" style="width:200px;height:200px;display:block;margin:0 auto;object-fit:contain" />
+                </div>
+                <p style="margin:10px 0 0;font-size:12px;color:#4a5a52">Scan dengan aplikasi e-wallet atau m-Banking Anda. Pembayaran akan terverifikasi secara otomatis.</p>
+            </div>
+
             <!-- Tombol Pantau Status Live -->
             <a href="#" class="co-submit-btn" id="success-tracker-btn" style="text-decoration:none;margin-top:16px;background:var(--green);color:#fff">
                 <span>Pantau Status Pesanan Live (Realtime Tracker) ➔</span>
@@ -571,6 +600,9 @@
         return sel ? sel.dataset.take : 'pickup';
     }
 
+    var isFallbackMode = false;
+    var FLAT_ONGKIR = {{ (float) ($tarifOngkir ?? 2000) }};
+
     function currentPay() {
         var sel = document.querySelector('[data-pay].is-selected');
         return sel ? sel.dataset.pay : 'qris';
@@ -578,15 +610,37 @@
 
     function updatePaymentDisplay() {
         var pay = currentPay();
+        var take = currentTake();
+        var qrisInfoBox = document.getElementById('qris-info-box');
+        var qrisDeliveryHint = document.getElementById('qris-delivery-hint');
+        var fallbackBanner = document.getElementById('co-fallback-banner');
         var qrisBox = document.getElementById('qris-box');
         var tunaiBox = document.getElementById('tunai-box');
         var submitLabel = document.getElementById('co-submit-label');
 
         if (pay === 'qris') {
-            if (qrisBox) qrisBox.style.display = 'block';
             if (tunaiBox) tunaiBox.style.display = 'none';
-            if (submitLabel) submitLabel.textContent = 'Bayar via QRIS & Buat Pesanan';
+
+            if (isFallbackMode) {
+                if (qrisInfoBox) qrisInfoBox.style.display = 'none';
+                if (fallbackBanner) fallbackBanner.style.display = 'block';
+                if (qrisBox) qrisBox.style.display = 'block';
+                if (submitLabel) submitLabel.textContent = 'Unggah Bukti & Buat Pesanan (QRIS Statis)';
+            } else {
+                if (qrisInfoBox) qrisInfoBox.style.display = 'block';
+                if (fallbackBanner) fallbackBanner.style.display = 'none';
+                if (qrisBox) qrisBox.style.display = 'none';
+                if (qrisDeliveryHint) {
+                    qrisDeliveryHint.style.display = (take === 'delivery') ? 'block' : 'none';
+                }
+                if (submitLabel) {
+                    submitLabel.textContent = 'Bayar via QRIS & Buat Pesanan';
+                }
+            }
         } else {
+            // pay === 'tunai'
+            if (qrisInfoBox) qrisInfoBox.style.display = 'none';
+            if (fallbackBanner) fallbackBanner.style.display = 'none';
             if (qrisBox) qrisBox.style.display = 'none';
             if (tunaiBox) tunaiBox.style.display = 'block';
             if (submitLabel) submitLabel.textContent = 'Buat Pesanan (Bayar di Tempat)';
@@ -700,7 +754,7 @@
         var subtotal = cart.reduce(function (s, it) { return s + (parseFloat(it.harga) || 0) * (parseInt(it.jumlah, 10) || 0); }, 0);
         var totalQty = cart.reduce(function (s, it) { return s + (parseInt(it.jumlah, 10) || 0); }, 0);
         var isDelivery = currentTake() === 'delivery';
-        var ongkir = !cart.length ? 0 : (isDelivery ? 10000 : 0);
+        var ongkir = !cart.length ? 0 : (isDelivery ? FLAT_ONGKIR : 0);
         var ppn = Math.round((subtotal + ongkir) * 0.11);
         var grandTotal = subtotal + ongkir + ppn;
 
@@ -760,7 +814,7 @@
     try {
         var savedPay = localStorage.getItem('hamta_pay');
         var savedTake = localStorage.getItem('hamta_take');
-        if (savedPay) {
+        if (savedPay && (savedPay === 'qris' || savedPay === 'tunai')) {
             var payBtn = document.querySelector('[data-pay="' + savedPay + '"]');
             if (payBtn) payBtn.click();
         }
@@ -797,12 +851,31 @@
         if (timeEl) timeEl.textContent = order.created_at || 'Baru saja';
 
         if (payEl) {
-            if (order.metode_bayar === 'qris') {
+            if (order.metode_bayar === 'midtrans') {
+                if (order.status_pembayaran === 'terverifikasi' || order.status_pembayaran === 'settlement') {
+                    payEl.className = 'co-badge-status co-badge-verified';
+                    payEl.textContent = 'QRIS Otomatis — Lunas';
+                } else {
+                    payEl.className = 'co-badge-status co-badge-pending';
+                    payEl.textContent = 'QRIS Otomatis — Menunggu Pembayaran';
+                }
+            } else if (order.metode_bayar === 'qris' || order.metode_bayar === 'qris_statis') {
                 payEl.className = 'co-badge-status co-badge-pending';
-                payEl.textContent = 'QRIS — Menunggu Verifikasi Admin';
+                payEl.textContent = 'QRIS Manual — Menunggu Verifikasi';
             } else {
                 payEl.className = 'co-badge-status co-badge-verified';
                 payEl.textContent = 'Bayar di Tempat (Tunai)';
+            }
+        }
+
+        var qrSuccessBox = document.getElementById('success-midtrans-qr-box');
+        var qrSuccessImg = document.getElementById('success-midtrans-qr-img');
+        if (qrSuccessBox && qrSuccessImg) {
+            if (order.metode_bayar === 'midtrans' && order.qr_url) {
+                qrSuccessImg.src = order.qr_url;
+                qrSuccessBox.style.display = 'block';
+            } else {
+                qrSuccessBox.style.display = 'none';
             }
         }
 
@@ -949,11 +1022,11 @@
                 return;
             }
 
-            // Validasi 2: Bukti transfer QRIS wajib ada jika bayar via QRIS
+            // Validasi 2: Bukti transfer QRIS manual wajib ada jika dalam mode fallback QRIS statis
             var take = currentTake();
             var pay = currentPay();
-            if (pay === 'qris' && !selectedBuktiFile) {
-                showMsg('Bukti pembayaran QRIS wajib diunggah sebelum membuat pesanan.', true);
+            if (pay === 'qris' && isFallbackMode && !selectedBuktiFile) {
+                showMsg('Bukti pembayaran QRIS statis wajib diunggah sebelum membuat pesanan.', true);
                 if (window.hamtaToast) window.hamtaToast('Unggah bukti pembayaran QRIS terlebih dahulu.');
                 var buktiArea = document.getElementById('co-bukti-upload-area');
                 if (buktiArea) {
@@ -986,7 +1059,9 @@
             if (take === 'delivery' && savedAddr) {
                 formData.append('alamat_delivery', [savedAddr.alamat, savedAddr.patokan].filter(Boolean).join(' — '));
             }
-            formData.append('metode_bayar', pay);
+            // Jika dalam mode fallback QRIS statis, kirim metode_bayar='qris_statis'
+            var sendPay = (pay === 'qris' && isFallbackMode) ? 'qris_statis' : pay;
+            formData.append('metode_bayar', sendPay);
             formData.append('cart', JSON.stringify(payloadCart));
             if (selectedBuktiFile) {
                 formData.append('bukti_bayar', selectedBuktiFile);
@@ -1008,6 +1083,26 @@
                 return res.json().then(function (body) { return { ok: res.ok, body: body }; });
             }).then(function (out) {
                 submitBtn.disabled = false;
+
+                // Cek apakah server meminta fallback ke QRIS statis (misal Midtrans down/timeout/gagal)
+                if (out.body && out.body.fallback_required) {
+                    isFallbackMode = true;
+                    updatePaymentDisplay();
+                    var fallbackBanner = document.getElementById('co-fallback-banner');
+                    var fallbackText = document.getElementById('co-fallback-text');
+                    if (fallbackBanner) fallbackBanner.style.display = 'block';
+                    if (fallbackText && out.body.message) fallbackText.textContent = out.body.message;
+
+                    var qrisBox = document.getElementById('qris-box');
+                    if (qrisBox) {
+                        qrisBox.style.display = 'block';
+                        qrisBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    if (window.hamtaToast) window.hamtaToast('Layanan QRIS otomatis dialihkan ke QRIS statis.');
+                    showMsg('Layanan QRIS otomatis sedang tidak dapat dijangkau. Silakan transfer via barcode QRIS dan unggah bukti transfer di bawah.', true);
+                    return;
+                }
+
                 updatePaymentDisplay();
                 if (!out.ok) {
                     var firstErr = out.body && out.body.errors

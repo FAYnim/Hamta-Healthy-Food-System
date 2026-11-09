@@ -57,11 +57,6 @@
                     <span class="text-[#65BD5E]">Yuk pesan di Hamta!</span>
                 </h1>
 
-                <!-- Description -->
-                <p class="text-gray-200 text-sm sm:text-base mt-4 leading-relaxed font-normal">
-                    Katalog salad renyah, wrap lezat, sandwich bergizi, dan jus buah asli tanpa komisi mahal platform ojol. Checkout langsung, transparan, dan praktis via QRIS.
-                </p>
-
                 <!-- CTA Buttons -->
                 <div class="mt-8 flex flex-wrap items-center gap-3.5">
                     <a 
@@ -114,9 +109,6 @@
         <!-- Header Section -->
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div>
-                <span class="text-xs font-extrabold uppercase tracking-wider text-[#65BD5E]">
-                    Ulasan Nyata Pelanggan
-                </span>
                 <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#010101] mt-1">
                     Apa Kata Customer Tercinta Kami?
                 </h2>

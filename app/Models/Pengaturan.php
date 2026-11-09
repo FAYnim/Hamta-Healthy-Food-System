@@ -14,5 +14,15 @@ class Pengaturan extends Model
         'logo',
         'whatsapp',
         'instagram',
+        'tarif_ongkir',
     ];
+
+    protected $casts = [
+        'tarif_ongkir' => 'float',
+    ];
+
+    public static function getTarifOngkir(): float
+    {
+        return (float) (self::value('tarif_ongkir') ?? 2000.00);
+    }
 }
