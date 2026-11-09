@@ -224,9 +224,20 @@
                                     }
                                 }
                             }
+                            $expiryTime = $pesanan->midtrans_response['expiry_time'] ?? null;
+                            $isExpiredInitial = false;
+                            if ($expiryTime && in_array($pesanan->status_pembayaran, ['menunggu_verifikasi', 'pending'])) {
+                                try {
+                                    $isExpiredInitial = now()->greaterThanOrEqualTo(\Carbon\Carbon::parse($expiryTime));
+                                } catch (\Throwable) {
+                                    $isExpiredInitial = false;
+                                }
+                            }
+
                             $isPendingOrMenunggu = in_array($pesanan->status_pembayaran, ['menunggu_verifikasi', 'pending']);
                             $isMidtrans = $pesanan->metode_bayar === 'midtrans';
-                            $showQr = $isPendingOrMenunggu && $isMidtrans && ! empty($qrUrl);
+                            $showQr = $isPendingOrMenunggu && $isMidtrans && ! empty($qrUrl) && ! $isExpiredInitial;
+                            $showExpired = ($isExpiredInitial || in_array($pesanan->status_pembayaran, ['ditolak', 'expired'])) && $isMidtrans;
                             $needUploadBukti = $pesanan->status_pembayaran === 'menunggu_verifikasi'
                                 && in_array($pesanan->metode_bayar, ['qris_statis', 'qris'])
                                 && empty($pesanan->bukti_bayar);
@@ -235,6 +246,13 @@
                         <!-- Wadah QRIS Otomatis Midtrans -->
                         <div id="tr-midtrans-qr-wrap" style="display: {{ $showQr ? 'block' : 'none' }}; margin: 12px 0 16px; text-align: center; padding: 16px; background: #fff; border: 2px solid var(--green); border-radius: 14px; box-shadow: 0 4px 12px rgba(11,65,43,.08);">
                             <span style="display:block;font-size:12px;font-weight:800;color:var(--green);letter-spacing:.6px;margin-bottom:8px">SCAN UNTUK MEMBAYAR (QRIS)</span>
+                            
+                            <!-- Countdown Badge -->
+                            <div id="tr-expiry-badge" style="display:inline-flex;align-items:center;gap:6px;background:#fef2f2;border:1px solid #fecaca;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;color:#991b1b;margin-bottom:12px">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                <span>Kedaluwarsa dalam: <span id="tr-expiry-countdown">--:--</span></span>
+                            </div>
+
                             <div style="display:inline-block;padding:10px;background:#fbf8f0;border-radius:12px;border:1px dashed rgba(11,65,43,.3);">
                                 <img id="tr-midtrans-qr-img" src="{{ $qrUrl ?? '' }}" alt="QRIS Midtrans" style="width:200px;height:200px;display:block;margin:0 auto;object-fit:contain;" />
                             </div>
@@ -242,6 +260,20 @@
                                 Buka aplikasi e-wallet (GoPay, OVO, Dana) atau m-Banking Anda, lalu scan QR di atas.<br>
                                 <strong>Status pembayaran akan diverifikasi otomatis tanpa perlu upload bukti transfer.</strong>
                             </p>
+                        </div>
+
+                        <!-- Wadah Jika QRIS Expired / Kedaluwarsa -->
+                        <div id="tr-midtrans-expired-wrap" style="display: {{ $showExpired ? 'block' : 'none' }}; margin: 12px 0 16px; text-align: center; padding: 18px 16px; background: #fff; border: 2px dashed #ef4444; border-radius: 14px;">
+                            <div style="width:44px;height:44px;border-radius:50%;background:#fee2e2;color:#dc2626;display:inline-flex;align-items:center;justify-content:center;margin-bottom:8px">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            </div>
+                            <h4 style="margin:0 0 4px;font-size:14px;font-weight:800;color:#991b1b">Batas Waktu Pembayaran Habis</h4>
+                            <p style="margin:0 0 12px;font-size:12px;color:#6f6a5f;line-height:1.4">
+                                Kode QRIS ini telah kedaluwarsa. Silakan lakukan pemesanan ulang untuk mendapatkan kode pembayaran baru.
+                            </p>
+                            <a href="{{ route('customer.daftar_menu') }}" style="display:inline-block;padding:8px 16px;background:var(--green);color:#fff;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none">
+                                Pesan Ulang Menu
+                            </a>
                         </div>
 
                         <!-- Wadah Form Upload Bukti QRIS Statis (Jika Belum Upload) -->
@@ -450,6 +482,47 @@
     var orderCode = @json($pesanan->kode_pesanan);
     var curStatus = @json($pesanan->status_pesanan);
     var curPayStatus = @json($pesanan->status_pembayaran);
+    var initialExpiry = @json($expiryTime ? \Carbon\Carbon::parse($expiryTime)->toISOString() : null);
+    var countdownTimer = null;
+
+    function startCountdown(expiryIso) {
+        if (!expiryIso) return;
+        var targetDate = new Date(expiryIso).getTime();
+        var countdownEl = document.getElementById('tr-expiry-countdown');
+        var qrWrap = document.getElementById('tr-midtrans-qr-wrap');
+        var expWrap = document.getElementById('tr-midtrans-expired-wrap');
+
+        if (countdownTimer) clearInterval(countdownTimer);
+
+        function tick() {
+            var now = Date.now();
+            var distance = targetDate - now;
+
+            if (distance <= 0) {
+                if (countdownEl) countdownEl.textContent = '00:00';
+                if (qrWrap) qrWrap.style.display = 'none';
+                if (expWrap && (curPayStatus === 'pending' || curPayStatus === 'menunggu_verifikasi')) {
+                    expWrap.style.display = 'block';
+                }
+                if (countdownTimer) clearInterval(countdownTimer);
+                return;
+            }
+
+            var m = Math.floor(distance / (1000 * 60));
+            var s = Math.floor((distance % (1000 * 60)) / 1000);
+            var mStr = (m < 10 ? '0' : '') + m;
+            var sStr = (s < 10 ? '0' : '') + s;
+
+            if (countdownEl) countdownEl.textContent = mStr + ':' + sStr;
+        }
+
+        tick();
+        countdownTimer = setInterval(tick, 1000);
+    }
+
+    if (initialExpiry) {
+        startCountdown(initialExpiry);
+    }
 
     var rupiah = function (n) {
         return 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.round(n));
@@ -510,16 +583,25 @@
         // Update QRIS Midtrans
         var qrWrap = document.getElementById('tr-midtrans-qr-wrap');
         var qrImg = document.getElementById('tr-midtrans-qr-img');
+        var expWrap = document.getElementById('tr-midtrans-expired-wrap');
 
         var isPendingPay = (data.status_pembayaran === 'menunggu_verifikasi' || data.status_pembayaran === 'pending');
         var isMidtransPay = (data.metode_bayar === 'midtrans');
 
+        if (data.expiry_time) {
+            startCountdown(data.expiry_time);
+        }
+
         if (qrWrap) {
-            if (isPendingPay && isMidtransPay && data.qr_url) {
+            if (isPendingPay && isMidtransPay && data.qr_url && !data.is_expired) {
                 if (qrImg) qrImg.src = data.qr_url;
                 qrWrap.style.display = 'block';
+                if (expWrap) expWrap.style.display = 'none';
             } else {
                 qrWrap.style.display = 'none';
+                if (isMidtransPay && (data.is_expired || data.status_pembayaran === 'expired' || data.status_pembayaran === 'ditolak')) {
+                    if (expWrap) expWrap.style.display = 'block';
+                }
             }
         }
 

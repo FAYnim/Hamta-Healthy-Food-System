@@ -102,6 +102,7 @@ class CheckoutController extends Controller
                 DB::commit();
 
                 $qrUrl = $charge['qr_url'] ?? null;
+                $expiryTime = $charge['expiry_time'] ?? null;
 
                 return response()->json([
                     'kode_pesanan' => $pesanan->kode_pesanan,
@@ -117,6 +118,7 @@ class CheckoutController extends Controller
                     'status_pesanan' => $pesanan->status_pesanan,
                     'status_pembayaran' => $pesanan->status_pembayaran,
                     'qr_url' => $qrUrl,
+                    'expiry_time' => $expiryTime,
                     'midtrans_order_id' => $pesanan->midtrans_order_id,
                     'created_at' => $pesanan->created_at?->format('d M Y, H:i') ?? now()->format('d M Y, H:i'),
                 ], 201);

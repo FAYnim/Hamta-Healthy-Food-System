@@ -468,6 +468,42 @@ class MidtransIntegrationTest extends TestCase
         Storage::disk('public')->assertExists($pesanan->bukti_bayar);
     }
 
+    public function test_status_pesanan_api_includes_expiry_time_and_detects_expiration(): void
+    {
+        $fakeQrUrl = 'https://api.sandbox.midtrans.com/v2/qris/api-test/qr-code';
+        $pastExpiry = now()->subMinutes(5)->format('Y-m-d H:i:s');
+
+        $pesanan = Pesanan::create([
+            'kode_pesanan' => 'HMT-261108-EXP1',
+            'jenis' => 'online',
+            'nama_pelanggan' => 'Sinta',
+            'no_whatsapp' => '0812345671',
+            'metode_ambil' => 'pickup',
+            'id_cabang' => $this->cabang->id_cabang,
+            'subtotal' => 30000,
+            'total_bayar' => 30000,
+            'metode_bayar' => 'midtrans',
+            'midtrans_order_id' => 'HMT-261108-EXP1-1',
+            'midtrans_response' => [
+                'qr_url' => $fakeQrUrl,
+                'expiry_time' => $pastExpiry,
+            ],
+            'status_pembayaran' => 'pending',
+            'status_pesanan' => 'diproses',
+        ]);
+
+        $response = $this->getJson(route('customer.pesanan.api_status', $pesanan->kode_pesanan));
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'ok' => true,
+                'kode_pesanan' => 'HMT-261108-EXP1',
+                'qr_url' => $fakeQrUrl,
+                'expiry_time' => $pastExpiry,
+                'is_expired' => true,
+            ]);
+    }
+
     protected function actingAsAdmin(Admin $admin): self
     {
         session(['admin_id' => $admin->id_admin]);
