@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pesanan;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -70,6 +71,18 @@ class StatusPesananController extends Controller
             }
         }
 
+        $expiryTime = $pesanan->midtrans_response['expiry_time'] ?? null;
+        $isExpired = false;
+        if ($expiryTime && in_array($pesanan->status_pembayaran, ['menunggu_verifikasi', 'pending'])) {
+            try {
+                if (now()->greaterThanOrEqualTo(Carbon::parse($expiryTime))) {
+                    $isExpired = true;
+                }
+            } catch (\Throwable) {
+                $isExpired = false;
+            }
+        }
+
         return response()->json([
             'ok' => true,
             'kode_pesanan' => $pesanan->kode_pesanan,
@@ -85,6 +98,8 @@ class StatusPesananController extends Controller
             'nama_cabang' => $pesanan->cabang?->nama_cabang ?? 'Cabang Hamta',
             'metode_bayar' => $pesanan->metode_bayar,
             'qr_url' => $qrUrl,
+            'expiry_time' => $expiryTime,
+            'is_expired' => $isExpired,
             'bukti_bayar' => $pesanan->bukti_bayar ? asset('storage/'.$pesanan->bukti_bayar) : null,
             'nama_pelanggan' => $pesanan->nama_pelanggan,
             'items' => $items,

@@ -90,7 +90,7 @@
     <div class="al-list" id="al-list"></div>
 
     <button type="button" class="al-checkout-btn" id="al-checkout-btn" style="display:none">
-        <span>Gunakan Alamat Terpilih &amp; Lanjut Checkout</span>
+        <span>Gunakan Alamat</span>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
     </button>
 
@@ -177,24 +177,27 @@
         return a && a.id ? a.id : null;
     }
 
+    var selectedId = activeId();
+
     function render() {
         var items = loadList();
-        var sel = activeId();
-        if (items.length > 0 && (!sel || !items.some(function (it) { return it.id === sel; }))) {
-            sel = items[0].id;
-            try { localStorage.setItem(ACTIVE_KEY, JSON.stringify(items[0])); } catch (e) {}
+        if (items.length > 0 && (!selectedId || !items.some(function (it) { return it.id === selectedId; }))) {
+            selectedId = activeId() || items[0].id;
+            if (!items.some(function (it) { return it.id === selectedId; })) {
+                selectedId = items[0].id;
+            }
         }
         list.textContent = '';
         empty.hidden = items.length > 0;
         if (checkoutBtn) checkoutBtn.style.display = items.length > 0 ? 'flex' : 'none';
 
         items.forEach(function (item) {
-            var isSel = item.id === sel;
+            var isSel = item.id === selectedId;
             var card = document.createElement('article');
             card.className = 'al-card' + (isSel ? ' is-selected' : '');
-            card.setAttribute('role', 'button');
+            card.setAttribute('role', 'radio');
             card.setAttribute('tabindex', '0');
-            card.setAttribute('aria-pressed', isSel ? 'true' : 'false');
+            card.setAttribute('aria-checked', isSel ? 'true' : 'false');
             card.dataset.id = item.id;
 
             var radio = document.createElement('span');
@@ -241,31 +244,15 @@
                 body.appendChild(region);
             }
 
-            var cardFooter = document.createElement('div');
-            cardFooter.className = 'al-card-footer';
-
             if (isSel) {
+                var cardFooter = document.createElement('div');
+                cardFooter.className = 'al-card-footer';
                 var badge = document.createElement('span');
                 badge.className = 'al-badge-selected';
                 badge.textContent = '✓ Alamat Terpilih';
-
-                var useBtn = document.createElement('button');
-                useBtn.type = 'button';
-                useBtn.className = 'al-use-btn';
-                useBtn.dataset.act = 'use';
-                useBtn.textContent = 'Gunakan untuk Checkout →';
-
-                cardFooter.append(badge, useBtn);
-            } else {
-                var pickBtn = document.createElement('button');
-                pickBtn.type = 'button';
-                pickBtn.className = 'al-use-btn al-use-btn-secondary';
-                pickBtn.dataset.act = 'use';
-                pickBtn.textContent = 'Pilih & Gunakan Alamat Ini';
-
-                cardFooter.append(pickBtn);
+                cardFooter.appendChild(badge);
+                body.appendChild(cardFooter);
             }
-            body.appendChild(cardFooter);
 
             card.append(radio, body);
 
@@ -273,35 +260,28 @@
                 var act = e.target && e.target.dataset ? e.target.dataset.act : null;
                 if (act === 'edit') { openModal(item.id); return; }
                 if (act === 'del') { removeItem(item.id); return; }
-                selectItem(item.id, true);
+                selectedId = item.id;
+                render();
             });
             card.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectItem(item.id, true); }
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    selectedId = item.id;
+                    render();
+                }
             });
 
             list.appendChild(card);
         });
     }
 
-    function selectItem(id, andReturn) {
-        var items = loadList();
-        var found = null;
-        items.forEach(function (item) { if (item.id === id) found = item; });
-        if (!found) return;
-        try { localStorage.setItem(ACTIVE_KEY, JSON.stringify(found)); } catch (e) {}
-        render();
-        toast('Alamat pengiriman dipilih');
-        if (andReturn) {
-            setTimeout(function () {
-                window.location.href = "{{ route('customer.checkout') }}";
-            }, 300);
-        }
-    }
-
     function removeItem(id) {
         if (!window.confirm('Hapus alamat ini?')) return;
         var items = loadList().filter(function (item) { return item.id !== id; });
         saveList(items);
+        if (selectedId === id) {
+            selectedId = items.length ? items[0].id : null;
+        }
         if (activeId() === id) {
             if (items.length) {
                 try { localStorage.setItem(ACTIVE_KEY, JSON.stringify(items[0])); } catch (e) {}
@@ -359,10 +339,7 @@
                     ? { id: item.id, nama: nama, telepon: telepon, alamat: alamat, patokan: patokan }
                     : item;
             });
-            var updated = items.find(function(it) { return it.id === editingId; });
-            if (activeId() === editingId && updated) {
-                try { localStorage.setItem(ACTIVE_KEY, JSON.stringify(updated)); } catch (e) {}
-            }
+            selectedId = editingId;
         } else {
             var entry = {
                 id: 'addr-' + Date.now().toString(36),
@@ -372,28 +349,25 @@
                 patokan: patokan
             };
             items.push(entry);
-            editingId = entry.id;
+            selectedId = entry.id;
         }
         saveList(items);
-        var saved = null;
-        items.forEach(function (item) { if (item.id === editingId) saved = item; });
-        if (saved) {
-            try { localStorage.setItem(ACTIVE_KEY, JSON.stringify(saved)); } catch (e) {}
-        }
         closeModal();
         render();
-        toast('Alamat tersimpan! Mengalihkan ke checkout...');
-        setTimeout(function () {
-            window.location.href = "{{ route('customer.checkout') }}";
-        }, 350);
+        toast('Alamat berhasil disimpan');
     });
 
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', function () {
-            var active = loadActive();
-            if (!active && loadList().length > 0) {
-                selectItem(loadList()[0].id, true);
-            } else {
+            var items = loadList();
+            if (!items.length) {
+                toast('Belum ada alamat tersimpan. Silakan tambah alamat terlebih dahulu.');
+                return;
+            }
+            var chosen = items.find(function (it) { return it.id === selectedId; }) || items[0];
+            if (chosen) {
+                try { localStorage.setItem(ACTIVE_KEY, JSON.stringify(chosen)); } catch (e) {}
+                toast('Alamat pengiriman dipilih');
                 window.location.href = "{{ route('customer.checkout') }}";
             }
         });

@@ -34,7 +34,24 @@
         .store { min-height:260px; margin-top:58px; padding:38px 40px; background:linear-gradient(90deg,rgba(5,65,43,.93),rgba(5,65,43,.56)), url('/images/salad-1-clean.webp') center/cover; display:flex; align-items:center; }
         .store h3 { font-size:24px; line-height:1.1; margin:0 0 15px; max-width:300px; }
         .store p { margin:0 0 20px; font-size:14px; }
-        @media (max-width:700px) { h2{font-size:22px;margin:20px 6px 12px}.catalog{padding:12px 9px 15px;gap:17px 9px}.product-name{font-size:12px;left:5px;right:5px;bottom:5px}.price{font-size:14px;margin:7px 3px 5px}.btn{padding:7px 8px;font-size:10px}.event{min-height:190px;padding:24px 20px}.event-copy{width:58%}.event h3{font-size:20px}.event p{font-size:10px}.event-img{width:55%;right:-9%}.store{margin-top:35px;min-height:190px;padding:28px 24px}.store h3{font-size:19px} }
+        @media (max-width: 768px) {
+            h2:not(.tracking-tight) { font-size: 22px; margin: 20px 6px 12px; }
+            .catalog {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 14px 12px 18px;
+                gap: 16px 12px;
+            }
+            .product-name { font-size: 13px; left: 6px; right: 6px; bottom: 6px; }
+            .price { font-size: 15px; margin: 8px 3px 6px; }
+            .btn { padding: 8px 10px; font-size: 11px; }
+            .event { min-height: 190px; padding: 24px 20px; }
+            .event-copy { width: 58%; }
+            .event h3 { font-size: 20px; }
+            .event p { font-size: 10px; }
+            .event-img { width: 55%; right: -9%; }
+            .store { margin-top: 35px; min-height: 190px; padding: 28px 24px; }
+            .store h3 { font-size: 19px; }
+        }
     </style>
 </head>
 <body>
@@ -77,7 +94,7 @@
     </section>
     <h2 id="menu">Menu / Katalog</h2>
     <section class="catalog">
-        @forelse ($menus as $menu)
+        @forelse ($menus->take(8) as $menu)
             <article class="product">
                 <div class="product-art">
                     @if ($menu->foto)

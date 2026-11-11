@@ -42,11 +42,12 @@ class MidtransService
      *
      * @param  string  $orderId  ID transaksi unik Midtrans
      * @param  int  $grossAmount  Total tagihan bulat (rupiah)
-     * @return array Raw response Midtrans beserta helper qr_url
+     * @param  int  $expiryMinutes  Masa kedaluwarsa QR dalam menit (default 15 menit)
+     * @return array Raw response Midtrans beserta helper qr_url dan expiry_time
      *
      * @throws Exception
      */
-    public function chargeQris(string $orderId, int $grossAmount): array
+    public function chargeQris(string $orderId, int $grossAmount, int $expiryMinutes = 15): array
     {
         $this->bootConfig();
 
@@ -58,6 +59,11 @@ class MidtransService
             ],
             'qris' => [
                 'acquirer' => 'gopay',
+            ],
+            'custom_expiry' => [
+                'order_time' => now()->timezone('Asia/Jakarta')->format('Y-m-d H:i:s O'),
+                'expiry_duration' => $expiryMinutes,
+                'unit' => 'minute',
             ],
         ];
 
@@ -83,6 +89,11 @@ class MidtransService
 
         if ($qrUrl) {
             $response['qr_url'] = $qrUrl;
+        }
+
+        // Pastikan expiry_time selalu terisi untuk kebutuhan countdown di client
+        if (empty($response['expiry_time'])) {
+            $response['expiry_time'] = now()->timezone('Asia/Jakarta')->addMinutes($expiryMinutes)->format('Y-m-d H:i:s');
         }
 
         return $response;

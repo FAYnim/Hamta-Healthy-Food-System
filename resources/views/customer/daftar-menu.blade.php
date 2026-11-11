@@ -18,7 +18,7 @@
         .catalog-empty { grid-column:1 / -1; text-align:center; font-size:14px; font-weight:600; padding:24px 0; }
         .btn { display:inline-block; padding:9px 15px; border:0; border-radius:7px; background:var(--green); color:#fff; font-weight:700; font-size:13px; text-decoration:none; transition:transform .2s,background .2s; }
         .btn:hover { background:#16613f; transform:translateY(-2px); }
-        @media (max-width:700px) {
+        @media (max-width: 768px) {
             .menu-title { font-size:22px; margin:4px 2px 12px; }
             .catalog { padding:12px 9px 15px; gap:17px 9px; margin-bottom:22px; grid-template-columns:repeat(2,1fr); }
             .product-name { font-size:12px; left:5px; right:5px; bottom:5px; }
