@@ -20,7 +20,7 @@ class StatusPesananController extends Controller
         $pesanan = null;
 
         if ($kodePesanan !== '') {
-            $pesanan = Pesanan::with(['cabang', 'detailPesanan.komponenSalad'])
+            $pesanan = Pesanan::with(['cabang', 'detailPesanan.komponenSalad', 'rating'])
                 ->where('kode_pesanan', $kodePesanan)
                 ->first();
         }
@@ -36,7 +36,7 @@ class StatusPesananController extends Controller
      */
     public function cek(string $kode): JsonResponse
     {
-        $pesanan = Pesanan::with(['cabang', 'detailPesanan.komponenSalad'])
+        $pesanan = Pesanan::with(['cabang', 'detailPesanan.komponenSalad', 'rating'])
             ->where('kode_pesanan', trim($kode))
             ->first();
 

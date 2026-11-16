@@ -23,6 +23,10 @@ class Pengaturan extends Model
 
     public static function getTarifOngkir(): float
     {
-        return (float) (self::value('tarif_ongkir') ?? 2000.00);
+        try {
+            return (float) (self::value('tarif_ongkir') ?? 2000.00);
+        } catch (\Throwable) {
+            return 2000.00;
+        }
     }
 }

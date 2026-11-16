@@ -14,8 +14,8 @@
     <div class="min-h-screen flex flex-col lg:flex-row">
         <x-admin.sidebar />
 
-        <main class="flex-1 p-6 md:p-8 lg:p-10 max-w-7xl">
-            <header class="flex items-center justify-between mb-8">
+        <main class="flex-1 p-4 sm:p-6 md:p-8 lg:p-10 max-w-7xl">
+            <header class="flex items-center justify-between mb-6 md:mb-8">
                 <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Pengaturan</h2>
                 <div class="hidden lg:flex items-center">
                     <span class="bg-white border border-stone-200/60 rounded-xl px-7 py-2.5 font-bold text-base shadow-sm">

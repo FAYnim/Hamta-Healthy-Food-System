@@ -6,7 +6,7 @@
     <title>Status Pesanan — Hamta Healthy Food</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        .tr-wrap { width: 100%; padding-bottom: 48px; }
+        .tr-wrap { width: 100%; max-width: 820px; margin: 0 auto; padding-bottom: 48px; }
         .tr-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 8px 0 24px; flex-wrap: wrap; }
         .tr-title-group { display: flex; align-items: center; gap: 14px; }
         .tr-back { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #fff; border: 1.5px solid rgba(11,65,43,.15); color: var(--green); text-decoration: none; transition: all .2s; }
@@ -90,9 +90,28 @@
             </div>
         </div>
 
+        @if (session('success'))
+            <div style="background:#eef5ea;border:1.5px solid var(--green);color:#16613f;padding:12px 16px;border-radius:12px;margin-bottom:16px;font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:10px;">
+                <svg style="width:20px;height:20px;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
+        @if (session('error'))
+            <div style="background:#fee2e2;border:1.5px solid #f87171;color:#991b1b;padding:12px 16px;border-radius:12px;margin-bottom:16px;font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:10px;">
+                <svg style="width:20px;height:20px;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>{{ session('error') }}</span>
+            </div>
+        @endif
+
         @if (! $pesanan)
-            <!-- Form Cari Kode Pesanan jika belum ada di URL -->
+            <!-- Form Cari Kode Pesanan jika belum ada di URL atau tidak ditemukan -->
             <section class="tr-card" style="text-align:center;padding:36px 20px">
+                @if ($kode !== '')
+                    <div style="background:#fee2e2;border:1.5px solid #f87171;color:#991b1b;padding:12px 16px;border-radius:12px;margin-bottom:20px;font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:10px;text-align:left;max-width:480px;margin-left:auto;margin-right:auto">
+                        <svg style="width:20px;height:20px;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <span>Pesanan dengan kode <strong>{{ $kode }}</strong> tidak ditemukan di sistem. Pastikan kode pesanan Anda sudah benar.</span>
+                    </div>
+                @endif
                 <div class="flex justify-center mb-3">
                     <div class="w-14 h-14 rounded-2xl bg-emerald-100/60 flex items-center justify-center text-[#0B412B]">
                         <x-lucide-salad class="w-8 h-8" />
@@ -428,6 +447,11 @@
                                         Komponen: {{ $item->komponenSalad->pluck('nama_komponen')->implode(', ') }}
                                     </div>
                                 @endif
+                                @if (!empty($item->catatan))
+                                    <div style="font-size:11.5px;color:#0b412b;background:rgba(101,189,94,.12);border-left:2.5px solid var(--green);padding:2px 8px;border-radius:4px;margin-top:4px;display:inline-block">
+                                        <span style="font-weight:700">Catatan:</span> {{ $item->catatan }}
+                                    </div>
+                                @endif
                                 @if ($isItemCanceled)
                                     <div class="flex items-center gap-1" style="font-size:11px;color:#c0392b;font-weight:700;margin-top:2px">
                                         <x-lucide-alert-circle class="w-3.5 h-3.5 text-red-600 shrink-0" />
@@ -446,6 +470,63 @@
                     <span style="font-size:15px;font-weight:800">Total Pembayaran:</span>
                     <span id="tr-bottom-total" style="font-size:18px;font-weight:800;color:var(--green)">{{ $rp($pesanan->total_bayar) }}</span>
                 </div>
+            </section>
+
+            <!-- Section Rating & Ulasan Pelanggan (PRD F7) -->
+            <section class="tr-card" id="tr-rating-section">
+                @if ($pesanan->rating)
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px">
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <h3 style="margin:0;font-size:16px;font-weight:800;color:var(--green)">Ulasan &amp; Rating Anda</h3>
+                        </div>
+                        <span class="tr-status-pill tr-pill-selesai" style="font-size:11px">Ulasan Terkirim</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:4px;margin-bottom:8px">
+                        @for ($i = 1; $i <= 5; $i++)
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="{{ $i <= $pesanan->rating->bintang ? '#f59e0b' : 'none' }}" stroke="{{ $i <= $pesanan->rating->bintang ? '#f59e0b' : '#cbd5e1' }}" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        @endfor
+                        <span style="font-size:13.5px;font-weight:800;color:#374151;margin-left:6px">{{ $pesanan->rating->bintang }} / 5 Bintang</span>
+                    </div>
+                    @if ($pesanan->rating->ulasan)
+                        <div style="background:#fbfbf9;border:1px solid rgba(11,65,43,.12);border-radius:10px;padding:12px 14px;font-size:13px;color:#374151;font-style:italic">
+                            "{{ $pesanan->rating->ulasan }}"
+                        </div>
+                    @endif
+                @else
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <h3 style="margin:0;font-size:16px;font-weight:800;color:var(--green)">Beri Penilaian &amp; Ulasan Pesanan</h3>
+                    </div>
+                    <p style="margin:0 0 14px;font-size:13px;color:#6f6a5f">
+                        Bagaimana pengalaman Anda dengan menu dan layanan Hamta Healthy Food? Ulasan Anda sangat berharga bagi kami.
+                    </p>
+
+                    <form method="POST" action="{{ route('customer.status_pesanan.rating', $pesanan->kode_pesanan) }}" id="tr-rating-form">
+                        @csrf
+                        <div style="margin-bottom:12px">
+                            <span style="display:block;font-size:12px;font-weight:700;color:#374151;margin-bottom:6px">Pilih Bintang:*</span>
+                            <div id="tr-star-picker" style="display:inline-flex;gap:6px;cursor:pointer" role="radiogroup" aria-label="Rating bintang">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <button type="button" data-star="{{ $i }}" class="tr-star-btn" aria-label="{{ $i }} bintang" style="background:none;border:none;padding:2px;cursor:pointer;color:#f59e0b;transition:transform .15s">
+                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                    </button>
+                                @endfor
+                            </div>
+                            <input type="hidden" name="bintang" id="tr-star-input" value="5" required>
+                        </div>
+
+                        <div style="margin-bottom:14px">
+                            <label for="tr-ulasan-input" style="display:block;font-size:12px;font-weight:700;color:#374151;margin-bottom:6px">Ulasan Tambahan (Opsional):</label>
+                            <textarea name="ulasan" id="tr-ulasan-input" rows="3" maxlength="500" placeholder="Tuliskan pengalaman Anda, rasa salad, keramahan staf, atau saran menu baru..."
+                                      style="width:100%;box-sizing:border-box;padding:10px 14px;border-radius:10px;border:1.5px solid rgba(11,65,43,.22);font-size:13px;font-family:inherit;outline:none;resize:vertical"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn" style="width:100%;padding:12px 18px;border-radius:10px;font-size:14px;font-weight:800;background:var(--green);color:#fff;border:none;cursor:pointer">
+                            Kirim Ulasan
+                        </button>
+                    </form>
+                @endif
             </section>
 
             <!-- Card Kontak / Bantuan Kasir -->
@@ -707,6 +788,35 @@
                 if (btn) { btn.disabled = false; btn.textContent = 'Unggah Bukti Transfer'; }
             });
         });
+    }
+
+    var starInput = document.getElementById('tr-star-input');
+    var starBtns = document.querySelectorAll('.tr-star-btn');
+    if (starInput && starBtns.length) {
+        function updateStars(val) {
+            starBtns.forEach(function (btn) {
+                var s = parseInt(btn.dataset.star, 10);
+                btn.style.color = s <= val ? '#f59e0b' : '#cbd5e1';
+                btn.style.transform = s <= val ? 'scale(1.08)' : 'scale(1)';
+            });
+        }
+        updateStars(parseInt(starInput.value, 10) || 5);
+        starBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var val = parseInt(btn.dataset.star, 10);
+                starInput.value = val;
+                updateStars(val);
+            });
+            btn.addEventListener('mouseenter', function () {
+                updateStars(parseInt(btn.dataset.star, 10));
+            });
+        });
+        var starPicker = document.getElementById('tr-star-picker');
+        if (starPicker) {
+            starPicker.addEventListener('mouseleave', function () {
+                updateStars(parseInt(starInput.value, 10) || 5);
+            });
+        }
     }
 
     var refreshBtn = document.getElementById('tr-manual-refresh');

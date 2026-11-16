@@ -19,7 +19,7 @@ class PesananController extends Controller
         $status = $request->query('status');
         $q = trim((string) $request->query('q'));
 
-        $pesanan = Pesanan::with(['cabang'])
+        $pesanan = Pesanan::with(['cabang', 'detailPesanan'])
             ->when(in_array($status, ['diproses', 'siap', 'selesai', 'batal'], true),
                 fn ($query) => $query->where('status_pesanan', $status))
             ->when($q !== '', fn ($query) => $query->where(fn ($sub) => $sub

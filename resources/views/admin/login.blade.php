@@ -71,7 +71,7 @@
         <!-- ========================================== -->
         <!-- LEFT SIDE: Cream Background with Salad     -->
         <!-- ========================================== -->
-        <div class="w-full lg:w-[56%] flex items-center justify-start py-8 px-4 sm:px-8 lg:p-0 relative min-h-[340px] lg:min-h-screen">
+        <div class="w-full lg:w-[56%] hidden md:flex items-center justify-start py-8 px-4 sm:px-8 lg:p-0 relative min-h-[240px] lg:min-h-screen">
             <!-- Salad Bowl: positioned touching/overlapping the left edge with slide-in and continuous rotation -->
             <div class="animate-slide-in-left relative w-72 sm:w-84 md:w-96 lg:w-[420px] xl:w-[460px] -ml-8 sm:-ml-12 lg:-ml-14 xl:-ml-16 select-none pointer-events-none">
                 <div class="animate-spin-infinite">
@@ -88,7 +88,7 @@
         <!-- ========================================== -->
         <!-- RIGHT SIDE: Dark Green Form Area           -->
         <!-- ========================================== -->
-        <div class="w-full lg:w-[44%] bg-hamta-dark lg:bg-transparent min-h-screen flex flex-col justify-center items-center px-6 sm:px-12 py-12 relative">
+        <div class="w-full lg:w-[44%] bg-hamta-dark lg:bg-transparent min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 lg:px-12 py-8 sm:py-12 relative">
 
             <div class="w-full max-w-[320px] sm:max-w-[340px] mx-auto">
 

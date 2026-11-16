@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -20,10 +20,10 @@
         <!-- ========================================== -->
         <!-- 2. MAIN CONTENT AREA (Cream: #F7F2E7)      -->
         <!-- ========================================== -->
-        <main class="flex-1 p-6 md:p-8 lg:p-10 max-w-7xl">
+        <main class="flex-1 p-4 sm:p-6 md:p-8 lg:p-10 max-w-7xl">
 
             <!-- Topbar Section -->
-            <header class="flex items-center justify-between mb-8">
+            <header class="flex items-center justify-between mb-6 md:mb-8">
                 <div>
                     <h2 class="text-2xl md:text-3xl font-bold text-hamta-black tracking-tight">Daftar Pesanan</h2>
                 </div>
@@ -37,7 +37,7 @@
             </header>
 
             <!-- Top Action / Filter Bar -->
-            <div class="bg-white rounded-2xl p-4 shadow-sm border border-stone-100 mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="bg-white rounded-2xl p-3.5 sm:p-4 shadow-sm border border-stone-100 mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 md:gap-4">
                 
                 @php
                     $tabs = [
@@ -50,11 +50,11 @@
                 @endphp
 
                 <!-- Status Tabs -->
-                <div class="flex items-center gap-3 w-full md:w-auto overflow-x-auto">
+                <div class="flex items-center gap-2 sm:gap-3 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                     @foreach ($tabs as $nilai => $label)
                         @php $aktif = ($status ?? '') === $nilai; @endphp
                         <a href="{{ route('admin.daftar_pesanan', array_filter(['status' => $nilai, 'q' => $q ?: null])) }}"
-                           class="px-5 py-2 rounded-xl text-sm shrink-0 transition {{ $aktif ? 'bg-hamta-green text-white font-bold shadow-sm' : 'text-hamta-black hover:bg-stone-100 font-semibold' }}"
+                           class="px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm shrink-0 transition {{ $aktif ? 'bg-hamta-green text-white font-bold shadow-sm' : 'text-hamta-black hover:bg-stone-100 font-semibold' }}"
                            @if ($aktif) aria-current="page" @endif>
                             {{ $label }}
                         </a>
@@ -103,6 +103,7 @@
                                 <th class="py-4 px-6">Customer</th>
                                 <th class="py-4 px-6">Cabang</th>
                                 <th class="py-4 px-6">Total</th>
+                                <th class="py-4 px-6">Catatan Pembeli</th>
                                 <th class="py-4 px-6">Status</th>
                                 <th class="py-4 px-6 text-center w-36">Aksi</th>
                             </tr>
@@ -115,6 +116,7 @@
                                     $badge = $item->status_pesanan === 'batal'
                                         ? 'bg-red-100 text-red-700'
                                         : 'bg-[#BEE3B6] text-hamta-dark';
+                                    $catatanItems = $item->detailPesanan->filter(fn ($d) => !empty(trim($d->catatan ?? '')));
                                 @endphp
                                 <tr class="hover:bg-stone-50/50 transition">
                                     <td class="py-5 px-6 font-semibold text-hamta-black">
@@ -126,11 +128,27 @@
                                     <td class="py-5 px-6 font-medium text-hamta-black">
                                         {{ $item->cabang?->nama_cabang ?? '-' }}
                                     </td>
-                                    <td class="py-5 px-6 font-bold text-hamta-black text-base">
+                                    <td class="cell-total py-5 px-6 font-bold text-hamta-black text-base">
                                         Rp {{ number_format((float) $item->total_bayar, 0, ',', '.') }}
                                     </td>
-                                    <td class="py-5 px-6">
-                                        <span class="inline-block px-3 py-1 rounded-full font-semibold text-xs capitalize {{ $badge }}">
+                                    <td class="cell-catatan py-5 px-6 max-w-xs">
+                                        @if ($catatanItems->isNotEmpty())
+                                            <div class="space-y-1.5">
+                                                @foreach ($catatanItems as $catItem)
+                                                    <div class="inline-flex items-start gap-1.5 bg-amber-50/90 border border-amber-200/80 text-amber-900 rounded-lg px-2.5 py-1 text-xs">
+                                                        <x-lucide-clipboard-pen class="w-3.5 h-3.5 text-amber-700 shrink-0 mt-0.5" />
+                                                        <span class="break-words">
+                                                            <strong class="font-semibold text-stone-700">{{ $catItem->nama_item }}:</strong> {{ $catItem->catatan }}
+                                                        </span>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @else
+                                            <span class="text-xs text-stone-400 italic">- Tidak ada -</span>
+                                        @endif
+                                    </td>
+                                    <td class="cell-status py-5 px-6">
+                                        <span class="badge-status inline-block px-3 py-1 rounded-full font-semibold text-xs capitalize {{ $badge }}">
                                             {{ $item->status_pesanan }}
                                         </span>
                                     </td>
@@ -146,7 +164,7 @@
                                 </tr>
                                 <!-- Baris loker: panel detail yang membuka tepat di bawah baris ini -->
                                 <tr class="detail-row hidden">
-                                    <td colspan="6" class="p-0">
+                                    <td colspan="7" class="p-0">
                                         <div class="detail-slot bg-white border-y border-stone-200">
                                             <div class="p-10 text-center text-sm text-hamta-gray">Memuat detail…</div>
                                         </div>
@@ -154,7 +172,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="py-14 px-6 text-center text-hamta-gray font-medium">
+                                    <td colspan="7" class="py-14 px-6 text-center text-hamta-gray font-medium">
                                         Belum ada pesanan{{ $q !== '' ? ' yang cocok dengan pencarian.' : '.' }}
                                     </td>
                                 </tr>
@@ -278,20 +296,22 @@
                             if (!root) return;
                             const barisInduk = loker.previousElementSibling;
                             if (!barisInduk || barisInduk.tagName !== 'TR') return;
-                            const tds = barisInduk.querySelectorAll('td');
+
                             const statusBaru = root.getAttribute('data-status');
-                            if (statusBaru && tds.length > 4) {
-                                const badge = tds[4].querySelector('span');
+                            if (statusBaru) {
+                                const badge = barisInduk.querySelector('.badge-status');
                                 if (badge) {
                                     badge.textContent = statusBaru;
-                                    badge.className = 'inline-block px-3 py-1 rounded-full font-semibold text-xs capitalize ' +
+                                    badge.className = 'badge-status inline-block px-3 py-1 rounded-full font-semibold text-xs capitalize ' +
                                         (statusBaru === 'batal' ? 'bg-red-100 text-red-700' : 'bg-[#BEE3B6] text-hamta-dark');
                                 }
                             }
                             const totalBaru = root.getAttribute('data-total');
-                            if (totalBaru && tds.length > 3) {
-                                const cell = tds[3];
-                                cell.textContent = 'Rp ' + Number(totalBaru).toLocaleString('id-ID', { maximumFractionDigits: 0 });
+                            if (totalBaru) {
+                                const cellTotal = barisInduk.querySelector('.cell-total');
+                                if (cellTotal) {
+                                    cellTotal.textContent = 'Rp ' + Number(totalBaru).toLocaleString('id-ID', { maximumFractionDigits: 0 });
+                                }
                             }
                         } catch (_) { /* partial lama tanpa data-status/total — abaikan */ }
                     })

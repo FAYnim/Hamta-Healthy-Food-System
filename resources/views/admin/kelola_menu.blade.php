@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -42,6 +42,23 @@
                 </div>
             @endif
 
+            <!-- Primary Navigation Tabs (PRD A2: Menu Reguler, Komponen Salad, Bahan) -->
+            <div class="flex items-center gap-2 mb-6 border-b border-stone-200/80 pb-2 overflow-x-auto">
+                <a href="{{ route('admin.kelola_menu', ['tab' => 'produk']) }}"
+                   class="px-5 py-2.5 rounded-xl font-bold text-sm transition {{ $tab === 'produk' ? 'bg-hamta-green text-white shadow-sm' : 'text-hamta-black hover:bg-white bg-white/60' }}">
+                    Menu Reguler ({{ $produk->total() }})
+                </a>
+                <a href="{{ route('admin.kelola_menu', ['tab' => 'komponen']) }}"
+                   class="px-5 py-2.5 rounded-xl font-bold text-sm transition {{ $tab === 'komponen' ? 'bg-hamta-green text-white shadow-sm' : 'text-hamta-black hover:bg-white bg-white/60' }}">
+                    Komponen Kreasikan Salad ({{ $komponen->count() }})
+                </a>
+                <a href="{{ route('admin.kelola_menu', ['tab' => 'bahan']) }}"
+                   class="px-5 py-2.5 rounded-xl font-bold text-sm transition {{ $tab === 'bahan' ? 'bg-hamta-green text-white shadow-sm' : 'text-hamta-black hover:bg-white bg-white/60' }}">
+                    Daftar Bahan &amp; Alergen ({{ $bahan->count() }})
+                </a>
+            </div>
+
+            @if ($tab === 'produk')
             <!-- Top Action / Filter Bar -->
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-stone-100 mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
                 
@@ -206,6 +223,161 @@
                 @endif
             </div>
 
+            @elseif ($tab === 'komponen')
+            <!-- ========================================== -->
+            <!-- TAB: KOMPONEN SALAD (SAYURAN & PROTEIN)    -->
+            <!-- ========================================== -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-stone-100 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-lg font-bold text-hamta-black">Komponen Kreasikan Salad Sendiri</h3>
+                    <p class="text-xs text-hamta-gray mt-0.5">Kelola ketersediaan (toggle sold-out) dan harga tambahan untuk sayuran &amp; protein.</p>
+                </div>
+                <button type="button" id="btn-tambah-komponen" class="bg-hamta-green hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow-sm transition shrink-0 cursor-pointer">
+                    + Tambah Komponen
+                </button>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-[#E5E5E5] text-hamta-black text-sm font-bold">
+                                <th class="py-4 px-6">Nama Komponen</th>
+                                <th class="py-4 px-6 w-36">Jenis</th>
+                                <th class="py-4 px-6 text-center w-32">Status</th>
+                                <th class="py-4 px-6">Harga Tambahan</th>
+                                <th class="py-4 px-6">Bahan Terkait</th>
+                                <th class="py-4 px-6 text-center w-28">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-200 text-sm">
+                            @forelse ($komponen as $item)
+                                <tr class="hover:bg-stone-50/50 transition {{ $item->status_aktif ? '' : 'opacity-60' }}">
+                                    <td class="py-4 px-6 font-bold text-hamta-black text-base">
+                                        {{ $item->nama_komponen }}
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        @if ($item->jenis === 'sayuran')
+                                            <span class="inline-block bg-emerald-100 text-emerald-800 font-semibold text-xs px-3.5 py-1 rounded-full">
+                                                Sayuran
+                                            </span>
+                                        @else
+                                            <span class="inline-block bg-amber-100 text-amber-800 font-semibold text-xs px-3.5 py-1 rounded-full">
+                                                Protein
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="py-4 px-6 text-center">
+                                        <form method="POST" action="{{ route('admin.kelola_menu.komponen.status', $item->id_komponen) }}" class="inline-flex">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit"
+                                                role="switch"
+                                                aria-checked="{{ $item->status_aktif ? 'true' : 'false' }}"
+                                                aria-label="Status {{ $item->nama_komponen }}"
+                                                title="{{ $item->status_aktif ? 'Klik untuk menandai sold-out' : 'Klik untuk mengaktifkan kembali' }}"
+                                                class="relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-hamta-dark focus-visible:ring-offset-2 {{ $item->status_aktif ? 'bg-hamta-green hover:bg-[#58a851]' : 'bg-stone-300 hover:bg-stone-400' }}">
+                                                <span class="sr-only">{{ $item->status_aktif ? 'Tersedia' : 'Sold-out' }}</span>
+                                                <span class="inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform {{ $item->status_aktif ? 'translate-x-6' : 'translate-x-1' }}"></span>
+                                            </button>
+                                        </form>
+                                    </td>
+                                    <td class="py-4 px-6 font-bold text-hamta-black text-base">
+                                        @if ($item->harga_tambahan > 0)
+                                            +Rp {{ number_format($item->harga_tambahan, 0, ',', '.') }}
+                                        @else
+                                            <span class="text-xs text-stone-500 font-normal">Gratis (+Rp 0)</span>
+                                        @endif
+                                    </td>
+                                    <td class="py-4 px-6 text-xs text-stone-600">
+                                        {{ $item->bahan->isNotEmpty() ? $item->bahan->pluck('nama_bahan')->implode(', ') : '-' }}
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center justify-center gap-2">
+                                            <button type="button" class="btn-edit-komponen w-9 h-9 rounded-lg bg-[#E08A3C] hover:bg-[#d07b30] text-white flex items-center justify-center transition"
+                                                data-id="{{ $item->id_komponen }}"
+                                                data-nama="{{ $item->nama_komponen }}"
+                                                data-jenis="{{ $item->jenis }}"
+                                                data-harga="{{ (int) round((float) $item->harga_tambahan) }}"
+                                                data-status="{{ $item->status_aktif ? '1' : '0' }}">
+                                                <x-lucide-pencil class="w-4 h-4" />
+                                            </button>
+                                            <form method="POST" action="{{ route('admin.kelola_menu.komponen.destroy', $item->id_komponen) }}" onsubmit="return confirm('Yakin ingin menghapus komponen {{ $item->nama_komponen }}?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="w-9 h-9 rounded-lg bg-hamta-red hover:bg-[#d04b4b] text-white flex items-center justify-center transition" title="Hapus">
+                                                    <x-lucide-trash-2 class="w-4 h-4" />
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="py-10 px-6 text-center text-hamta-gray">
+                                        Belum ada komponen salad kustom terdaftar.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            @else
+            <!-- ========================================== -->
+            <!-- TAB: DAFTAR BAHAN & ALERGEN (PRD A2)       -->
+            <!-- ========================================== -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-stone-100 mb-6">
+                <h3 class="text-lg font-bold text-hamta-black">Master Bahan Baku &amp; Info Alergen</h3>
+                <p class="text-xs text-hamta-gray mt-0.5">Informasi alergen dan komposisi menu (info komposisi alergen tanpa tracking kuantitas stok).</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-[#E5E5E5] text-hamta-black text-sm font-bold">
+                                <th class="py-4 px-6 w-16">#</th>
+                                <th class="py-4 px-6">Nama Bahan</th>
+                                <th class="py-4 px-6">Info Alergen / Keterangan</th>
+                                <th class="py-4 px-6">Dipakai Pada Produk</th>
+                                <th class="py-4 px-6">Dipakai Pada Komponen</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-200 text-sm">
+                            @forelse ($bahan as $idx => $b)
+                                <tr class="hover:bg-stone-50/50 transition">
+                                    <td class="py-4 px-6 text-stone-500 font-semibold">{{ $idx + 1 }}</td>
+                                    <td class="py-4 px-6 font-bold text-hamta-black text-base">{{ $b->nama_bahan }}</td>
+                                    <td class="py-4 px-6">
+                                        @if ($b->keterangan)
+                                            <span class="inline-block bg-rose-50 text-rose-700 border border-rose-200/60 font-medium text-xs px-3 py-1 rounded-lg">
+                                                ⚠️ {{ $b->keterangan }}
+                                            </span>
+                                        @else
+                                            <span class="text-xs text-stone-400">Tidak ada info alergen</span>
+                                        @endif
+                                    </td>
+                                    <td class="py-4 px-6 text-xs text-stone-600">
+                                        {{ $b->produk->isNotEmpty() ? $b->produk->pluck('nama_produk')->implode(', ') : '-' }}
+                                    </td>
+                                    <td class="py-4 px-6 text-xs text-stone-600">
+                                        {{ $b->komponenSalad->isNotEmpty() ? $b->komponenSalad->pluck('nama_komponen')->implode(', ') : '-' }}
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="py-10 px-6 text-center text-hamta-gray">
+                                        Belum ada data bahan baku.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @endif
         </main>
 
     </div>
@@ -500,6 +672,93 @@
         </div>
     </div>
 
+    <!-- ========================================== -->
+    <!-- MODAL TAMBAH KOMPONEN SALAD                -->
+    <!-- ========================================== -->
+    <div id="modal-tambah-komponen" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="judul-modal-tambah-komponen">
+        <div class="absolute inset-0 bg-black/40" data-tutup-modal-komponen></div>
+        <div class="relative mx-auto mt-12 mb-8 w-[calc(100%-2rem)] max-w-[420px] bg-white rounded-2xl shadow-xl p-6">
+            <h3 id="judul-modal-tambah-komponen" class="text-lg font-bold text-hamta-black mb-4">
+                Tambah Komponen Salad Baru
+            </h3>
+            <form action="{{ route('admin.kelola_menu.komponen.store') }}" method="POST" class="space-y-4">
+                @csrf
+                <div>
+                    <label class="block text-sm font-semibold text-hamta-black mb-1.5">Nama Komponen</label>
+                    <input type="text" name="nama_komponen" placeholder="Contoh: Jagung Manis" required
+                           class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black outline-none focus:border-hamta-green">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-hamta-black mb-1.5">Jenis</label>
+                    <select name="jenis" required class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black outline-none focus:border-hamta-green">
+                        <option value="sayuran">Sayuran</option>
+                        <option value="protein">Protein</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-hamta-black mb-1.5">Harga Tambahan</label>
+                    <div class="flex items-center bg-white border border-stone-300 rounded-xl focus-within:border-hamta-green">
+                        <span class="pl-4 pr-1.5 py-2.5 text-sm font-semibold text-hamta-gray select-none">Rp.</span>
+                        <input type="number" name="harga_tambahan" value="0" min="0" step="500" required
+                               class="w-full bg-transparent rounded-r-xl px-1 py-2.5 pr-4 text-sm text-hamta-black outline-none">
+                    </div>
+                </div>
+                <div class="flex items-center justify-end gap-2.5 pt-2">
+                    <button type="button" data-tutup-modal-komponen class="bg-[#E5E5E5] hover:bg-[#d9d9d9] text-hamta-black font-bold text-sm px-5 py-2 rounded-lg transition">
+                        Batal
+                    </button>
+                    <button type="submit" class="bg-hamta-green hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-lg transition">
+                        Simpan Komponen
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL EDIT KOMPONEN SALAD                  -->
+    <!-- ========================================== -->
+    <div id="modal-edit-komponen" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="judul-modal-edit-komponen">
+        <div class="absolute inset-0 bg-black/40" data-tutup-modal-edit-komponen></div>
+        <div class="relative mx-auto mt-12 mb-8 w-[calc(100%-2rem)] max-w-[420px] bg-white rounded-2xl shadow-xl p-6">
+            <h3 id="judul-modal-edit-komponen" class="text-lg font-bold text-hamta-black mb-4">
+                Edit Komponen Salad
+            </h3>
+            <form id="form-edit-komponen" action="" method="POST" class="space-y-4">
+                @csrf
+                @method('PATCH')
+                <div>
+                    <label class="block text-sm font-semibold text-hamta-black mb-1.5">Nama Komponen</label>
+                    <input type="text" id="edit-komponen-nama" name="nama_komponen" required
+                           class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black outline-none focus:border-hamta-green">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-hamta-black mb-1.5">Jenis</label>
+                    <select id="edit-komponen-jenis" name="jenis" required class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black outline-none focus:border-hamta-green">
+                        <option value="sayuran">Sayuran</option>
+                        <option value="protein">Protein</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-hamta-black mb-1.5">Harga Tambahan</label>
+                    <div class="flex items-center bg-white border border-stone-300 rounded-xl focus-within:border-hamta-green">
+                        <span class="pl-4 pr-1.5 py-2.5 text-sm font-semibold text-hamta-gray select-none">Rp.</span>
+                        <input type="number" id="edit-komponen-harga" name="harga_tambahan" min="0" step="500" required
+                               class="w-full bg-transparent rounded-r-xl px-1 py-2.5 pr-4 text-sm text-hamta-black outline-none">
+                    </div>
+                </div>
+                <div class="flex items-center justify-end gap-2.5 pt-2">
+                    <button type="button" data-tutup-modal-edit-komponen class="bg-[#E5E5E5] hover:bg-[#d9d9d9] text-hamta-black font-bold text-sm px-5 py-2 rounded-lg transition">
+                        Batal
+                    </button>
+                    <button type="submit" class="bg-hamta-green hover:bg-[#58a851] text-white font-bold text-sm px-5 py-2 rounded-lg transition">
+                        Perbarui
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         const modalTambah = document.getElementById('modal-tambah');
         const modalEdit = document.getElementById('modal-edit');
@@ -519,19 +778,52 @@
         const editFotoHint = document.getElementById('edit-foto-hint');
         const editFotoLama = document.getElementById('edit-foto-lama');
 
+        const modalTambahKomponen = document.getElementById('modal-tambah-komponen');
+        const modalEditKomponen = document.getElementById('modal-edit-komponen');
+        const btnTambahKomponen = document.getElementById('btn-tambah-komponen');
+        const formEditKomponen = document.getElementById('form-edit-komponen');
+        const editKomponenNama = document.getElementById('edit-komponen-nama');
+        const editKomponenJenis = document.getElementById('edit-komponen-jenis');
+        const editKomponenHarga = document.getElementById('edit-komponen-harga');
+
         function bukaModal(el) {
+            if (!el) return;
             el.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
 
         function tutupModal(el) {
+            if (!el) return;
             el.classList.add('hidden');
-            if (modalTambah.classList.contains('hidden') && modalEdit.classList.contains('hidden') && modalHapus.classList.contains('hidden')) {
-                document.body.style.overflow = '';
-            }
+            document.body.style.overflow = '';
         }
 
-        btnTambah.addEventListener('click', () => bukaModal(modalTambah));
+        if (btnTambah) {
+            btnTambah.addEventListener('click', () => bukaModal(modalTambah));
+        }
+
+        if (btnTambahKomponen) {
+            btnTambahKomponen.addEventListener('click', () => bukaModal(modalTambahKomponen));
+        }
+
+        document.querySelectorAll('[data-tutup-modal-komponen]').forEach(el => {
+            el.addEventListener('click', () => tutupModal(modalTambahKomponen));
+        });
+
+        document.querySelectorAll('[data-tutup-modal-edit-komponen]').forEach(el => {
+            el.addEventListener('click', () => tutupModal(modalEditKomponen));
+        });
+
+        document.querySelectorAll('.btn-edit-komponen').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                formEditKomponen.action = "{{ url('admin/kelola-menu/komponen') }}/" + id;
+                editKomponenNama.value = btn.dataset.nama || '';
+                editKomponenJenis.value = btn.dataset.jenis || 'sayuran';
+                editKomponenHarga.value = btn.dataset.harga || 0;
+                bukaModal(modalEditKomponen);
+            });
+        });
 
         modalTambah.querySelectorAll('[data-tutup-modal]').forEach(el => {
             el.addEventListener('click', () => tutupModal(modalTambah));

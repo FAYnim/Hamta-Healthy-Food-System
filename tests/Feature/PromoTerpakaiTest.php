@@ -3,10 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Cabang;
-use App\Models\DetailPesanan;
 use App\Models\Pesanan;
 use App\Models\Promo;
-use App\Models\Produk;
 use App\Services\PromoService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -37,7 +35,7 @@ class PromoTerpakaiTest extends TestCase
         ]);
 
         return Pesanan::create(array_merge([
-            'kode_pesanan' => 'HMT-' . uniqid(),
+            'kode_pesanan' => 'HMT-'.uniqid(),
             'jenis' => 'kasir',
             'id_cabang' => $cabang->id_cabang,
             'metode_ambil' => 'pickup',
@@ -46,7 +44,7 @@ class PromoTerpakaiTest extends TestCase
             'subtotal' => 50000,
             'total_diskon' => 0,
             'total_bayar' => 50000,
-            'metode_bayar' => 'tunai',
+            'metode_bayar' => 'qris',
             'status_pembayaran' => 'terverifikasi',
             'status_pesanan' => 'diproses',
         ], $atribut));

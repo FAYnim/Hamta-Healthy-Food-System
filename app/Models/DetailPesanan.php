@@ -20,6 +20,7 @@ class DetailPesanan extends Model
         'jumlah',
         'harga_satuan',
         'subtotal_item',
+        'catatan',
         'status_item',
     ];
 

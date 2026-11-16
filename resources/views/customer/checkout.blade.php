@@ -93,7 +93,6 @@
         .qris-upload-label:hover { border-color:var(--green); background:#eef5ea; }
         .qris-preview { display:flex; align-items:center; gap:12px; padding:10px 14px; background:#fbf8f0; border:1.5px solid var(--green); border-radius:10px; margin-top:10px; }
         .qris-preview img { width:52px; height:52px; object-fit:cover; border-radius:7px; border:1px solid rgba(11,65,43,.2); }
-        .tunai-card { background:#fff; border:2px solid #d8e2d2; border-radius:12px; padding:16px; margin-top:14px; }
         .co-submit-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; margin-top:16px; padding:14px 20px; border-radius:12px; border:0; background:var(--green); color:#fff; font-family:inherit; font-size:15px; font-weight:800; cursor:pointer; transition:all .15s; box-shadow:0 4px 12px rgba(11,65,43,.25); }
         .co-submit-btn:hover { background:#16613f; transform:translateY(-1px); }
         .co-submit-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
@@ -112,6 +111,13 @@
         .co-wa-btn:hover { background:#1ebc59; }
         .co-new-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:11px 18px; border-radius:11px; background:transparent; border:1.5px solid var(--green); color:var(--green); font-size:13px; font-weight:700; text-decoration:none; transition:all .15s; margin-top:8px; cursor:pointer; }
         .co-new-btn:hover { background:#eef5ea; }
+
+        .co-container { max-width: 780px; margin: 0 auto; width: 100%; }
+
+        @media (min-width: 701px) and (max-width: 1024px) {
+            .co-card { padding: 22px 20px; }
+            .co-head h1 { font-size: 24px; }
+        }
 
         @media (max-width:700px) {
             .co-head { gap:10px; margin-bottom:16px; }
@@ -142,15 +148,16 @@
 <div class="page">
     @include('customer.partials.header')
 
-    <div class="co-head">
-        <a class="co-back" href="{{ url('/') }}" aria-label="Kembali">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-        </a>
-        <h1>Rincian Pesananmu</h1>
-    </div>
+    <div class="co-container">
+        <div class="co-head">
+            <a class="co-back" href="{{ url('/') }}" aria-label="Kembali">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+            </a>
+            <h1>Rincian Pesananmu</h1>
+        </div>
 
-    <!-- ─── TAMPILAN 1: FORM CHECKOUT & PEMBAYARAN ──────────────────── -->
-    <div id="co-form-view">
+        <!-- ─── TAMPILAN 1: FORM CHECKOUT & PEMBAYARAN ──────────────────── -->
+        <div id="co-form-view">
         <!-- Section Alamat -->
         <section class="co-card" id="co-address-section">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
@@ -210,31 +217,37 @@
                     <span>Delivery / Diantar<small>Kurir mengantar langsung ke alamat tujuan</small></span>
                 </button>
             </div>
+
+            <!-- Pilihan Cabang Outlet untuk Metode Pickup (PRD F3) -->
+            <div id="co-pickup-branch-section" style="margin-top:16px;padding-top:14px;border-top:1px dashed rgba(11,65,43,.15)">
+                <label style="display:block;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:8px">Pilih Cabang Outlet Pengambilan:*</label>
+                <div class="co-opt-group" id="co-branch-group" role="radiogroup" aria-label="Pilih cabang outlet">
+                    @forelse ($cabang ?? \App\Models\Cabang::all() as $cb)
+                        <button type="button" class="co-opt {{ $loop->first ? 'is-selected' : '' }}" data-branch="{{ $cb->id_cabang }}" aria-pressed="{{ $loop->first ? 'true' : 'false' }}">
+                            <span class="co-opt-radio" aria-hidden="true"></span>
+                            <span>
+                                <strong>Cabang {{ $cb->nama_cabang }}</strong>
+                                <small style="display:block;font-size:11.5px;color:#4a5a52;margin-top:2px">{{ $cb->alamat }}</small>
+                            </span>
+                        </button>
+                    @empty
+                        <p style="font-size:12px;color:#666">Belum ada cabang terdaftar.</p>
+                    @endforelse
+                </div>
+            </div>
         </section>
 
         <!-- Section Metode Pembayaran & QRIS Statis -->
         <section class="co-card" id="co-payment-section">
             <h2>Metode Pembayaran</h2>
 
-            <!-- Opsi Pembayaran untuk Pickup (Muncul 2 Opsi: QRIS & Tunai) -->
-            <div class="co-opt-group" id="co-pay-pickup-group" role="radiogroup" aria-label="Metode pembayaran" style="margin-top:14px">
-                <button type="button" class="co-opt is-selected" data-pay="qris" aria-pressed="true">
-                    <span class="co-opt-radio" aria-hidden="true"></span>
-                    <span>QRIS<small>Bayar instan via GoPay, OVO, Dana, BCA &amp; m-Banking</small></span>
-                </button>
-                <button type="button" class="co-opt" data-pay="tunai" aria-pressed="false">
-                    <span class="co-opt-radio" aria-hidden="true"></span>
-                    <span>Bayar di Tempat (Tunai)<small>Bayar langsung saat mengambil pesanan di outlet</small></span>
-                </button>
-            </div>
-
-            <!-- Tampilan Pembayaran untuk Delivery (Hanya QRIS, Langsung Terpilih, Tanpa Opsi) -->
-            <div id="co-pay-delivery-badge" style="display:none;margin-top:14px;padding:14px 16px;background:#fbf8f0;border:2px solid var(--green);border-radius:12px;align-items:center;justify-content:space-between;gap:12px">
+            <!-- Metode Pembayaran: QRIS (Satu-satunya metode) -->
+            <div id="co-pay-qris-badge" style="margin-top:14px;padding:14px 16px;background:#fbf8f0;border:2px solid var(--green);border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:12px">
                 <div style="display:flex;align-items:center;gap:12px">
                     <span class="qris-badge" style="font-size:16px">QRIS</span>
                     <div>
-                        <strong style="display:block;font-size:13.5px;color:var(--ink)">QRIS (Pembayaran Instan)</strong>
-                        <small style="display:block;font-size:11.5px;color:#4a5a52;margin-top:2px">Pesanan delivery otomatis menggunakan pembayaran QRIS instan</small>
+                        <strong style="display:block;font-size:13.5px;color:var(--ink)">QRIS (Pembayaran Instan &amp; Cashless)</strong>
+                        <small style="display:block;font-size:11.5px;color:#4a5a52;margin-top:2px">Bayar instan via GoPay, OVO, DANA, BCA, ShopeePay &amp; seluruh m-Banking</small>
                     </div>
                 </div>
                 <span style="font-size:11.5px;font-weight:700;color:var(--green);background:#eef5ea;padding:3px 10px;border-radius:20px;white-space:nowrap">✓ Terpilih</span>
@@ -535,6 +548,7 @@
             </button>
         </section>
     </div>
+    </div>
 <script>
 (function () {
     function getActiveAddress() {
@@ -604,62 +618,31 @@
         return sel ? sel.dataset.take : 'pickup';
     }
 
+    function currentBranch() {
+        var sel = document.querySelector('#co-branch-group [data-branch].is-selected');
+        return sel ? parseInt(sel.dataset.branch, 10) : 1;
+    }
+
     var isFallbackMode = false;
     var FLAT_ONGKIR = {{ (float) ($tarifOngkir ?? 2000) }};
 
     function currentPay() {
-        var take = currentTake();
-        if (take === 'delivery') {
-            return 'qris';
-        }
-        var sel = document.querySelector('#co-pay-pickup-group [data-pay].is-selected');
-        return sel ? sel.dataset.pay : 'qris';
+        return 'qris';
     }
 
     function updatePaymentDisplay() {
-        var take = currentTake();
-        var pay = currentPay();
-        var payPickupGroup = document.getElementById('co-pay-pickup-group');
-        var payDeliveryBadge = document.getElementById('co-pay-delivery-badge');
         var fallbackBanner = document.getElementById('co-fallback-banner');
         var qrisBox = document.getElementById('qris-box');
         var submitLabel = document.getElementById('co-submit-label');
 
-        if (take === 'delivery') {
-            // Delivery: hanya muncul QRIS, langsung terpilih tanpa opsi
-            if (payPickupGroup) payPickupGroup.style.display = 'none';
-            if (payDeliveryBadge) payDeliveryBadge.style.display = 'flex';
-
-            if (isFallbackMode) {
-                if (fallbackBanner) fallbackBanner.style.display = 'block';
-                if (qrisBox) qrisBox.style.display = 'block';
-                if (submitLabel) submitLabel.textContent = 'Unggah Bukti & Buat Pesanan (QRIS Statis)';
-            } else {
-                if (fallbackBanner) fallbackBanner.style.display = 'none';
-                if (qrisBox) qrisBox.style.display = 'none';
-                if (submitLabel) submitLabel.textContent = 'Bayar via QRIS & Buat Pesanan';
-            }
+        if (isFallbackMode) {
+            if (fallbackBanner) fallbackBanner.style.display = 'block';
+            if (qrisBox) qrisBox.style.display = 'block';
+            if (submitLabel) submitLabel.textContent = 'Unggah Bukti & Buat Pesanan (QRIS Statis)';
         } else {
-            // Pickup: muncul 2 opsi (QRIS & Tunai)
-            if (payPickupGroup) payPickupGroup.style.display = 'grid';
-            if (payDeliveryBadge) payDeliveryBadge.style.display = 'none';
-
-            if (pay === 'qris') {
-                if (isFallbackMode) {
-                    if (fallbackBanner) fallbackBanner.style.display = 'block';
-                    if (qrisBox) qrisBox.style.display = 'block';
-                    if (submitLabel) submitLabel.textContent = 'Unggah Bukti & Buat Pesanan (QRIS Statis)';
-                } else {
-                    if (fallbackBanner) fallbackBanner.style.display = 'none';
-                    if (qrisBox) qrisBox.style.display = 'none';
-                    if (submitLabel) submitLabel.textContent = 'Bayar via QRIS & Buat Pesanan';
-                }
-            } else {
-                // Tunai
-                if (fallbackBanner) fallbackBanner.style.display = 'none';
-                if (qrisBox) qrisBox.style.display = 'none';
-                if (submitLabel) submitLabel.textContent = 'Buat Pesanan (Bayar di Tempat)';
-            }
+            if (fallbackBanner) fallbackBanner.style.display = 'none';
+            if (qrisBox) qrisBox.style.display = 'none';
+            if (submitLabel) submitLabel.textContent = 'Bayar via QRIS & Buat Pesanan';
         }
     }
 
@@ -729,6 +712,40 @@
                 detail.textContent = item.komponen.map(function (k) { return k.nama || k; }).join(', ');
                 mid.appendChild(detail);
             }
+
+            // Input Catatan Khusus per Item Produk
+            var noteWrap = document.createElement('div');
+            noteWrap.style.cssText = 'margin-top:6px;';
+            var noteInput = document.createElement('input');
+            noteInput.type = 'text';
+            noteInput.className = 'co-item-note-input';
+            noteInput.placeholder = 'Catatan menu (cth: saus dipisah, tanpa mayones, dll.)';
+            noteInput.value = item.catatan || '';
+            noteInput.style.cssText = 'width:100%;max-width:440px;padding:6px 11px;font-size:12px;border:1.5px solid rgba(11,65,43,.22);border-radius:8px;background:#ffffff;outline:none;transition:border-color .15s;font-family:inherit;color:var(--ink);';
+            noteInput.addEventListener('focus', function() {
+                noteInput.style.borderColor = 'var(--green)';
+                noteInput.style.boxShadow = '0 0 0 2px rgba(101,189,94,.15)';
+            });
+            noteInput.addEventListener('blur', function() {
+                noteInput.style.borderColor = 'rgba(11,65,43,.22)';
+                noteInput.style.boxShadow = 'none';
+            });
+            noteInput.addEventListener('change', function() {
+                var c = window.hamtaGetCart ? window.hamtaGetCart() : [];
+                if (c[index]) {
+                    c[index].catatan = noteInput.value.trim() || null;
+                    if (window.hamtaSaveCart) window.hamtaSaveCart(c);
+                }
+            });
+            noteInput.addEventListener('input', function() {
+                var c = window.hamtaGetCart ? window.hamtaGetCart() : [];
+                if (c[index]) {
+                    c[index].catatan = noteInput.value.trim() || null;
+                    try { localStorage.setItem('hamta_cart', JSON.stringify(c)); } catch (e) {}
+                }
+            });
+            noteWrap.appendChild(noteInput);
+            mid.appendChild(noteWrap);
             var qty = document.createElement('div');
             qty.className = 'co-qty';
             qty.setAttribute('aria-label', 'Jumlah ' + item.jumlah);
@@ -803,18 +820,6 @@
         render();
     }
 
-    document.querySelectorAll('[data-pay]').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            document.querySelectorAll('[data-pay]').forEach(function (b) {
-                var on = b === btn;
-                b.classList.toggle('is-selected', on);
-                b.setAttribute('aria-pressed', on ? 'true' : 'false');
-            });
-            try { localStorage.setItem('hamta_pay', btn.dataset.pay); } catch (e) {}
-            updatePaymentDisplay();
-        });
-    });
-
     document.querySelectorAll('[data-take]').forEach(function (btn) {
         btn.addEventListener('click', function () {
             document.querySelectorAll('[data-take]').forEach(function (b) {
@@ -823,40 +828,40 @@
                 b.setAttribute('aria-pressed', on ? 'true' : 'false');
             });
             try { localStorage.setItem('hamta_take', btn.dataset.take); } catch (e) {}
+            try { localStorage.setItem('hamta_pay', 'qris'); } catch (e) {}
 
-            // Jika memilih delivery, otomatis set metode bayar ke QRIS
-            if (btn.dataset.take === 'delivery') {
-                var qrisBtn = document.querySelector('[data-pay="qris"]');
-                var tunaiBtn = document.querySelector('[data-pay="tunai"]');
-                if (qrisBtn) {
-                    qrisBtn.classList.add('is-selected');
-                    qrisBtn.setAttribute('aria-pressed', 'true');
-                }
-                if (tunaiBtn) {
-                    tunaiBtn.classList.remove('is-selected');
-                    tunaiBtn.setAttribute('aria-pressed', 'false');
-                }
-                try { localStorage.setItem('hamta_pay', 'qris'); } catch (e) {}
+            var branchSec = document.getElementById('co-pickup-branch-section');
+            if (branchSec) {
+                branchSec.style.display = btn.dataset.take === 'pickup' ? 'block' : 'none';
             }
 
             render();
         });
     });
 
+    document.querySelectorAll('[data-branch]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('[data-branch]').forEach(function (b) {
+                var on = b === btn;
+                b.classList.toggle('is-selected', on);
+                b.setAttribute('aria-pressed', on ? 'true' : 'false');
+            });
+            try { localStorage.setItem('hamta_branch', btn.dataset.branch); } catch (e) {}
+        });
+    });
+
     try {
         var savedTake = localStorage.getItem('hamta_take');
-        var savedPay = localStorage.getItem('hamta_pay');
         if (savedTake && (savedTake === 'pickup' || savedTake === 'delivery')) {
             var takeBtn = document.querySelector('[data-take="' + savedTake + '"]');
             if (takeBtn) takeBtn.click();
         }
-        if (savedTake === 'delivery') {
-            var qrisBtn = document.querySelector('[data-pay="qris"]');
-            if (qrisBtn) qrisBtn.click();
-        } else if (savedPay && (savedPay === 'qris' || savedPay === 'tunai')) {
-            var payBtn = document.querySelector('[data-pay="' + savedPay + '"]');
-            if (payBtn) payBtn.click();
+        var savedBranch = localStorage.getItem('hamta_branch');
+        if (savedBranch) {
+            var branchBtn = document.querySelector('[data-branch="' + savedBranch + '"]');
+            if (branchBtn) branchBtn.click();
         }
+        localStorage.setItem('hamta_pay', 'qris');
     } catch (e) {}
 
     function showMsg(text, isError) {
@@ -894,12 +899,9 @@
                     payEl.className = 'co-badge-status co-badge-pending';
                     payEl.textContent = 'QRIS Otomatis — Menunggu Pembayaran';
                 }
-            } else if (order.metode_bayar === 'qris' || order.metode_bayar === 'qris_statis') {
+            } else {
                 payEl.className = 'co-badge-status co-badge-pending';
                 payEl.textContent = 'QRIS Manual — Menunggu Verifikasi';
-            } else {
-                payEl.className = 'co-badge-status co-badge-verified';
-                payEl.textContent = 'Bayar di Tempat (Tunai)';
             }
         }
 
@@ -965,19 +967,39 @@
             itemsList.innerHTML = '';
             (items || []).forEach(function (it) {
                 var row = document.createElement('div');
-                row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:7px 0;font-size:13px;border-bottom:1px dashed rgba(11,65,43,.12)';
+                row.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;font-size:13px;border-bottom:1px dashed rgba(11,65,43,.12);gap:12px';
                 var itemSub = (parseFloat(it.harga) || 0) * (parseInt(it.jumlah, 10) || 0);
-                row.innerHTML = '<div><strong style="color:var(--ink)">' + esc(it.nama) + '</strong> <span style="font-weight:600;color:#6f6a5f">x' + it.jumlah + '</span></div><div style="font-weight:700">' + rupiah(itemSub) + '</div>';
+
+                var noteHtml = '';
+                if (it.catatan && String(it.catatan).trim()) {
+                    noteHtml = '<div style="margin-top:4px;font-size:11.5px;color:#0b412b;background:rgba(101,189,94,.14);border-left:2.5px solid var(--green);padding:2px 8px;border-radius:4px;display:inline-block"><span style="font-weight:700">Catatan:</span> ' + esc(it.catatan) + '</div>';
+                }
+
+                var kompHtml = '';
+                if (it.komponen && it.komponen.length) {
+                    kompHtml = '<div style="font-size:11.5px;color:#6f6a5f;margin-top:2px">' + esc(it.komponen.map(function(k){ return k.nama || k; }).join(', ')) + '</div>';
+                }
+
+                row.innerHTML = '<div><div><strong style="color:var(--ink)">' + esc(it.nama) + '</strong> <span style="font-weight:600;color:#6f6a5f">x' + it.jumlah + '</span></div>' + kompHtml + noteHtml + '</div><div style="font-weight:700;white-space:nowrap">' + rupiah(itemSub) + '</div>';
                 itemsList.appendChild(row);
             });
         }
 
         if (waBtn) {
+            var itemsSummary = (items || []).map(function (it) {
+                var line = '• ' + (it.nama || 'Menu') + ' (' + it.jumlah + 'x)';
+                if (it.catatan && String(it.catatan).trim()) {
+                    line += ' — Catatan: ' + String(it.catatan).trim();
+                }
+                return line;
+            }).join('\n');
+
             var msg = 'Halo Admin Hamta Healthy Food, saya sudah membuat pesanan di website!\n\n' +
                 '• No. Pesanan: ' + (order.kode_pesanan || '') + '\n' +
                 '• Nama: ' + (order.nama_pelanggan || '-') + '\n' +
                 '• Metode: ' + (order.metode_ambil === 'delivery' ? 'Delivery' : 'Pickup') + '\n' +
-                '• Pembayaran: ' + (order.metode_bayar === 'qris' ? 'QRIS (Sudah Bayar)' : 'Bayar di Tempat') + '\n' +
+                '• Pembayaran: QRIS\n\n' +
+                'Daftar Menu:\n' + itemsSummary + '\n\n' +
                 '• Total Tagihan: ' + rupiah(order.total_bayar || 0) + '\n\n' +
                 'Pantau status pesanan live: ' + "{{ url('status-pesanan') }}/" + encodeURIComponent(order.kode_pesanan || '') + '\n\n' +
                 'Mohon segera diproses ya. Terima kasih!';
@@ -1003,12 +1025,9 @@
                             if (qrExpiredBox && order.metode_bayar === 'midtrans') qrExpiredBox.style.display = 'block';
                         }
                         if (payEl) {
-                            if (data.metode_bayar === 'tunai') {
+                            if (data.status_pembayaran === 'terverifikasi' || data.status_pembayaran === 'settlement') {
                                 payEl.className = 'co-badge-status co-badge-verified';
-                                payEl.textContent = 'Bayar di Tempat (Tunai)';
-                            } else if (data.status_pembayaran === 'terverifikasi') {
-                                payEl.className = 'co-badge-status co-badge-verified';
-                                payEl.textContent = 'QRIS — Terverifikasi (Lunas)';
+                                payEl.textContent = data.metode_bayar === 'midtrans' ? 'QRIS Otomatis — Lunas' : 'QRIS — Terverifikasi (Lunas)';
                             } else if (data.status_pembayaran === 'ditolak') {
                                 payEl.className = 'co-badge-status';
                                 payEl.style.background = '#fee2e2';
@@ -1126,6 +1145,7 @@
                     id_produk: parseInt(it.id_produk, 10),
                     id_komponen: (ids || []).map(function (id) { return parseInt(id, 10); }).filter(Boolean),
                     jumlah: parseInt(it.jumlah, 10) || 1,
+                    catatan: it.catatan ? String(it.catatan).trim() : null,
                 };
             });
 
@@ -1133,6 +1153,9 @@
             formData.append('nama_pelanggan', (savedAddr && savedAddr.nama) || '');
             formData.append('no_whatsapp', (savedAddr && savedAddr.telepon) || '');
             formData.append('metode_ambil', take);
+            if (take === 'pickup') {
+                formData.append('id_cabang', currentBranch());
+            }
             if (take === 'delivery' && savedAddr) {
                 formData.append('alamat_delivery', [savedAddr.alamat, savedAddr.patokan].filter(Boolean).join(' — '));
             }

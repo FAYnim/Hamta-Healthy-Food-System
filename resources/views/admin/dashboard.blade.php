@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -20,10 +20,10 @@
         <!-- ========================================== -->
         <!-- 2. MAIN CONTENT AREA (Cream: #F7F2E7)      -->
         <!-- ========================================== -->
-        <main class="flex-1 p-6 md:p-8 lg:p-10 max-w-7xl">
+        <main class="flex-1 p-4 sm:p-6 md:p-8 lg:p-10 max-w-7xl">
 
             <!-- Topbar / Header Section -->
-            <header class="flex items-center justify-between mb-8">
+            <header class="flex items-center justify-between mb-6 md:mb-8">
                 <div>
                     <h2 class="text-2xl md:text-3xl font-bold text-hamta-black tracking-tight">Dashboard</h2>
                 </div>

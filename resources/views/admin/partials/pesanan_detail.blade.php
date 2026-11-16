@@ -33,68 +33,108 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 py-5" data-status="{{ $pesanan->status_pesanan }}" data-total="{{ $pesanan->total_bayar }}">
 
-    <!-- Kolom Kiri: Daftar item + total (kartu hijau muda) -->
-    <div class="bg-[#BEE3B6] rounded-2xl p-5">
-        <p class="text-base font-bold text-hamta-black mb-3">Daftar Pesanan</p>
+    <!-- Kolom Kiri: Daftar item + total & Form Catatan Pembeli -->
+    <div class="space-y-4">
+        <div class="bg-[#BEE3B6] rounded-2xl p-5">
+            <p class="text-base font-bold text-hamta-black mb-3">Daftar Pesanan</p>
 
-        <ul class="text-sm text-hamta-black">
-            @foreach ($pesanan->detailPesanan as $item)
-                <li class="flex items-baseline gap-2 py-1 {{ $item->status_item === 'dibatalkan' ? 'opacity-60 line-through' : '' }}">
-                    <span class="shrink-0">•</span>
-                    <span class="font-semibold shrink-0">{{ $item->nama_item }}</span>
-                    <span class="shrink-0">{{ $item->jumlah }}x {{ $rp($item->harga_satuan) }}</span>
-                    <span class="flex-1 border-b border-hamta-black/25 translate-y-[-2px]"></span>
-                    <span class="font-semibold shrink-0">{{ $rp($item->subtotal_item) }}</span>
-                    @if ($item->status_item !== 'dibatalkan')
-                        <form method="POST" action="{{ route('admin.daftar_pesanan.item.batal', $item->id_detail) }}" class="loker-form inline" onsubmit="return confirm('Batalkan item {{ $item->nama_item }}?')">
-                            @csrf
-                            @method('PATCH')
-                            <button type="submit" class="text-xs font-semibold text-red-600 hover:underline">Batalkan</button>
-                        </form>
-                    @endif
-                </li>
-
-                @if ($item->komponenSalad->isNotEmpty())
-                    <li class="pl-6 text-xs text-hamta-black/70 pb-1">
-                        {{ $item->komponenSalad->pluck('nama_komponen')->implode(', ') }}
+            <ul class="text-sm text-hamta-black">
+                @foreach ($pesanan->detailPesanan as $item)
+                    <li class="flex items-baseline gap-2 py-1 {{ $item->status_item === 'dibatalkan' ? 'opacity-60 line-through' : '' }}">
+                        <span class="shrink-0">•</span>
+                        <span class="font-semibold shrink-0">{{ $item->nama_item }}</span>
+                        <span class="shrink-0">{{ $item->jumlah }}x {{ $rp($item->harga_satuan) }}</span>
+                        <span class="flex-1 border-b border-hamta-black/25 translate-y-[-2px]"></span>
+                        <span class="font-semibold shrink-0">{{ $rp($item->subtotal_item) }}</span>
+                        @if ($item->status_item !== 'dibatalkan')
+                            <form method="POST" action="{{ route('admin.daftar_pesanan.item.batal', $item->id_detail) }}" class="loker-form inline" onsubmit="return confirm('Batalkan item {{ $item->nama_item }}?')">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="text-xs font-semibold text-red-600 hover:underline">Batalkan</button>
+                            </form>
+                        @endif
                     </li>
-                @endif
-            @endforeach
-        </ul>
 
-        <div class="mt-2 pt-1 border-t border-hamta-black/25 text-sm space-y-1">
-            <div class="flex items-baseline gap-2">
-                <span class="font-semibold text-hamta-black">Subtotal</span>
-                <span class="flex-1"></span>
-                <span class="font-semibold text-hamta-black">{{ $rp($pesanan->subtotal) }}</span>
-            </div>
-            @if ($pesanan->total_diskon > 0)
-                <div class="flex items-baseline gap-2">
-                    <span class="font-semibold text-hamta-black">Diskon</span>
-                    <span class="flex-1"></span>
-                    <span class="font-semibold text-hamta-black">-{{ $rp($pesanan->total_diskon) }}</span>
-                </div>
-                {{-- Promo yang terpakai, biar admin tahu diskonnya datang dari promo mana --}}
-                @foreach ($pesanan->promo as $promoTerpakai)
-                    <div class="flex items-baseline gap-2 text-xs text-hamta-gray">
-                        <span class="shrink-0">• {{ $promoTerpakai->nama_promo }}</span>
-                        <span class="flex-1"></span>
-                        <span class="shrink-0">-{{ $rp($promoTerpakai->pivot->nilai_potongan) }}</span>
-                    </div>
+                    @if ($item->komponenSalad->isNotEmpty())
+                        <li class="pl-6 text-xs text-hamta-black/70 pb-1">
+                            {{ $item->komponenSalad->pluck('nama_komponen')->implode(', ') }}
+                        </li>
+                    @endif
+
+                    @if (!empty($item->catatan))
+                        <li class="pl-6 text-xs text-emerald-800 pb-1 italic">
+                            <span class="font-bold not-italic">Catatan:</span> {{ $item->catatan }}
+                        </li>
+                    @endif
                 @endforeach
-            @endif
-            @if ($pesanan->metode_ambil === 'delivery' && $pesanan->ongkir != null)
+            </ul>
+
+            <div class="mt-2 pt-1 border-t border-hamta-black/25 text-sm space-y-1">
                 <div class="flex items-baseline gap-2">
-                    <span class="font-semibold text-hamta-black">Ongkir</span>
+                    <span class="font-semibold text-hamta-black">Subtotal</span>
                     <span class="flex-1"></span>
-                    <span class="font-semibold text-hamta-black">{{ $rp($pesanan->ongkir) }}</span>
+                    <span class="font-semibold text-hamta-black">{{ $rp($pesanan->subtotal) }}</span>
                 </div>
-            @endif
-            <div class="flex items-baseline gap-2">
-                <span class="font-semibold text-hamta-black">Total</span>
-                <span class="flex-1"></span>
-                <span class="font-bold text-hamta-black" data-total-display="{{ $pesanan->total_bayar }}">{{ $rp($pesanan->total_bayar) }}</span>
+                @if ($pesanan->total_diskon > 0)
+                    <div class="flex items-baseline gap-2">
+                        <span class="font-semibold text-hamta-black">Diskon</span>
+                        <span class="flex-1"></span>
+                        <span class="font-semibold text-hamta-black">-{{ $rp($pesanan->total_diskon) }}</span>
+                    </div>
+                    {{-- Promo yang terpakai, biar admin tahu diskonnya datang dari promo mana --}}
+                    @foreach ($pesanan->promo as $promoTerpakai)
+                        <div class="flex items-baseline gap-2 text-xs text-hamta-gray">
+                            <span class="shrink-0">• {{ $promoTerpakai->nama_promo }}</span>
+                            <span class="flex-1"></span>
+                            <span class="shrink-0">-{{ $rp($promoTerpakai->pivot->nilai_potongan) }}</span>
+                        </div>
+                    @endforeach
+                @endif
+                @if ($pesanan->metode_ambil === 'delivery' && $pesanan->ongkir != null)
+                    <div class="flex items-baseline gap-2">
+                        <span class="font-semibold text-hamta-black">Ongkir</span>
+                        <span class="flex-1"></span>
+                        <span class="font-semibold text-hamta-black">{{ $rp($pesanan->ongkir) }}</span>
+                    </div>
+                @endif
+                <div class="flex items-baseline gap-2">
+                    <span class="font-semibold text-hamta-black">Total</span>
+                    <span class="flex-1"></span>
+                    <span class="font-bold text-hamta-black" data-total-display="{{ $pesanan->total_bayar }}">{{ $rp($pesanan->total_bayar) }}</span>
+                </div>
             </div>
+        </div>
+
+        @php
+            $catatanKhusus = $pesanan->detailPesanan->filter(fn ($d) => !empty(trim($d->catatan ?? '')));
+        @endphp
+
+        <!-- Form / Kotak Catatan Pembeli dari Checkout -->
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+            <div class="flex items-center gap-2 text-amber-900 font-bold text-sm mb-2.5">
+                <x-lucide-clipboard-pen class="w-4 h-4 text-amber-700 shrink-0" />
+                <span>Catatan dari Pembeli (Checkout)</span>
+            </div>
+
+            @if ($catatanKhusus->isNotEmpty())
+                <div class="space-y-2">
+                    @foreach ($catatanKhusus as $itemCatatan)
+                        <div class="bg-white rounded-xl p-3 border border-amber-200/70 shadow-xs">
+                            <div class="flex items-center justify-between text-xs font-bold text-hamta-black mb-1">
+                                <span>{{ $itemCatatan->nama_item }} <span class="text-stone-500 font-normal">({{ $itemCatatan->jumlah }}x)</span></span>
+                                <span class="text-[10px] text-amber-700 bg-amber-100/70 px-2 py-0.5 rounded-full font-semibold">Catatan Khusus</span>
+                            </div>
+                            <div class="bg-stone-50 rounded-lg p-2.5 border border-stone-200 text-xs text-stone-800 italic">
+                                "{{ $itemCatatan->catatan }}"
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-xs text-stone-500 italic bg-white/60 rounded-xl p-3 border border-amber-100">
+                    Tidak ada catatan khusus yang ditinggalkan pembeli untuk pesanan ini.
+                </p>
+            @endif
         </div>
     </div>
 

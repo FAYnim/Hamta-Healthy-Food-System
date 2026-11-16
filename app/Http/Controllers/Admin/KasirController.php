@@ -1,26 +1,25 @@
 <?php
 
-
 namespace App\Http\Controllers\Admin;
 
-
+use App\Http\Controllers\Controller;
+use App\Models\Cabang;
+use App\Models\DetailPesanan;
+use App\Models\KomponenSalad;
+use App\Models\Pesanan;
+use App\Models\Produk;
+use App\Models\Promo;
+use App\Services\PromoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
-use App\Models\Pesanan;
-use App\Models\DetailPesanan;
-use App\Models\Produk;
-use App\Models\KomponenSalad;
-use App\Models\Cabang;
-use App\Models\Promo;
-use App\Services\PromoService;
 
-
-class KasirController extends \App\Http\Controllers\Controller
+class KasirController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         // Produk aktif saja yang bisa dipilih kasir (produk sold-out disembunyikan)
         $produk = Produk::where('status_aktif', true)
             ->orderBy('nama_produk')
@@ -50,24 +49,26 @@ class KasirController extends \App\Http\Controllers\Controller
         ]);
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         // Validasi input transaksi kasir (nama pelanggan boleh kosong untuk walk-in)
         $data = $request->validate([
             'nama_pelanggan' => ['nullable', 'string', 'max:100'],
             'no_whatsapp' => ['nullable', 'string', 'max:20'],
             'id_cabang' => ['required', 'integer', 'exists:cabang,id_cabang'],
-            'metode_bayar' => ['required', Rule::in(['tunai', 'qris'])],
+            'metode_bayar' => ['required', Rule::in(['qris'])],
             'cart' => ['required', 'array', 'min:1'],
             'cart.*.tipe' => ['required', Rule::in(['produk', 'custom'])],
             'cart.*.id_produk' => ['required', 'integer'],
             'cart.*.id_komponen' => ['nullable', 'array'],
             'cart.*.jumlah' => ['required', 'integer', 'min:1'],
+            'cart.*.catatan' => ['nullable', 'string', 'max:255'],
         ]);
 
         // Id admin diambil dari session login, tanpa itu transaksi tidak bisa disimpan
         $id_admin = session('admin_id');
 
-        if (!$id_admin) {
+        if (! $id_admin) {
             throw ValidationException::withMessages([
                 'cart' => 'Sesi admin habis, silakan login ulang.',
             ]);
@@ -98,7 +99,7 @@ class KasirController extends \App\Http\Controllers\Controller
                 // Harga SELALU diambil dari master produk di DB, bukan dari nilai harga kiriman frontend
                 $produk = $produkMap->get((int) $item['id_produk']);
 
-                if (!$produk) {
+                if (! $produk) {
                     throw ValidationException::withMessages([
                         'cart' => 'Ada produk yang sudah tidak tersedia, silakan perbarui keranjang.',
                     ]);
@@ -117,7 +118,7 @@ class KasirController extends \App\Http\Controllers\Controller
                     }
 
                     // Harga komponen juga diambil dari DB, lalu dijumlahkan dengan harga dasar produk
-                    $komponenTerpilih = collect($idKomponen)->map(fn($id) => $komponenMap->get((int) $id));
+                    $komponenTerpilih = collect($idKomponen)->map(fn ($id) => $komponenMap->get((int) $id));
 
                     if ($komponenTerpilih->contains(null)) {
                         throw ValidationException::withMessages([
@@ -147,6 +148,7 @@ class KasirController extends \App\Http\Controllers\Controller
                     'jumlah' => (int) $item['jumlah'],
                     'harga_satuan' => $hargaSatuan,
                     'subtotal_item' => $subtotalItem,
+                    'catatan' => ! empty($item['catatan']) ? trim((string) $item['catatan']) : null,
                     'komponen' => $komponenTerpilih,
                 ];
             }
@@ -185,11 +187,12 @@ class KasirController extends \App\Http\Controllers\Controller
                     'jumlah' => $item['jumlah'],
                     'harga_satuan' => $item['harga_satuan'],
                     'subtotal_item' => $item['subtotal_item'],
+                    'catatan' => $item['catatan'] ?? null,
                     'status_item' => 'aktif',
                 ]);
 
                 // Simpan pilihan komponen salad custom + snapshot harga_tambahan saat transaksi
-                $pivot = $item['komponen']->mapWithKeys(fn($komponen) => [
+                $pivot = $item['komponen']->mapWithKeys(fn ($komponen) => [
                     $komponen->id_komponen => ['harga_tambahan' => $komponen->harga_tambahan],
                 ])->toArray();
 
@@ -212,14 +215,15 @@ class KasirController extends \App\Http\Controllers\Controller
 
         // Kembali ke halaman kasir dengan pesan sukses
         return redirect()->route('admin.kasir')
-            ->with('success', 'Transaksi kasir tersimpan dengan kode pesanan ' . $pesanan->kode_pesanan . '.'
-                . ($namaPromo !== '' ? ' Promo terpakai: ' . $namaPromo . '.' : ''));
+            ->with('success', 'Transaksi kasir tersimpan dengan kode pesanan '.$pesanan->kode_pesanan.'.'
+                .($namaPromo !== '' ? ' Promo terpakai: '.$namaPromo.'.' : ''));
     }
 
     // Generate kode pesanan unik untuk transaksi kasir (format sama dengan pesanan online)
-    private function generateKodePesanan() {
+    private function generateKodePesanan()
+    {
         do {
-            $kode = 'HMT-' . now()->format('ymd') . '-' . strtoupper(Str::random(5));
+            $kode = 'HMT-'.now()->format('ymd').'-'.strtoupper(Str::random(5));
         } while (Pesanan::where('kode_pesanan', $kode)->exists());
 
         return $kode;

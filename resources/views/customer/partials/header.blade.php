@@ -257,6 +257,14 @@
         .mobile-actions { display: flex !important; }
     }
 
+    @media (min-width: 769px) and (max-width: 1024px) {
+        :root { --page-pad: 20px; }
+        .page { padding: 22px var(--page-pad) 0; }
+        .nav { padding-bottom: 20px; }
+        .brand { width: 96px; }
+        .links { gap: 18px; font-size: 14px; }
+    }
+
     @media (min-width: 769px) {
         .mobile-actions { display: none !important; }
         .hamta-drawer-backdrop,
@@ -421,9 +429,54 @@
         });
     }
 
+    function addToCart(item) {
+        var id = parseInt(item.id_produk || item.id, 10);
+        if (!id) return false;
+        var cart = getCart();
+        var note = item.catatan ? String(item.catatan).trim() : null;
+        var qty = parseInt(item.jumlah, 10) || 1;
+
+        var existing = cart.find(function (it) { 
+            return it.tipe === 'produk' && 
+                   parseInt(it.id_produk, 10) === id && 
+                   (it.catatan || null) === note; 
+        });
+
+        if (existing) {
+            existing.jumlah = (parseInt(existing.jumlah, 10) || 1) + qty;
+        } else {
+            cart.push({
+                tipe: 'produk',
+                id_produk: id,
+                nama: item.nama || 'Produk',
+                harga: parseFloat(item.harga) || 0,
+                foto: item.foto || '',
+                jumlah: qty,
+                catatan: note
+            });
+        }
+
+        try {
+            localStorage.setItem(KEY, JSON.stringify(cart));
+            updateCartBadges();
+        } catch (err) {
+            showToast('Keranjang penuh, gagal menyimpan.');
+            return false;
+        }
+
+        var label = item.nama || 'Produk';
+        if (qty > 1) {
+            showToast(label + ' (' + qty + 'x) berhasil dimasukkan ke keranjang');
+        } else {
+            showToast(label + ' berhasil dimasukkan ke keranjang');
+        }
+        return true;
+    }
+
     window.hamtaToast = showToast;
     window.hamtaGetCart = getCart;
     window.hamtaUpdateCartBadge = updateCartBadges;
+    window.hamtaAddToCart = addToCart;
     window.hamtaSaveCart = function (cart) {
         try {
             localStorage.setItem(KEY, JSON.stringify(cart));
@@ -510,30 +563,13 @@
         var btn = e.target.closest('[data-add-cart]');
         if (!btn) return;
         e.preventDefault();
-        var id = parseInt(btn.dataset.id, 10);
-        if (!id) return;
-        var cart = getCart();
-        var existing = cart.find(function (item) { return item.tipe === 'produk' && parseInt(item.id_produk, 10) === id; });
-        if (existing) {
-            existing.jumlah = (parseInt(existing.jumlah, 10) || 1) + 1;
-        } else {
-            cart.push({
-                tipe: 'produk',
-                id_produk: id,
-                nama: btn.dataset.nama || 'Produk',
-                harga: parseFloat(btn.dataset.harga) || 0,
-                foto: btn.dataset.foto || '',
-                jumlah: 1,
-            });
-        }
-        try {
-            localStorage.setItem(KEY, JSON.stringify(cart));
-            updateCartBadges();
-        } catch (err) {
-            showToast('Keranjang penuh, gagal menyimpan.');
-            return;
-        }
-        showToast((btn.dataset.nama || 'Produk') + ' berhasil dimasukkan ke keranjang');
+        addToCart({
+            id_produk: btn.dataset.id,
+            nama: btn.dataset.nama,
+            harga: btn.dataset.harga,
+            foto: btn.dataset.foto,
+            jumlah: 1
+        });
     });
 
     // Initialize badges on DOM ready

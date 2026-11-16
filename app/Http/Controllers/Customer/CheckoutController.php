@@ -36,8 +36,9 @@ class CheckoutController extends Controller
             'nama_pelanggan' => ['required', 'string', 'max:100'],
             'no_whatsapp' => ['required', 'string', 'max:20'],
             'metode_ambil' => ['required', Rule::in(['pickup', 'delivery'])],
+            'id_cabang' => ['nullable', 'integer', 'exists:cabang,id_cabang'],
             'alamat_delivery' => ['required_if:metode_ambil,delivery', 'nullable', 'string', 'max:255'],
-            'metode_bayar' => ['required', Rule::in(['qris', 'qris_statis', 'tunai', 'midtrans'])],
+            'metode_bayar' => ['required', Rule::in(['qris', 'qris_statis', 'midtrans'])],
             'bukti_bayar' => [
                 Rule::requiredIf(fn () => $request->input('metode_bayar') === 'qris_statis'),
                 'nullable',
@@ -51,6 +52,7 @@ class CheckoutController extends Controller
             'cart.*.id_komponen' => ['nullable', 'array'],
             'cart.*.id_komponen.*' => ['integer'],
             'cart.*.jumlah' => ['required', 'integer', 'min:1'],
+            'cart.*.catatan' => ['nullable', 'string', 'max:255'],
         ], [
             'nama_pelanggan.required' => 'Silakan atur dan pilih alamat pengiriman terlebih dahulu.',
             'no_whatsapp.required' => 'Nomor WhatsApp pemesan wajib terisi dari alamat.',
@@ -67,9 +69,12 @@ class CheckoutController extends Controller
             $buktiBayarPath = $request->file('bukti_bayar')->store('bukti_bayar', 'public');
         }
 
-        // ponytail: belum ada pilihan cabang di UI checkout, pakai cabang pertama
-        // sebagai fallback sementara; ganti dengan pilihan cabang / cabang terdekat bila sudah ada.
-        $cabang = Cabang::orderBy('id_cabang')->first();
+        // Tentukan cabang pengambilan pesanan (sesuai pilihan pickup atau cabang pertama sebagai default)
+        if ($request->filled('id_cabang')) {
+            $cabang = Cabang::find($request->id_cabang) ?? Cabang::orderBy('id_cabang')->first();
+        } else {
+            $cabang = Cabang::orderBy('id_cabang')->first();
+        }
 
         if (! $cabang) {
             throw ValidationException::withMessages([
@@ -122,6 +127,10 @@ class CheckoutController extends Controller
                     'midtrans_order_id' => $pesanan->midtrans_order_id,
                     'created_at' => $pesanan->created_at?->format('d M Y, H:i') ?? now()->format('d M Y, H:i'),
                 ], 201);
+            } catch (ValidationException $e) {
+                DB::rollBack();
+
+                throw $e;
             } catch (\Throwable $e) {
                 DB::rollBack();
 
@@ -230,8 +239,15 @@ class CheckoutController extends Controller
                 'jumlah' => (int) $item['jumlah'],
                 'harga_satuan' => $hargaSatuan,
                 'subtotal_item' => $subtotalItem,
+                'catatan' => ! empty($item['catatan']) ? trim((string) $item['catatan']) : null,
                 'komponen' => $komponenTerpilih,
             ];
+        }
+
+        if ($subtotal > 99999999.00) {
+            throw ValidationException::withMessages([
+                'cart' => 'Total belanja melebihi batas maksimal transaksi (Rp 99.999.999). Silakan sesuaikan kuantitas pesanan.',
+            ]);
         }
 
         $tarifOngkir = $data['metode_ambil'] === 'delivery' ? Pengaturan::getTarifOngkir() : 0.00;
@@ -265,6 +281,7 @@ class CheckoutController extends Controller
                 'jumlah' => $item['jumlah'],
                 'harga_satuan' => $item['harga_satuan'],
                 'subtotal_item' => $item['subtotal_item'],
+                'catatan' => $item['catatan'] ?? null,
                 'status_item' => 'aktif',
             ]);
 

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -20,7 +20,7 @@
         <!-- ========================================== -->
         <!-- 2. MAIN CONTENT AREA (Cream: #F7F2E7)      -->
         <!-- ========================================== -->
-        <main class="flex-1 p-6 md:p-8 lg:p-10">
+        <main class="flex-1 p-4 sm:p-6 md:p-8 lg:p-10">
 
             <!-- Topbar Section -->
             <header class="flex items-center justify-between mb-6">
@@ -61,10 +61,10 @@
             @endif
 
             <!-- 2 Columns Layout: Menu Catalog & Shopping Cart -->
-            <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-                <!-- Left Column (Menu Catalog): 8 Cols -->
-                <div class="xl:col-span-7 space-y-6">
+                <!-- Left Column (Menu Catalog): 7 Cols on Desktop/Tablet Landscape -->
+                <div class="lg:col-span-7 space-y-6">
 
                     <!-- Search Input -->
                     <div class="relative">
@@ -81,30 +81,30 @@
                     </div>
 
                     <!-- Category Filter Pills -->
-                    <div class="flex items-center gap-3 overflow-x-auto pb-2">
-                        <button type="button" data-filter-kategori="" class="px-5 py-2 rounded-full bg-hamta-green text-white font-semibold text-sm shadow-sm shrink-0 transition">
+                    <div class="flex items-center gap-2.5 sm:gap-3 overflow-x-auto pb-2 scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                        <button type="button" data-filter-kategori="" class="px-4 sm:px-5 py-2 rounded-full bg-hamta-green text-white font-semibold text-xs sm:text-sm shadow-sm shrink-0 transition">
                             Semua
                         </button>
-                        <button type="button" data-filter-kategori="Salad" class="px-5 py-2 rounded-full border border-hamta-black bg-white text-hamta-black hover:bg-stone-100 font-semibold text-sm transition shrink-0">
+                        <button type="button" data-filter-kategori="Salad" class="px-4 sm:px-5 py-2 rounded-full border border-hamta-black bg-white text-hamta-black hover:bg-stone-100 font-semibold text-xs sm:text-sm transition shrink-0">
                             Salad
                         </button>
-                        <button type="button" data-filter-kategori="Sandwich" class="px-5 py-2 rounded-full border border-hamta-black bg-white text-hamta-black hover:bg-stone-100 font-semibold text-sm transition shrink-0">
+                        <button type="button" data-filter-kategori="Sandwich" class="px-4 sm:px-5 py-2 rounded-full border border-hamta-black bg-white text-hamta-black hover:bg-stone-100 font-semibold text-xs sm:text-sm transition shrink-0">
                             Sandwich
                         </button>
-                        <button type="button" data-filter-kategori="Juice" class="px-5 py-2 rounded-full border border-hamta-black bg-white text-hamta-black hover:bg-stone-100 font-semibold text-sm transition shrink-0">
+                        <button type="button" data-filter-kategori="Juice" class="px-4 sm:px-5 py-2 rounded-full border border-hamta-black bg-white text-hamta-black hover:bg-stone-100 font-semibold text-xs sm:text-sm transition shrink-0">
                             Juice
                         </button>
                         <button
                             type="button"
                             id="kasir-buka-custom"
-                            class="px-5 py-2 rounded-full border border-hamta-dark bg-white text-hamta-dark hover:bg-[#CDE9C7] font-semibold text-sm transition shrink-0"
+                            class="px-4 sm:px-5 py-2 rounded-full border border-hamta-dark bg-white text-hamta-dark hover:bg-[#CDE9C7] font-semibold text-xs sm:text-sm transition shrink-0"
                         >
                             Kreasikan
                         </button>
                     </div>
 
-                    <!-- Product Grid (2 Columns) -->
-                    <div id="kasir-produk-grid" class="grid grid-cols-2 gap-4">
+                    <!-- Product Grid (Responsive: 2 cols on Phone, 3 cols on Tablet Portrait / Large Desktop, 2 cols on Tablet Landscape/Laptop) -->
+                    <div id="kasir-produk-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
                         @forelse ($produk as $item)
                             <button
                                 type="button"
@@ -113,7 +113,7 @@
                                 data-nama="{{ $item->nama_produk }}"
                                 data-harga="{{ (float) $item->harga_offline }}"
                                 data-kategori="{{ $item->kategori }}"
-                                class="kasir-produk-card bg-white rounded-2xl p-4 shadow-sm border border-stone-100 hover:shadow-md hover:border-hamta-green/50 transition cursor-pointer text-left w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-hamta-green"
+                                class="kasir-produk-card bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-stone-100 hover:shadow-md hover:border-hamta-green/50 transition cursor-pointer text-left w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-hamta-green"
                             >
                                 <div class="w-full aspect-square bg-[#D9D9D9] rounded-xl mb-3 flex items-center justify-center overflow-hidden">
                                     @if ($item->foto)
@@ -122,8 +122,8 @@
                                         <x-lucide-image class="w-8 h-8 text-stone-400" />
                                     @endif
                                 </div>
-                                <h4 class="font-bold text-hamta-black text-base truncate">{{ $item->nama_produk }}</h4>
-                                <p class="font-bold text-hamta-black text-base mt-1">Rp {{ number_format($item->harga_offline, 0, ',', '.') }}</p>
+                                <h4 class="font-bold text-hamta-black text-sm sm:text-base truncate">{{ $item->nama_produk }}</h4>
+                                <p class="font-bold text-hamta-black text-sm sm:text-base mt-1">Rp {{ number_format($item->harga_offline, 0, ',', '.') }}</p>
                             </button>
                         @empty
                             <div class="col-span-full bg-white rounded-2xl p-10 text-center text-hamta-gray border border-stone-100">
@@ -178,8 +178,8 @@
 
                 </div>
 
-                <!-- Right Column (Shopping Cart / Keranjang): 4 Cols -->
-                <div class="xl:col-span-5 bg-white rounded-2xl p-6 shadow-sm border border-stone-100">
+                <!-- Right Column (Shopping Cart / Keranjang): 5 Cols on Desktop/Tablet Landscape -->
+                <div class="lg:col-span-5 bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-stone-100">
 
                     <form id="kasir-form" method="POST" action="{{ route('admin.kasir.store') }}" class="flex flex-col">
                         @csrf
@@ -259,19 +259,13 @@
 
                             <div>
                                 <span class="block text-xs font-semibold text-hamta-black mb-1.5">Metode Bayar</span>
-                                <div class="flex gap-2">
-                                    <label class="flex-1 cursor-pointer">
-                                        <input type="radio" name="metode_bayar" value="tunai" class="peer sr-only" {{ old('metode_bayar', 'tunai') === 'tunai' ? 'checked' : '' }}>
-                                        <span class="flex items-center justify-center gap-2 rounded-xl border border-stone-300 py-2.5 text-sm font-semibold text-hamta-black transition peer-checked:bg-hamta-green peer-checked:text-white peer-checked:border-hamta-green peer-focus-visible:ring-2 peer-focus-visible:ring-hamta-dark">
-                                            <x-lucide-banknote class="w-4 h-4" /> Tunai
-                                        </span>
-                                    </label>
-                                    <label class="flex-1 cursor-pointer">
-                                        <input type="radio" name="metode_bayar" value="qris" class="peer sr-only" {{ old('metode_bayar') === 'qris' ? 'checked' : '' }}>
-                                        <span class="flex items-center justify-center gap-2 rounded-xl border border-stone-300 py-2.5 text-sm font-semibold text-hamta-black transition peer-checked:bg-hamta-green peer-checked:text-white peer-checked:border-hamta-green peer-focus-visible:ring-2 peer-focus-visible:ring-hamta-dark">
-                                            <x-lucide-qr-code class="w-4 h-4" /> QRIS
-                                        </span>
-                                    </label>
+                                <input type="hidden" name="metode_bayar" value="qris">
+                                <div class="flex items-center justify-between rounded-xl border border-hamta-green/30 bg-hamta-green/5 px-3.5 py-2.5">
+                                    <div class="flex items-center gap-2">
+                                        <x-lucide-qr-code class="w-4 h-4 text-hamta-green" />
+                                        <span class="text-sm font-semibold text-hamta-green">QRIS (Cashless)</span>
+                                    </div>
+                                    <span class="text-[11px] font-bold text-hamta-green bg-hamta-lime/30 px-2 py-0.5 rounded-full">Satu-satunya metode</span>
                                 </div>
                             </div>
                         </div>

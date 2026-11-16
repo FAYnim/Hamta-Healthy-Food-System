@@ -34,16 +34,34 @@ class AuthController extends Controller
         $secretKey = config('services.recaptcha.secret_key') ?: env('RECAPTCHA_SECRET_KEY');
         if ($secretKey) {
             try {
-                $response = Http::asForm()->timeout(5)->post('https://www.google.com/recaptcha/api/siteverify', [
+                $httpClient = Http::asForm()->timeout(5);
+
+                // Gunakan CA bundle lokal XAMPP atau bypass SSL pada non-production untuk menghindari cURL error 60 di Windows
+                if (file_exists('C:/xampp/apache/bin/curl-ca-bundle.crt')) {
+                    $httpClient = $httpClient->withOptions(['verify' => 'C:/xampp/apache/bin/curl-ca-bundle.crt']);
+                } elseif (! app()->isProduction()) {
+                    $httpClient = $httpClient->withoutVerifying();
+                }
+
+                $response = $httpClient->post('https://www.google.com/recaptcha/api/siteverify', [
                     'secret' => $secretKey,
                     'response' => $data['g-recaptcha-response'],
                     'remoteip' => $request->ip(),
                 ]);
 
                 if (! $response->successful() || ! ($response->json('success') ?? false)) {
+                    $errorCodes = $response->json('error-codes') ?? [];
+                    Log::warning('reCAPTCHA verification rejected by Google: '.json_encode($response->json()));
+
+                    // Beri petunjuk jika hostname tidak cocok di Google Console saat dev lokal
+                    $pesanError = 'Verifikasi reCAPTCHA gagal. Silakan coba lagi.';
+                    if (! app()->isProduction() && in_array('hostname-mismatch', $errorCodes)) {
+                        $pesanError = 'Domain localhost belum didaftarkan di Google reCAPTCHA Console.';
+                    }
+
                     return redirect()->back()
                         ->withInput($request->only('username'))
-                        ->with('error', 'Verifikasi reCAPTCHA gagal. Silakan coba lagi.');
+                        ->with('error', $pesanError);
                 }
             } catch (\Throwable $e) {
                 Log::warning('reCAPTCHA verification warning: '.$e->getMessage());

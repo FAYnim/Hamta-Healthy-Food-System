@@ -346,7 +346,7 @@ class MidtransIntegrationTest extends TestCase
     {
         Storage::fake('public');
 
-        $file = UploadedFile::fake()->image('bukti_transfer.jpg');
+        $file = UploadedFile::fake()->create('bukti_transfer.jpg', 100, 'image/jpeg');
 
         $payload = [
             'nama_pelanggan' => 'Eko Static',
@@ -447,7 +447,7 @@ class MidtransIntegrationTest extends TestCase
             'bukti_bayar' => null,
         ]);
 
-        $file = UploadedFile::fake()->image('bukti_tf.jpg');
+        $file = UploadedFile::fake()->create('bukti_tf.jpg', 100, 'image/jpeg');
 
         $response = $this->post(route('customer.status_pesanan.upload_bukti', $pesanan->kode_pesanan), [
             'bukti_bayar' => $file,
