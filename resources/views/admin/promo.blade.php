@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Promo - Hamta Healthy Food</title>
+    @include('partials.favicon')
 
     <!-- Tailwind CSS via Vite -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))

@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             CabangSeeder::class,
             BahanSeeder::class,
             KomponenSaladSeeder::class,
+            ProdukSeeder::class,
         ]);
     }
 }
