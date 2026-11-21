@@ -23,6 +23,8 @@ class StatusPesananController extends Controller
             $pesanan = Pesanan::with(['cabang', 'detailPesanan.komponenSalad', 'rating'])
                 ->where('kode_pesanan', $kodePesanan)
                 ->first();
+
+            $pesanan?->batalkanJikaExpired();
         }
 
         return view('customer.status-pesanan', [
@@ -77,6 +79,7 @@ class StatusPesananController extends Controller
             try {
                 if (now()->greaterThanOrEqualTo(Carbon::parse($expiryTime))) {
                     $isExpired = true;
+                    $pesanan->batalkanJikaExpired();
                 }
             } catch (\Throwable) {
                 $isExpired = false;

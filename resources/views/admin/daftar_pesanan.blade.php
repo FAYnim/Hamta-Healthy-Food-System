@@ -114,9 +114,16 @@
                         <tbody class="divide-y divide-stone-200 text-sm">
                             @forelse ($pesanan as $item)
                                 @php
-                                    $badge = $item->status_pesanan === 'batal'
-                                        ? 'bg-red-100 text-red-700'
-                                        : 'bg-[#BEE3B6] text-hamta-dark';
+                                    $isBatal = $item->status_pesanan === 'batal';
+                                    $isPendingPay = in_array($item->status_pembayaran, ['pending', 'menunggu_verifikasi'], true);
+
+                                    if ($isBatal) {
+                                        $badgeClass = 'bg-red-100 text-red-700';
+                                    } elseif ($item->status_pesanan === 'diproses' && $isPendingPay) {
+                                        $badgeClass = 'bg-amber-100 text-amber-800 border border-amber-300/80';
+                                    } else {
+                                        $badgeClass = 'bg-[#BEE3B6] text-hamta-dark';
+                                    }
                                     $catatanItems = $item->detailPesanan->filter(fn ($d) => !empty(trim($d->catatan ?? '')));
                                 @endphp
                                 <tr class="hover:bg-stone-50/50 transition">
@@ -149,9 +156,40 @@
                                         @endif
                                     </td>
                                     <td class="cell-status py-5 px-6">
-                                        <span class="badge-status inline-block px-3 py-1 rounded-full font-semibold text-xs capitalize {{ $badge }}">
-                                            {{ $item->status_pesanan }}
-                                        </span>
+                                        <div class="flex flex-col items-start gap-1">
+                                            <span class="badge-status inline-block px-3 py-1 rounded-full font-semibold text-xs capitalize {{ $badgeClass }}">
+                                                {{ $item->status_pesanan }}
+                                            </span>
+
+                                            <div class="badge-pay-wrap">
+                                                @if (in_array($item->status_pembayaran, ['terverifikasi', 'settlement'], true))
+                                                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700">
+                                                        <x-lucide-check-circle-2 class="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                                        <span>Lunas</span>
+                                                    </span>
+                                                @elseif ($item->status_pembayaran === 'pending')
+                                                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-amber-700">
+                                                        <x-lucide-clock class="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                                                        <span>Menunggu Bayar</span>
+                                                    </span>
+                                                @elseif ($item->status_pembayaran === 'menunggu_verifikasi')
+                                                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700">
+                                                        <x-lucide-file-search class="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                                                        <span>Verifikasi TF</span>
+                                                    </span>
+                                                @elseif ($item->status_pembayaran === 'expired')
+                                                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-red-600">
+                                                        <x-lucide-timer-off class="w-3.5 h-3.5 text-red-500 shrink-0" />
+                                                        <span>QR Kedaluwarsa</span>
+                                                    </span>
+                                                @elseif (in_array($item->status_pembayaran, ['ditolak', 'gagal'], true))
+                                                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-red-600">
+                                                        <x-lucide-x-circle class="w-3.5 h-3.5 text-red-500 shrink-0" />
+                                                        <span>Bayar Gagal</span>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </td>
                                     <td class="py-5 px-6 text-center">
                                         <button type="button"
@@ -299,14 +337,40 @@
                             if (!barisInduk || barisInduk.tagName !== 'TR') return;
 
                             const statusBaru = root.getAttribute('data-status');
+                            const payBaru = root.getAttribute('data-pembayaran');
+                            const isPendingPay = payBaru === 'pending' || payBaru === 'menunggu_verifikasi';
+
                             if (statusBaru) {
                                 const badge = barisInduk.querySelector('.badge-status');
                                 if (badge) {
                                     badge.textContent = statusBaru;
-                                    badge.className = 'badge-status inline-block px-3 py-1 rounded-full font-semibold text-xs capitalize ' +
-                                        (statusBaru === 'batal' ? 'bg-red-100 text-red-700' : 'bg-[#BEE3B6] text-hamta-dark');
+                                    if (statusBaru === 'batal') {
+                                        badge.className = 'badge-status inline-block px-3 py-1 rounded-full font-semibold text-xs capitalize bg-red-100 text-red-700';
+                                    } else if (statusBaru === 'diproses' && isPendingPay) {
+                                        badge.className = 'badge-status inline-block px-3 py-1 rounded-full font-semibold text-xs capitalize bg-amber-100 text-amber-800 border border-amber-300/80';
+                                    } else {
+                                        badge.className = 'badge-status inline-block px-3 py-1 rounded-full font-semibold text-xs capitalize bg-[#BEE3B6] text-hamta-dark';
+                                    }
                                 }
                             }
+
+                            if (payBaru) {
+                                const payWrap = barisInduk.querySelector('.badge-pay-wrap');
+                                if (payWrap) {
+                                    if (payBaru === 'terverifikasi' || payBaru === 'settlement') {
+                                        payWrap.innerHTML = '<span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700"><svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg><span>Lunas</span></span>';
+                                    } else if (payBaru === 'pending') {
+                                        payWrap.innerHTML = '<span class="inline-flex items-center gap-1 text-[11px] font-bold text-amber-700"><svg class="w-3.5 h-3.5 text-amber-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Menunggu Bayar</span></span>';
+                                    } else if (payBaru === 'menunggu_verifikasi') {
+                                        payWrap.innerHTML = '<span class="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700"><svg class="w-3.5 h-3.5 text-blue-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M5 17a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="m9 18-1.5-1.5"/></svg><span>Verifikasi TF</span></span>';
+                                    } else if (payBaru === 'expired') {
+                                        payWrap.innerHTML = '<span class="inline-flex items-center gap-1 text-[11px] font-bold text-red-600"><svg class="w-3.5 h-3.5 text-red-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="2" x2="22" y2="22"/><path d="M12 2v2"/><path d="m19 5 1-1"/><path d="M22 12h-2"/><path d="m9 4 2-2"/><path d="M20.2 16.2A10 10 0 0 0 8 3.8"/><path d="M4 8a10 10 0 0 0 13.8 13.8"/></svg><span>QR Kedaluwarsa</span></span>';
+                                    } else if (payBaru === 'ditolak' || payBaru === 'gagal') {
+                                        payWrap.innerHTML = '<span class="inline-flex items-center gap-1 text-[11px] font-bold text-red-600"><svg class="w-3.5 h-3.5 text-red-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span>Bayar Gagal</span></span>';
+                                    }
+                                }
+                            }
+
                             const totalBaru = root.getAttribute('data-total');
                             if (totalBaru) {
                                 const cellTotal = barisInduk.querySelector('.cell-total');

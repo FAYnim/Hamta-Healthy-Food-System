@@ -30,7 +30,8 @@ class KasirController extends Controller
         $sayuran = $komponen->where('jenis', 'sayuran')->values();
         $protein = $komponen->where('jenis', 'protein')->values();
 
-        // Daftar cabang untuk dipilih kasir saat input transaksi
+        // Cabang MERR sebagai satu-satunya outlet kasir offline
+        $cabangMerr = Cabang::where('nama_cabang', 'like', '%merr%')->first() ?? Cabang::first();
         $cabang = Cabang::orderBy('nama_cabang')->get();
 
         // Promo yang sedang berlaku, biar kasir tahu promo mana yang bisa dipakai customer.
@@ -45,18 +46,19 @@ class KasirController extends Controller
             'sayuran' => $sayuran,
             'protein' => $protein,
             'cabang' => $cabang,
+            'cabangMerr' => $cabangMerr,
             'promoAktif' => $promoAktif,
         ]);
     }
 
     public function store(Request $request)
     {
-        // Validasi input transaksi kasir (nama pelanggan boleh kosong untuk walk-in)
+        // Validasi input transaksi kasir (nama pelanggan boleh kosong untuk walk-in, cabang otomatis Merr)
         $data = $request->validate([
             'nama_pelanggan' => ['nullable', 'string', 'max:100'],
             'no_whatsapp' => ['nullable', 'string', 'max:20'],
-            'id_cabang' => ['required', 'integer', 'exists:cabang,id_cabang'],
-            'metode_bayar' => ['required', Rule::in(['qris'])],
+            'id_cabang' => ['nullable', 'integer', 'exists:cabang,id_cabang'],
+            'metode_bayar' => ['required', Rule::in(['qris', 'tunai'])],
             'cart' => ['required', 'array', 'min:1'],
             'cart.*.tipe' => ['required', Rule::in(['produk', 'custom'])],
             'cart.*.id_produk' => ['required', 'integer'],
@@ -64,6 +66,18 @@ class KasirController extends Controller
             'cart.*.jumlah' => ['required', 'integer', 'min:1'],
             'cart.*.catatan' => ['nullable', 'string', 'max:255'],
         ]);
+
+        $idCabang = $data['id_cabang'] ?? null;
+        if (! $idCabang) {
+            $cabangMerr = Cabang::where('nama_cabang', 'like', '%merr%')->first() ?? Cabang::first();
+            $idCabang = $cabangMerr?->id_cabang;
+        }
+
+        if (! $idCabang) {
+            throw ValidationException::withMessages([
+                'cart' => 'Cabang MERR tidak ditemukan di database.',
+            ]);
+        }
 
         // Id admin diambil dari session login, tanpa itu transaksi tidak bisa disimpan
         $id_admin = session('admin_id');
@@ -75,7 +89,7 @@ class KasirController extends Controller
         }
 
         // Bungkus proses simpan pesanan + detail dalam 1 transaksi DB (sama seperti checkout customer)
-        $pesanan = DB::transaction(function () use ($data, $id_admin) {
+        $pesanan = DB::transaction(function () use ($data, $id_admin, $idCabang) {
             // --- HITUNG ULANG HARGA DI BACKEND (sama seperti PesananController customer) ---
             // Kumpulkan id produk & id komponen dari keranjang supaya master cukup di-query 1x
             $produkIds = collect($data['cart'])->pluck('id_produk')->unique()->values();
@@ -162,7 +176,7 @@ class KasirController extends Controller
                 'no_whatsapp' => $data['no_whatsapp'] ?? null,
                 // Transaksi kasir diasumsikan customer ambil di tempat, jadi tidak ada ongkir
                 'metode_ambil' => 'pickup',
-                'id_cabang' => $data['id_cabang'],
+                'id_cabang' => $idCabang,
                 'alamat_delivery' => null,
                 'ongkir' => 0,
                 'status_ongkir' => 'tidak_perlu',

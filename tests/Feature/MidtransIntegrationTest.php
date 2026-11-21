@@ -219,7 +219,7 @@ class MidtransIntegrationTest extends TestCase
         $this->assertEquals('settlement', $pesanan->midtrans_response['last_transaction_status']);
     }
 
-    public function test_webhook_expire_updates_status_to_ditolak(): void
+    public function test_webhook_expire_updates_status_to_expired_and_batal(): void
     {
         $pesanan = Pesanan::create([
             'kode_pesanan' => 'HMT-261108-XYZ12',
@@ -255,7 +255,37 @@ class MidtransIntegrationTest extends TestCase
         $response->assertStatus(200);
 
         $pesanan->refresh();
-        $this->assertEquals('ditolak', $pesanan->status_pembayaran);
+        $this->assertEquals('expired', $pesanan->status_pembayaran);
+        $this->assertEquals('batal', $pesanan->status_pesanan);
+    }
+
+    public function test_sinkronkan_pesanan_expired_cancels_overdue_orders(): void
+    {
+        $pastExpiry = now()->subMinutes(10)->format('Y-m-d H:i:s');
+        $pesanan = Pesanan::create([
+            'kode_pesanan' => 'HMT-AUTO-EXP-1',
+            'jenis' => 'online',
+            'nama_pelanggan' => 'Auto Expired User',
+            'no_whatsapp' => '081299990000',
+            'metode_ambil' => 'pickup',
+            'id_cabang' => $this->cabang->id_cabang,
+            'subtotal' => 30000,
+            'total_bayar' => 30000,
+            'metode_bayar' => 'midtrans',
+            'midtrans_order_id' => 'HMT-AUTO-EXP-1-99',
+            'midtrans_response' => [
+                'expiry_time' => $pastExpiry,
+            ],
+            'status_pembayaran' => 'pending',
+            'status_pesanan' => 'diproses',
+        ]);
+
+        $canceledCount = Pesanan::sinkronkanPesananExpired();
+
+        $this->assertGreaterThanOrEqual(1, $canceledCount);
+        $pesanan->refresh();
+        $this->assertEquals('expired', $pesanan->status_pembayaran);
+        $this->assertEquals('batal', $pesanan->status_pesanan);
     }
 
     public function test_webhook_invalid_signature_returns_403(): void

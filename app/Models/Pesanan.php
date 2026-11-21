@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Pesanan extends Model
@@ -77,5 +78,67 @@ class Pesanan extends Model
     public function rating()
     {
         return $this->hasOne(Rating::class, 'id_pesanan', 'id_pesanan');
+    }
+
+    /**
+     * Cek apakah pesanan QRIS Midtrans ini sudah melewati batas waktu pembayaran.
+     * Jika sudah lewat dan belum lunas, otomatis ubah status pesanan menjadi 'batal'
+     * dan status pembayaran menjadi 'expired'.
+     */
+    public function batalkanJikaExpired(): bool
+    {
+        if ($this->status_pesanan === 'batal' && $this->status_pembayaran === 'expired') {
+            return false;
+        }
+
+        if (! in_array($this->status_pembayaran, ['pending', 'menunggu_verifikasi'], true)) {
+            return false;
+        }
+
+        if (! in_array($this->metode_bayar, ['midtrans', 'qris'], true)) {
+            return false;
+        }
+
+        $expiryTime = $this->midtrans_response['expiry_time'] ?? null;
+        if (! $expiryTime) {
+            return false;
+        }
+
+        try {
+            if (now()->greaterThanOrEqualTo(Carbon::parse($expiryTime))) {
+                $this->update([
+                    'status_pembayaran' => 'expired',
+                    'status_pesanan' => 'batal',
+                ]);
+                $this->refresh();
+
+                return true;
+            }
+        } catch (\Throwable) {
+            return false;
+        }
+
+        return false;
+    }
+
+    /**
+     * Sinkronkan dan batalkan seluruh pesanan QRIS Midtrans yang telah melewati batas waktu kedaluwarsa.
+     */
+    public static function sinkronkanPesananExpired(): int
+    {
+        $pesananPending = static::whereIn('status_pembayaran', ['pending', 'menunggu_verifikasi'])
+            ->whereIn('metode_bayar', ['midtrans', 'qris'])
+            ->where('status_pesanan', '!=', 'batal')
+            ->whereNotNull('midtrans_response')
+            ->get();
+
+        $jumlah = 0;
+        foreach ($pesananPending as $p) {
+            if ($p->batalkanJikaExpired()) {
+                $jumlah++;
+            }
+        }
+
+        return $jumlah;
     }
 }

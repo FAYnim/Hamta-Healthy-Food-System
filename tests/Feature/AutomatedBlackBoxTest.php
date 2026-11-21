@@ -507,6 +507,18 @@ class AutomatedBlackBoxTest extends TestCase
     // F. ADMIN: KASIR
     // ==========================================
 
+    public function test_admin_kasir_halaman_bisa_diakses_dan_menampilkan_cabang_merr(): void
+    {
+        $response = $this->withSession([
+            'admin_id' => $this->admin->id_admin,
+            'admin_nama' => $this->admin->nama,
+        ])->get(route('admin.kasir'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Cabang Outlet');
+        $response->assertSee('MERR');
+    }
+
     public function test_admin_kasir_input_transaksi_offline_harga_offline(): void
     {
         // Harga offline Salad Sayur adalah 20.000 (bukan harga online 25.000)
@@ -533,6 +545,63 @@ class AutomatedBlackBoxTest extends TestCase
             'id_cabang' => $this->cabangMerr->id_cabang,
             'subtotal' => 40000,
             'total_bayar' => 40000,
+            'metode_bayar' => 'tunai',
+            'status_pembayaran' => 'terverifikasi',
+            'id_admin' => $this->admin->id_admin,
+        ]);
+    }
+
+    public function test_admin_kasir_input_transaksi_offline_qris(): void
+    {
+        $response = $this->withSession([
+            'admin_id' => $this->admin->id_admin,
+            'admin_nama' => $this->admin->nama,
+        ])->post(route('admin.kasir.store'), [
+            'id_cabang' => $this->cabangMerr->id_cabang,
+            'nama_pelanggan' => 'QRIS Walk-in',
+            'metode_bayar' => 'qris',
+            'cart' => [
+                [
+                    'tipe' => 'produk',
+                    'id_produk' => $this->saladSayur->id_produk,
+                    'jumlah' => 1,
+                ],
+            ],
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('pesanan', [
+            'jenis' => 'kasir',
+            'id_cabang' => $this->cabangMerr->id_cabang,
+            'metode_bayar' => 'qris',
+            'status_pembayaran' => 'terverifikasi',
+            'id_admin' => $this->admin->id_admin,
+        ]);
+    }
+
+    public function test_admin_kasir_input_transaksi_otomatis_cabang_merr_jika_tanpa_id_cabang(): void
+    {
+        $response = $this->withSession([
+            'admin_id' => $this->admin->id_admin,
+            'admin_nama' => $this->admin->nama,
+        ])->post(route('admin.kasir.store'), [
+            // id_cabang sengaja tidak dikirimkan
+            'nama_pelanggan' => 'Auto Merr Walk-in',
+            'metode_bayar' => 'tunai',
+            'cart' => [
+                [
+                    'tipe' => 'produk',
+                    'id_produk' => $this->saladSayur->id_produk,
+                    'jumlah' => 1,
+                ],
+            ],
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('pesanan', [
+            'jenis' => 'kasir',
+            'id_cabang' => $this->cabangMerr->id_cabang,
+            'metode_bayar' => 'tunai',
             'status_pembayaran' => 'terverifikasi',
             'id_admin' => $this->admin->id_admin,
         ]);

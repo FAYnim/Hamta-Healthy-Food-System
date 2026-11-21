@@ -15,6 +15,9 @@ class PesananController extends Controller
 {
     public function index(Request $request)
     {
+        // Sinkronkan otomatis pesanan QRIS yang telah melewati batas expiry time
+        Pesanan::sinkronkanPesananExpired();
+
         // Tampilkan semua pesanan (online & kasir), filter status + pencarian opsional
         $status = $request->query('status');
         $q = trim((string) $request->query('q'));
@@ -42,6 +45,8 @@ class PesananController extends Controller
         // Detail 1 pesanan untuk panel drawer (relasi lengkap utk tampilan)
         $pesanan = Pesanan::with(['cabang', 'admin', 'detailPesanan.komponenSalad', 'promo', 'rating'])
             ->findOrFail($id);
+
+        $pesanan->batalkanJikaExpired();
 
         return view('admin.partials.pesanan_detail', ['pesanan' => $pesanan]);
     }

@@ -31,7 +31,7 @@
     $waLink = $cleanWa ? 'https://wa.me/' . $cleanWa . '?text=' . rawurlencode($waText) : null;
 @endphp
 
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 py-5" data-status="{{ $pesanan->status_pesanan }}" data-total="{{ $pesanan->total_bayar }}">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 py-5" data-status="{{ $pesanan->status_pesanan }}" data-pembayaran="{{ $pesanan->status_pembayaran }}" data-total="{{ $pesanan->total_bayar }}">
 
     <!-- Kolom Kiri: Daftar item + total & Form Catatan Pembeli -->
     <div class="space-y-4">
@@ -167,38 +167,208 @@
             <p><span class="font-bold">Ongkir:</span> {{ $rp($pesanan->ongkir) }} <span class="text-xs text-emerald-700 font-bold ml-1">✓ Terkonfirmasi</span></p>
         @endif
 
-        <div>
-            <p class="font-bold mb-1.5">Status Pembayaran:</p>
-            <form method="POST" action="{{ route('admin.daftar_pesanan.pembayaran', $pesanan->id_pesanan) }}" class="loker-form inline-block">
-                @csrf
-                @method('PATCH')
-                <select name="status_pembayaran"
-                        onchange="this.form.requestSubmit()"
-                        class="w-56 bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm font-medium text-hamta-black outline-none cursor-pointer">
-                    <option value="menunggu_verifikasi" @selected($pesanan->status_pembayaran === 'menunggu_verifikasi')>Menunggu Verifikasi</option>
-                    <option value="pending" @selected($pesanan->status_pembayaran === 'pending')>Pending (Menunggu Bayar)</option>
-                    <option value="terverifikasi" @selected($pesanan->status_pembayaran === 'terverifikasi')>Terverifikasi (Lunas)</option>
-                    <option value="settlement" @selected($pesanan->status_pembayaran === 'settlement')>Settlement (Lunas Midtrans)</option>
-                    <option value="ditolak" @selected($pesanan->status_pembayaran === 'ditolak')>Ditolak</option>
-                    <option value="expired" @selected($pesanan->status_pembayaran === 'expired')>Expired</option>
-                    <option value="gagal" @selected($pesanan->status_pembayaran === 'gagal')>Gagal</option>
-                </select>
-            </form>
+        <!-- KOTAK STATUS PEMBAYARAN (KASUS A, B, C) -->
+        <div class="bg-stone-50 border border-stone-200/80 rounded-2xl p-4 space-y-2.5">
+            <div class="flex items-center justify-between">
+                <span class="font-bold text-xs uppercase tracking-wider text-stone-500">Status Pembayaran</span>
+                <span class="text-xs font-semibold text-stone-500">Metode: {{ strtoupper($pesanan->metode_bayar) }}</span>
+            </div>
+
+            {{-- KASUS A: MIDTRANS / QRIS OTOMATIS --}}
+            @if ($pesanan->metode_bayar === 'midtrans' || (!empty($pesanan->midtrans_order_id) && $pesanan->metode_bayar === 'qris'))
+                @if (in_array($pesanan->status_pembayaran, ['terverifikasi', 'settlement'], true))
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-bold">
+                        <x-lucide-check-circle-2 class="w-4 h-4 text-emerald-600 shrink-0" />
+                        <span>Lunas (Otomatis Midtrans)</span>
+                    </div>
+                @elseif ($pesanan->status_pembayaran === 'pending')
+                    <div class="space-y-2">
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-100 text-amber-800 text-xs font-bold">
+                            <x-lucide-clock class="w-4 h-4 text-amber-600 shrink-0" />
+                            <span>Menunggu Pembayaran Pelanggan (QRIS Dinamis)</span>
+                        </div>
+                        <p class="text-[11px] text-stone-500">
+                            QRIS tampil di layar pelanggan. Terverifikasi otomatis begitu dibayar.
+                        </p>
+                        <form method="POST" action="{{ route('admin.daftar_pesanan.pembayaran', $pesanan->id_pesanan) }}" class="loker-form inline-block">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="status_pembayaran" value="terverifikasi">
+                            <button type="submit" onclick="return confirm('Tandai pesanan ini sudah Lunas secara manual (misal pelanggan bayar tunai di kasir)?')" class="text-xs font-semibold text-emerald-700 hover:text-emerald-800 underline">
+                                Tandai Lunas Manual (Jika Bayar di Toko)
+                            </button>
+                        </form>
+                    </div>
+                @elseif ($pesanan->status_pembayaran === 'expired')
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-red-100 text-red-700 text-xs font-bold">
+                        <x-lucide-timer-off class="w-4 h-4 text-red-500 shrink-0" />
+                        <span>QRIS Kedaluwarsa (Waktu Habis)</span>
+                    </div>
+                @else
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-red-100 text-red-700 text-xs font-bold">
+                        <x-lucide-x-circle class="w-4 h-4 text-red-500 shrink-0" />
+                        <span>Pembayaran Ditolak / Gagal</span>
+                    </div>
+                @endif
+
+            {{-- KASUS B: QRIS STATIS / TRANSFER MANUAL --}}
+            @elseif (in_array($pesanan->metode_bayar, ['qris_statis', 'qris'], true))
+                @if ($pesanan->status_pembayaran === 'menunggu_verifikasi')
+                    <div class="space-y-2">
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-blue-100 text-blue-800 text-xs font-bold">
+                            <x-lucide-file-search class="w-4 h-4 text-blue-600 shrink-0" />
+                            <span>Menunggu Verifikasi Bukti Transfer</span>
+                        </div>
+
+                        <div class="flex items-center gap-2 pt-1">
+                            <form method="POST" action="{{ route('admin.daftar_pesanan.pembayaran', $pesanan->id_pesanan) }}" class="loker-form inline">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="status_pembayaran" value="terverifikasi">
+                                <button type="submit" class="px-3.5 py-1.5 bg-hamta-green hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-xs transition inline-flex items-center gap-1.5">
+                                    <x-lucide-check class="w-3.5 h-3.5" />
+                                    <span>Konfirmasi Lunas</span>
+                                </button>
+                            </form>
+                            <form method="POST" action="{{ route('admin.daftar_pesanan.pembayaran', $pesanan->id_pesanan) }}" class="loker-form inline">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="status_pembayaran" value="ditolak">
+                                <button type="submit" onclick="return confirm('Tolak bukti transfer pesanan ini?')" class="px-3.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 font-bold text-xs rounded-xl border border-red-200 transition inline-flex items-center gap-1.5">
+                                    <x-lucide-x class="w-3.5 h-3.5" />
+                                    <span>Tolak Bukti</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @elseif (in_array($pesanan->status_pembayaran, ['terverifikasi', 'settlement'], true))
+                    <div class="flex items-center justify-between">
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-bold">
+                            <x-lucide-check-circle-2 class="w-4 h-4 text-emerald-600 shrink-0" />
+                            <span>Lunas (Transfer Terverifikasi)</span>
+                        </div>
+                        <form method="POST" action="{{ route('admin.daftar_pesanan.pembayaran', $pesanan->id_pesanan) }}" class="loker-form inline">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="status_pembayaran" value="ditolak">
+                            <button type="submit" onclick="return confirm('Batalkan verifikasi pembayaran ini?')" class="text-xs text-stone-500 hover:text-red-600 underline">
+                                Batalkan Verifikasi
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <div class="flex items-center justify-between">
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-red-100 text-red-700 text-xs font-bold">
+                            <x-lucide-x-circle class="w-4 h-4 text-red-500 shrink-0" />
+                            <span>Bukti Transfer Ditolak</span>
+                        </div>
+                        <form method="POST" action="{{ route('admin.daftar_pesanan.pembayaran', $pesanan->id_pesanan) }}" class="loker-form inline">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="status_pembayaran" value="terverifikasi">
+                            <button type="submit" class="text-xs text-emerald-700 hover:underline font-semibold">
+                                Ubah Jadi Lunas
+                            </button>
+                        </form>
+                    </div>
+                @endif
+
+            {{-- KASUS C: TUNAI (KASIR WALK-IN) --}}
+            @else
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-bold">
+                    <x-lucide-check-circle-2 class="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>Lunas (Bayar Tunai di Kasir)</span>
+                </div>
+            @endif
         </div>
 
-        <div>
-            <p class="font-bold mb-1.5">Status Pesanan:</p>
-            <form method="POST" action="{{ route('admin.daftar_pesanan.status', $pesanan->id_pesanan) }}" class="loker-form inline-block">
-                @csrf
-                @method('PATCH')
-                <select name="status_pesanan"
-                        onchange="this.form.requestSubmit()"
-                        class="w-56 bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm font-medium text-hamta-black outline-none cursor-pointer">
-                    @foreach (['diproses' => 'Diproses (Sedang Disiapkan)', 'siap' => 'Siap (Ambil / Antar)', 'selesai' => 'Selesai', 'batal' => 'Batal'] as $nilai => $label)
-                        <option value="{{ $nilai }}" @selected($pesanan->status_pesanan === $nilai)>{{ $label }}</option>
-                    @endforeach
-                </select>
-            </form>
+        <!-- KOTAK ALUR PESANAN (OPERASIONAL DAPUR) -->
+        <div class="bg-stone-50 border border-stone-200/80 rounded-2xl p-4 space-y-3">
+            <div class="flex items-center justify-between">
+                <span class="font-bold text-xs uppercase tracking-wider text-stone-500">Status Pengerjaan Dapur</span>
+                <span class="text-xs font-bold text-hamta-black">
+                    @if ($pesanan->status_pesanan === 'diproses')
+                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#BEE3B6] text-hamta-dark">Diproses (Sedang Disiapkan)</span>
+                    @elseif ($pesanan->status_pesanan === 'siap')
+                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-teal-100 text-teal-800">Siap (Ambil / Antar)</span>
+                    @elseif ($pesanan->status_pesanan === 'selesai')
+                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">Selesai</span>
+                    @else
+                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">Dibatalkan</span>
+                    @endif
+                </span>
+            </div>
+
+            <!-- Tombol Aksi Utama Alur Pesanan -->
+            <div class="pt-1">
+                @if ($pesanan->status_pesanan === 'diproses')
+                    <div class="flex flex-wrap items-center gap-3">
+                        <form method="POST" action="{{ route('admin.daftar_pesanan.status', $pesanan->id_pesanan) }}" class="loker-form inline">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="status_pesanan" value="siap">
+                            <button type="submit" class="px-4 py-2 bg-hamta-green hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-xs transition inline-flex items-center gap-2">
+                                <x-lucide-package-check class="w-4 h-4" />
+                                <span>Tandai Siap (Ambil / Antar) ➔</span>
+                            </button>
+                        </form>
+
+                        <form method="POST" action="{{ route('admin.daftar_pesanan.status', $pesanan->id_pesanan) }}" class="loker-form inline">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="status_pesanan" value="batal">
+                            <button type="submit" onclick="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')" class="text-xs font-semibold text-red-600 hover:underline">
+                                Batalkan Pesanan
+                            </button>
+                        </form>
+                    </div>
+                @elseif ($pesanan->status_pesanan === 'siap')
+                    <div class="flex flex-wrap items-center gap-3">
+                        <form method="POST" action="{{ route('admin.daftar_pesanan.status', $pesanan->id_pesanan) }}" class="loker-form inline">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="status_pesanan" value="selesai">
+                            <button type="submit" class="px-4 py-2 bg-hamta-green hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-xs transition inline-flex items-center gap-2">
+                                <x-lucide-check class="w-4 h-4" />
+                                <span>Selesaikan Pesanan ✓</span>
+                            </button>
+                        </form>
+
+                        <form method="POST" action="{{ route('admin.daftar_pesanan.status', $pesanan->id_pesanan) }}" class="loker-form inline">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="status_pesanan" value="diproses">
+                            <button type="submit" class="text-xs font-semibold text-stone-500 hover:underline">
+                                ↺ Kembalikan ke Diproses
+                            </button>
+                        </form>
+                    </div>
+                @elseif ($pesanan->status_pesanan === 'selesai')
+                    <div class="flex items-center justify-between text-xs text-stone-500 font-medium">
+                        <span>Pesanan telah selesai diserahkan ke pelanggan.</span>
+                        <form method="POST" action="{{ route('admin.daftar_pesanan.status', $pesanan->id_pesanan) }}" class="loker-form inline">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="status_pesanan" value="siap">
+                            <button type="submit" class="text-xs text-stone-500 hover:underline">
+                                ↺ Kembalikan ke Siap
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-red-600 font-medium">Pesanan ini telah dibatalkan.</span>
+                        <form method="POST" action="{{ route('admin.daftar_pesanan.status', $pesanan->id_pesanan) }}" class="loker-form inline">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="status_pesanan" value="diproses">
+                            <button type="submit" class="text-xs font-semibold text-emerald-700 hover:underline">
+                                ↺ Pulihkan Pesanan (Proses Ulang)
+                            </button>
+                        </form>
+                    </div>
+                @endif
+            </div>
         </div>
 
         <div class="pt-3 border-t border-stone-200">

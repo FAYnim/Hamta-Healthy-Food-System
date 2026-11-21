@@ -50,12 +50,13 @@ class MidtransNotificationController extends Controller
 
         // 3. Mapping transaction_status:
         // settlement -> status_pembayaran='terverifikasi'
-        // expire -> status_pembayaran='ditolak'
-        // cancel / deny -> status_pembayaran='ditolak'
+        // expire -> status_pembayaran='expired' (pesanan dibatalkan)
+        // cancel / deny -> status_pembayaran='ditolak' (pesanan dibatalkan)
         // pending -> status_pembayaran='menunggu_verifikasi'
         $statusBaru = match ($transactionStatus) {
             'capture', 'settlement' => 'terverifikasi',
-            'expire', 'cancel', 'deny' => 'ditolak',
+            'expire' => 'expired',
+            'cancel', 'deny' => 'ditolak',
             'pending' => 'menunggu_verifikasi',
             default => $pesanan->status_pembayaran,
         };
@@ -66,10 +67,17 @@ class MidtransNotificationController extends Controller
         $currentResponse['last_transaction_status'] = $transactionStatus;
         $currentResponse['notification_received_at'] = now()->toIso8601String();
 
-        $pesanan->update([
+        $dataUpdate = [
             'status_pembayaran' => $statusBaru,
             'midtrans_response' => $currentResponse,
-        ]);
+        ];
+
+        // Jika transaksi kedaluwarsa atau ditolak, batalkan juga operasional pesanan
+        if (in_array($transactionStatus, ['expire', 'cancel', 'deny'], true)) {
+            $dataUpdate['status_pesanan'] = 'batal';
+        }
+
+        $pesanan->update($dataUpdate);
 
         Log::info("Midtrans webhook: Pesanan {$pesanan->kode_pesanan} status updated to {$statusBaru}", [
             'order_id' => $orderId,
