@@ -13,7 +13,7 @@
         .co-back:hover { background:rgba(11,65,43,.08); }
         .co-head h1 { margin:0; font-size:29px; line-height:1.15; letter-spacing:-.5px; }
 
-        .co-card { background:#fbf8f0; border:2px solid #426a57; border-radius:13px; padding:22px 24px; margin-bottom:20px; }
+        .co-card { background:#fff; border:2px solid var(--green); border-radius:14px; padding:22px 24px; margin-bottom:20px; box-shadow:0 4px 18px rgba(11,65,43,.06); }
         .co-card h2 { margin:0; font-size:18px; line-height:1.2; }
         .co-sub { margin:5px 0 0; font-size:13px; opacity:.7; }
 
@@ -101,7 +101,7 @@
         .co-success-icon { width:64px; height:64px; border-radius:50%; background:#eef5ea; color:var(--green); display:grid; place-items:center; margin:0 auto 14px; }
         .co-success-title { margin:0; font-size:24px; font-weight:800; color:var(--ink); letter-spacing:-.5px; }
         .co-success-sub { margin:6px 0 0; font-size:13.5px; color:#5c7a68; }
-        .co-order-meta { display:grid; grid-template-columns:1fr 1fr; gap:12px; text-align:left; background:#fbf8f0; border-radius:11px; padding:14px 16px; margin:18px 0; border:1px solid rgba(11,65,43,.12); }
+        .co-order-meta { display:grid; grid-template-columns:1fr 1fr; gap:12px; text-align:left; background:#f8faf7; border-radius:11px; padding:14px 16px; margin:18px 0; border:1px solid rgba(11,65,43,.12); }
         .co-order-meta-item { display:flex; flex-direction:column; gap:2px; }
         .co-order-meta-label { font-size:11px; color:#7a8a80; font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
         .co-order-meta-val { font-size:13.5px; font-weight:700; color:var(--ink); word-break:break-word; }
@@ -112,6 +112,252 @@
         .co-wa-btn:hover { background:#1ebc59; }
         .co-new-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:11px 18px; border-radius:11px; background:transparent; border:1.5px solid var(--green); color:var(--green); font-size:13px; font-weight:700; text-decoration:none; transition:all .15s; margin-top:8px; cursor:pointer; }
         .co-new-btn:hover { background:#eef5ea; }
+
+        /* Sub-action secondary buttons (Clean 2-Column Grid) */
+        .co-action-sub-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .co-sub-action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 11px 14px;
+            border-radius: 11px;
+            background: #f8faf7;
+            border: 1.5px solid rgba(11,65,43,.22);
+            color: var(--green);
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all .15s;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .co-sub-action-btn:hover {
+            background: #eef5ea;
+            border-color: var(--green);
+        }
+        .co-sub-action-btn svg {
+            flex-shrink: 0;
+        }
+        @media (max-width: 520px) {
+            .co-action-sub-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .co-sub-action-btn {
+                font-size: 12px;
+                padding: 10px 8px;
+            }
+        }
+
+        /* Hero Card Pembayaran QRIS */
+        .co-pay-hero-card {
+            border: 2px solid var(--green);
+            background: #fff;
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 30px rgba(11,65,43,.1);
+            position: relative;
+        }
+        .co-pay-hero-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .co-pay-hero-title-group {
+            flex: 1 1 260px;
+        }
+        .co-pay-kicker {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--green);
+            background: #eef5ea;
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 6px;
+        }
+        .co-pay-hero-title {
+            margin: 0;
+            font-size: 21px;
+            font-weight: 800;
+            color: var(--ink);
+            letter-spacing: -.3px;
+        }
+        .co-pay-hero-sub {
+            margin: 4px 0 0;
+            font-size: 13px;
+            color: #5c7a68;
+            line-height: 1.4;
+        }
+        .co-expiry-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #991b1b;
+        }
+        .co-amount-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 18px;
+            background: #f4f8f2;
+            border: 1.5px solid rgba(101,189,94,.4);
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .co-amount-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .co-amount-label {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #5c7a68;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+        .co-amount-val {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--green);
+            letter-spacing: -.5px;
+            line-height: 1.2;
+        }
+        .co-amount-copy-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 7px 14px;
+            border-radius: 8px;
+            background: #fff;
+            border: 1.5px solid var(--green);
+            color: var(--green);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .co-amount-copy-btn:hover {
+            background: var(--green);
+            color: #fff;
+        }
+        .co-qr-download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 16px;
+            border-radius: 999px;
+            background: #eef5ea;
+            border: 1.5px solid rgba(101,189,94,.6);
+            color: var(--green);
+            font-size: 12.5px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all .15s;
+        }
+        .co-qr-download-btn:hover {
+            background: var(--green);
+            color: #fff;
+        }
+        .co-qr-help-accordion {
+            margin-top: 14px;
+            text-align: left;
+            background: #fff;
+            border: 1px solid rgba(11,65,43,.15);
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 12px;
+        }
+        .co-qr-help-accordion summary {
+            font-weight: 700;
+            color: var(--green);
+            cursor: pointer;
+            user-select: none;
+            padding: 4px 0;
+        }
+        .co-qr-help-accordion ol {
+            margin: 8px 0 4px;
+            padding-left: 20px;
+            color: #4a5a52;
+            line-height: 1.6;
+        }
+        .co-qr-help-accordion li {
+            margin-bottom: 4px;
+        }
+
+        /* Success Toast Floating Notification */
+        .co-success-toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999999;
+            max-width: min(440px, calc(100vw - 32px));
+            background: #f4fbf5;
+            border: 2px solid #65bd5e;
+            border-radius: 14px;
+            padding: 14px 16px;
+            box-shadow: 0 12px 36px rgba(11,65,43,.2);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: co-toast-in .3s ease-out;
+            transition: opacity .35s, transform .35s;
+        }
+        .co-success-toast-icon {
+            flex: 0 0 34px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #eef5ea;
+            color: var(--green);
+            display: grid;
+            place-items: center;
+        }
+        .co-success-toast-content {
+            flex: 1 1 auto;
+            font-size: 12.5px;
+            line-height: 1.5;
+            color: #2c3e35;
+        }
+        .co-success-toast-title {
+            font-weight: 800;
+            font-size: 13.5px;
+            color: var(--green);
+            margin-bottom: 2px;
+        }
+        .co-success-toast-close {
+            border: none;
+            background: none;
+            color: #7a8a80;
+            cursor: pointer;
+            padding: 2px;
+            font-size: 18px;
+            line-height: 1;
+            transition: color .15s;
+        }
+        .co-success-toast-close:hover {
+            color: #16613f;
+        }
 
         .co-container { max-width: 780px; margin: 0 auto; width: 100%; }
 
@@ -142,6 +388,73 @@
             .co-pay-note { font-size:10px; }
             .co-info-value { font-size:12.5px; }
             .co-info-label { font-size:10.5px; }
+        }
+
+        /* Loading & Pulse Animations */
+        @keyframes co-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .co-spin-anim { animation: co-spin 1s linear infinite; }
+        @keyframes co-pulse { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .co-pulse-anim { animation: co-pulse 1.8s ease-in-out infinite; }
+
+        /* Friendly Toast Notification */
+        .co-friendly-toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999999;
+            max-width: min(420px, calc(100vw - 32px));
+            background: #fffdf7;
+            border: 2px solid #f59e0b;
+            border-radius: 14px;
+            padding: 14px 16px;
+            box-shadow: 0 12px 36px rgba(11,65,43,.18);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: co-toast-in .3s ease-out;
+            transition: opacity .35s, transform .35s;
+        }
+        @keyframes co-toast-in {
+            from { opacity: 0; transform: translateY(-16px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .co-friendly-toast-icon {
+            flex: 0 0 34px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #fef3c7;
+            color: #d97706;
+            display: grid;
+            place-items: center;
+        }
+        .co-friendly-toast-content {
+            flex: 1 1 auto;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #3d3a33;
+        }
+        .co-friendly-toast-title {
+            font-weight: 800;
+            font-size: 13px;
+            color: #92400e;
+            margin-bottom: 2px;
+        }
+        .co-friendly-toast-close {
+            border: none;
+            background: none;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 2px;
+            font-size: 18px;
+            line-height: 1;
+            transition: color .15s;
+        }
+        .co-friendly-toast-close:hover {
+            color: #4b5563;
+        }
+        @media (max-width: 700px) {
+            .co-friendly-toast { top: 12px; right: 12px; left: 12px; max-width: none; font-size: 12px; }
         }
     </style>
 </head>
@@ -180,7 +493,6 @@
                         <span id="co-addr-name">Nama Penerima</span>
                         <span class="co-addr-phone" id="co-addr-phone">(08xxx)</span>
                     </div>
-                    <span class="co-addr-badge">✓ Terpilih</span>
                 </div>
                 <p class="co-addr-text" id="co-addr-detail">-</p>
                 <p class="co-addr-note" id="co-addr-patokan" style="display:none">
@@ -202,7 +514,21 @@
         <section class="co-card">
             <h2>Rincian Pesanan</h2>
             <div id="co-cart-list"></div>
-            <p id="co-cart-empty" class="co-item-note">Keranjang masih kosong. Yuk tambah menu dulu!</p>
+            <div id="co-cart-empty" style="display:none;margin-top:14px;padding:22px 16px;text-align:center;background:#f8faf7;border:1.5px dashed rgba(11,65,43,.2);border-radius:12px">
+                <h3 style="margin:0 0 4px;font-size:15px;font-weight:800;color:var(--ink)">Keranjang Belanjamu Masih Kosong</h3>
+                <p style="margin:0 0 16px;font-size:12.5px;color:#5c7a68;max-width:380px;margin-left:auto;margin-right:auto;line-height:1.4">
+                    Yuk pilih menu salad segar, juice, atau sandwich sehat favoritmu terlebih dahulu!
+                </p>
+                <div style="display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap">
+                    <a href="{{ route('customer.daftar_menu') }}" style="display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:10px;background:var(--green);color:#fff;font-size:13px;font-weight:700;text-decoration:none;transition:all .15s;box-shadow:0 3px 10px rgba(11,65,43,.2)">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        <span>Pilih Menu Sekarang</span>
+                    </a>
+                    <a href="{{ route('customer.kreasikan_salad') }}" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;background:#fff;border:1.5px solid var(--green);color:var(--green);font-size:13px;font-weight:700;text-decoration:none;transition:all .15s">
+                        <span>Kreasikan Sendiri</span>
+                    </a>
+                </div>
+            </div>
         </section>
 
         <!-- Section Metode Pengiriman -->
@@ -243,15 +569,16 @@
             <h2>Metode Pembayaran</h2>
 
             <!-- Metode Pembayaran: QRIS (Satu-satunya metode) -->
-            <div id="co-pay-qris-badge" style="margin-top:14px;padding:14px 16px;background:#fbf8f0;border:2px solid var(--green);border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <div id="co-pay-qris-badge" style="margin-top:14px;padding:14px 16px;background:#f8faf7;border:2px solid var(--green);border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:12px">
                 <div style="display:flex;align-items:center;gap:12px">
-                    <span class="qris-badge" style="font-size:16px">QRIS</span>
+                    <div style="width:38px;height:38px;border-radius:10px;background:#eef5ea;color:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                        <x-lucide-qr-code class="w-5 h-5 text-emerald-800" />
+                    </div>
                     <div>
                         <strong style="display:block;font-size:13.5px;color:var(--ink)">QRIS (Pembayaran Instan &amp; Cashless)</strong>
                         <small style="display:block;font-size:11.5px;color:#4a5a52;margin-top:2px">Bayar instan via GoPay, OVO, DANA, BCA, ShopeePay &amp; seluruh m-Banking</small>
                     </div>
                 </div>
-                <span style="font-size:11.5px;font-weight:700;color:var(--green);background:#eef5ea;padding:3px 10px;border-radius:20px;white-space:nowrap">✓ Terpilih</span>
             </div>
 
             <!-- Banner Fallback jika Midtrans gagal/down -->
@@ -434,48 +761,248 @@
 
     <!-- ─── TAMPILAN 2: HASIL PESANAN YANG SUDAH DIBAYAR / DIPESAN ───── -->
     <div id="co-success-view" style="display:none">
-        <!-- Hero Sukses -->
-        <section class="co-success-card">
-            <div class="co-success-icon">
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <!-- KARTU 1: INSTRUKSI & PEMBAYARAN QRIS (HERO SECTION DI ATAS) -->
+        <section class="co-pay-hero-card" id="co-payment-hero-section">
+            <div class="co-pay-hero-header">
+                <div class="co-pay-hero-title-group">
+                    <h2 class="co-pay-hero-title">Selesaikan Pembayaran</h2>
+                    <p class="co-pay-hero-sub">Silakan scan kode QRIS di bawah ini agar pesananmu segera disiapkan di dapur Hamta.</p>
+                </div>
+
+                <!-- Countdown Timer -->
+                <div id="success-expiry-badge" class="co-expiry-badge" style="display:none">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span>Sisa Waktu: <strong id="success-expiry-countdown">--:--</strong></span>
+                </div>
             </div>
-            <h1 class="co-success-title flex items-center justify-center gap-2"><span>Hore! Pesanan Berhasil Dibuat</span> <x-lucide-party-popper class="w-7 h-7 text-emerald-700" /></h1>
-            <p class="co-success-sub">Terima kasih telah memesan menu sehat di Hamta Healthy Food Surabaya.</p>
+
+            <!-- Highlight Nominal Tagihan yang Harus Ditransfer -->
+            <div class="co-amount-box">
+                <div class="co-amount-info">
+                    <span class="co-amount-label">Total Tagihan Persis</span>
+                    <span class="co-amount-val" id="success-order-total-hero">Rp. 0</span>
+                </div>
+                <button type="button" class="co-amount-copy-btn" id="success-copy-total-btn" title="Salin Nominal">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                    <span>SALIN</span>
+                </button>
+            </div>
+
+            <!-- Wadah Loading Generate QRIS Midtrans -->
+            <div id="success-qr-loading-box" style="display:none;margin:16px 0;padding:26px 18px;background:#fff;border:2px solid var(--primary);border-radius:14px;text-align:center;box-shadow:0 4px 16px rgba(11,65,43,.06)">
+                <div style="display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;background:#eef5ea;color:var(--green);margin-bottom:12px">
+                    <svg class="co-spin-anim" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                    </svg>
+                </div>
+                <h3 style="margin:0 0 6px;font-size:16px;font-weight:800;color:var(--green)">Menyiapkan QRIS Pembayaran...</h3>
+                <p style="margin:0 auto 14px;max-width:320px;font-size:12px;color:#4a5a52;line-height:1.5">
+                    Sedang menghubungkan ke gateway pembayaran. Kode QRIS pembayaranmu akan muncul sebentar lagi...
+                </p>
+
+                <!-- Skeleton Placeholder -->
+                <div style="width:190px;height:190px;margin:0 auto;background:#f8faf6;border-radius:14px;border:2px dashed rgba(101,189,94,.45);display:flex;align-items:center;justify-content:center;padding:12px">
+                    <div class="co-pulse-anim" style="width:100%;height:100%;background:linear-gradient(90deg,#f0f5ee 25%,#e0ebd9 50%,#f0f5ee 75%);background-size:200% 100%;border-radius:10px"></div>
+                </div>
+
+                <div style="margin-top:14px;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--green);background:#eef5ea;padding:5px 14px;border-radius:999px">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span>Batas tunggu QR otomatis: <strong id="co-loading-countdown-num" style="font-size:13px;color:var(--primary)">10</strong>s</span>
+                </div>
+            </div>
+
+            <!-- QRIS Midtrans (Jika Ada) -->
+            <div id="success-midtrans-qr-box" style="display:none;margin:16px 0;padding:22px 16px;background:#fbfbf9;border:1.5px solid rgba(11,65,43,.2);border-radius:14px;text-align:center">
+                <div style="display:inline-block;padding:12px;background:#fff;border-radius:14px;border:1px dashed rgba(11,65,43,.3);box-shadow:0 4px 16px rgba(11,65,43,.06)">
+                    <img id="success-midtrans-qr-img" src="" alt="QRIS Midtrans" style="width:220px;height:220px;display:block;margin:0 auto;object-fit:contain;border-radius:8px" />
+                </div>
+
+                <div style="margin-top:14px;display:flex;justify-content:center;gap:10px">
+                    <a id="success-download-qr-btn" href="#" download="QRIS-Hamta.png" target="_blank" class="co-qr-download-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        <span>Unduh / Buka Gambar QR</span>
+                    </a>
+                </div>
+
+                <p style="margin:12px auto 0;max-width:440px;font-size:12px;color:#5a6860;line-height:1.5">
+                    Scan dengan aplikasi e-wallet atau m-Banking Anda (BCA, Mandiri, BRI, BNI, GoPay, OVO, Dana, ShopeePay). Pembayaran akan terverifikasi secara otomatis.
+                </p>
+
+                <!-- Petunjuk Bayar Mobile -->
+                <details class="co-qr-help-accordion">
+                    <summary>Cara bayar jika pesan lewat HP (Scan via Galeri)</summary>
+                    <ol>
+                        <li>Klik tombol <strong>Unduh / Buka Gambar QR</strong> di atas atau lakukan screenshot layar.</li>
+                        <li>Buka aplikasi m-Banking atau e-Wallet di HP kamu.</li>
+                        <li>Pilih menu <strong>QRIS / Bayar</strong>, lalu pilih ikon <strong>Galeri / Foto</strong>.</li>
+                        <li>Pilih foto QRIS Hamta tadi, periksa nominal, dan selesaikan pembayaran.</li>
+                    </ol>
+                </details>
+            </div>
+
+            <!-- Wadah Fallback QRIS Statis (Jika Midtrans Gagal / Timeout 10 Detik) -->
+            <div id="success-fallback-qr-box" style="display:none;margin:16px 0;padding:22px 18px;background:#fff;border:2px solid #f59e0b;border-radius:14px;text-align:center;box-shadow:0 6px 20px rgba(245,158,11,.1)">
+                <div style="display:inline-flex;align-items:center;gap:7px;background:#fef3c7;border:1px solid #fde68a;padding:5px 14px;border-radius:20px;font-size:11.5px;font-weight:800;color:#92400e;margin-bottom:12px">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span>Pembayaran Dialihkan ke QRIS Statis</span>
+                </div>
+
+                <h3 style="margin:0 0 3px;font-size:16px;font-weight:800;color:var(--ink)">HAMTA HEALTHY FOOD</h3>
+                <p style="margin:0 0 4px;font-size:12px;color:#6f6a5f">Scan QRIS statis di bawah melalui e-Wallet atau m-Banking Anda</p>
+                <p style="margin:0 0 12px;font-size:11px;font-weight:700;color:var(--green);letter-spacing:.5px">NMID: ID1024398129038</p>
+
+                <!-- Barcode SVG QRIS Statis -->
+                <div style="display:inline-block;padding:12px;background:#fbf8f0;border-radius:14px;border:1px dashed rgba(11,65,43,.3);box-shadow:0 2px 8px rgba(0,0,0,.04);margin-bottom:12px">
+                    <svg width="200" height="200" viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:10px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06);padding:8px">
+                        <rect x="20" y="20" width="56" height="56" rx="8" fill="#0B412B"/>
+                        <rect x="28" y="28" width="40" height="40" rx="4" fill="#fff"/>
+                        <rect x="36" y="36" width="24" height="24" rx="3" fill="#0B412B"/>
+
+                        <rect x="184" y="20" width="56" height="56" rx="8" fill="#0B412B"/>
+                        <rect x="192" y="28" width="40" height="40" rx="4" fill="#fff"/>
+                        <rect x="200" y="36" width="24" height="24" rx="3" fill="#0B412B"/>
+
+                        <rect x="20" y="184" width="56" height="56" rx="8" fill="#0B412B"/>
+                        <rect x="28" y="192" width="40" height="40" rx="4" fill="#fff"/>
+                        <rect x="36" y="200" width="24" height="24" rx="3" fill="#0B412B"/>
+
+                        <rect x="84" y="44" width="8" height="8" fill="#0B412B"/>
+                        <rect x="100" y="44" width="8" height="8" fill="#0B412B"/>
+                        <rect x="116" y="44" width="8" height="8" fill="#0B412B"/>
+                        <rect x="132" y="44" width="8" height="8" fill="#0B412B"/>
+                        <rect x="148" y="44" width="8" height="8" fill="#0B412B"/>
+                        <rect x="164" y="44" width="8" height="8" fill="#0B412B"/>
+
+                        <rect x="44" y="84" width="8" height="8" fill="#0B412B"/>
+                        <rect x="44" y="100" width="8" height="8" fill="#0B412B"/>
+                        <rect x="44" y="116" width="8" height="8" fill="#0B412B"/>
+                        <rect x="44" y="132" width="8" height="8" fill="#0B412B"/>
+                        <rect x="44" y="148" width="8" height="8" fill="#0B412B"/>
+                        <rect x="44" y="164" width="8" height="8" fill="#0B412B"/>
+
+                        <rect x="88" y="24" width="12" height="12" fill="#0B412B"/>
+                        <rect x="108" y="24" width="12" height="12" fill="#0B412B"/>
+                        <rect x="136" y="24" width="12" height="12" fill="#0B412B"/>
+                        <rect x="156" y="24" width="12" height="12" fill="#0B412B"/>
+
+                        <rect x="84" y="64" width="16" height="8" fill="#0B412B"/>
+                        <rect x="108" y="64" width="8" height="16" fill="#0B412B"/>
+                        <rect x="124" y="64" width="16" height="8" fill="#0B412B"/>
+                        <rect x="148" y="64" width="16" height="16" fill="#0B412B"/>
+
+                        <rect x="20" y="88" width="12" height="12" fill="#0B412B"/>
+                        <rect x="64" y="88" width="12" height="12" fill="#0B412B"/>
+                        <rect x="88" y="88" width="12" height="12" fill="#0B412B"/>
+                        <rect x="168" y="88" width="12" height="12" fill="#0B412B"/>
+                        <rect x="188" y="88" width="12" height="12" fill="#0B412B"/>
+                        <rect x="228" y="88" width="12" height="12" fill="#0B412B"/>
+
+                        <rect x="24" y="108" width="12" height="12" fill="#0B412B"/>
+                        <rect x="60" y="108" width="16" height="8" fill="#0B412B"/>
+                        <rect x="84" y="108" width="12" height="12" fill="#0B412B"/>
+                        <rect x="164" y="108" width="12" height="12" fill="#0B412B"/>
+                        <rect x="196" y="108" width="12" height="12" fill="#0B412B"/>
+                        <rect x="216" y="108" width="24" height="12" fill="#0B412B"/>
+
+                        <rect x="20" y="128" width="12" height="12" fill="#0B412B"/>
+                        <rect x="60" y="128" width="16" height="8" fill="#0B412B"/>
+                        <rect x="164" y="128" width="16" height="16" fill="#0B412B"/>
+                        <rect x="188" y="128" width="12" height="12" fill="#0B412B"/>
+                        <rect x="216" y="128" width="16" height="12" fill="#0B412B"/>
+
+                        <rect x="24" y="148" width="12" height="12" fill="#0B412B"/>
+                        <rect x="64" y="148" width="12" height="12" fill="#0B412B"/>
+                        <rect x="88" y="148" width="12" height="12" fill="#0B412B"/>
+                        <rect x="164" y="148" width="12" height="12" fill="#0B412B"/>
+                        <rect x="196" y="148" width="12" height="12" fill="#0B412B"/>
+                        <rect x="228" y="148" width="12" height="12" fill="#0B412B"/>
+
+                        <rect x="24" y="168" width="12" height="8" fill="#0B412B"/>
+                        <rect x="60" y="168" width="16" height="12" fill="#0B412B"/>
+                        <rect x="84" y="168" width="20" height="12" fill="#0B412B"/>
+                        <rect x="120" y="168" width="16" height="12" fill="#0B412B"/>
+                        <rect x="144" y="168" width="16" height="12" fill="#0B412B"/>
+                        <rect x="176" y="168" width="24" height="12" fill="#0B412B"/>
+                        <rect x="212" y="168" width="16" height="12" fill="#0B412B"/>
+
+                        <rect x="88" y="188" width="12" height="12" fill="#0B412B"/>
+                        <rect x="108" y="188" width="12" height="12" fill="#0B412B"/>
+                        <rect x="128" y="188" width="12" height="12" fill="#0B412B"/>
+                        <rect x="156" y="188" width="12" height="12" fill="#0B412B"/>
+                        <rect x="180" y="188" width="28" height="28" rx="4" fill="#0B412B"/>
+                        <rect x="188" y="196" width="12" height="12" rx="2" fill="#fff"/>
+                        <rect x="192" y="200" width="4" height="4" fill="#0B412B"/>
+                        <rect x="220" y="188" width="16" height="12" fill="#0B412B"/>
+
+                        <rect x="88" y="208" width="12" height="16" fill="#0B412B"/>
+                        <rect x="108" y="208" width="20" height="8" fill="#0B412B"/>
+                        <rect x="136" y="208" width="12" height="16" fill="#0B412B"/>
+                        <rect x="220" y="208" width="20" height="12" fill="#0B412B"/>
+
+                        <rect x="88" y="228" width="24" height="12" fill="#0B412B"/>
+                        <rect x="120" y="228" width="16" height="12" fill="#0B412B"/>
+                        <rect x="144" y="228" width="28" height="12" fill="#0B412B"/>
+                        <rect x="180" y="228" width="12" height="12" fill="#0B412B"/>
+                        <rect x="204" y="228" width="20" height="12" fill="#0B412B"/>
+
+                        <circle cx="130" cy="130" r="26" fill="#fff" stroke="#65BD5E" stroke-width="4"/>
+                        <circle cx="130" cy="130" r="20" fill="#0B412B"/>
+                        <path d="M124 135c0-6 6-11 12-11 0 6-6 11-12 11Z" fill="#65BD5E"/>
+                        <path d="M136 135c0-6-6-11-12-11 0 6 6 11 12 11Z" fill="#A8E6A1"/>
+                        <path d="M122 136q8-1 16-8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                    <div style="margin-top:8px;font-size:11px;font-weight:800;letter-spacing:1px;color:var(--green);background:#eef5ea;padding:3px 12px;border-radius:999px">SCAN &amp; BAYAR DI SINI</div>
+                </div>
+
+                <!-- Total Nominal -->
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;background:#fef3c7;border:1px solid #fde68a;border-radius:10px;margin-bottom:14px">
+                    <span style="font-size:12.5px;font-weight:700;color:#92400e">Total Transfer Persis:</span>
+                    <span id="success-fallback-nominal" style="font-size:17px;font-weight:900;color:var(--green)">Rp. 0</span>
+                </div>
+
+                <!-- Upload Bukti Transfer -->
+                <div id="success-fallback-upload-wrap" style="text-align:left;border-top:1px dashed rgba(11,65,43,.18);padding-top:14px">
+                    <label style="display:block;font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:6px">Unggah Bukti Transfer QRIS:</label>
+                    <label for="success-bukti-input" class="qris-upload-label" id="success-bukti-upload-area" style="cursor:pointer">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--green)"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        <span style="font-size:12px;font-weight:700">Pilih Foto Bukti Transfer</span>
+                        <span style="font-size:11px;color:#8A8A8A">Maksimal 5MB (JPG, PNG, atau WEBP)</span>
+                    </label>
+                    <input type="file" id="success-bukti-input" accept="image/png,image/jpeg,image/webp" style="display:none">
+
+                    <div id="success-bukti-preview" class="qris-preview" style="display:none;margin-top:10px">
+                        <img id="success-bukti-img" src="" alt="Bukti Transfer">
+                        <div style="flex:1 1 auto;min-width:0">
+                            <span id="success-bukti-filename" style="display:block;font-weight:700;font-size:12px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span>
+                            <span style="font-size:11px;color:var(--primary);font-weight:600">✓ Bukti siap dikirim</span>
+                        </div>
+                        <button type="button" id="success-bukti-remove" style="border:0;background:none;color:#c0392b;font-size:12px;font-weight:700;cursor:pointer">Hapus</button>
+                    </div>
+
+                    <button type="button" id="success-bukti-submit-btn" class="co-submit-btn" style="margin-top:12px;background:var(--green);color:#fff;width:100%;font-size:13.5px;padding:12px">
+                        <span id="success-bukti-submit-label">Kirim Bukti Pembayaran &amp; Konfirmasi</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Wadah Jika QRIS Expired di Checkout -->
+            <div id="success-midtrans-expired-box" style="display:none;margin:16px 0;padding:18px 16px;background:#fff;border:2px dashed #ef4444;border-radius:12px;text-align:center">
+                <div style="width:40px;height:40px;border-radius:50%;background:#fee2e2;color:#dc2626;display:inline-flex;align-items:center;justify-content:center;margin-bottom:8px">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
+                <h4 style="margin:0 0 4px;font-size:14px;font-weight:800;color:#991b1b">Waktu Pembayaran Telah Habis</h4>
+                <p style="margin:0 0 12px;font-size:12px;color:#6f6a5f">Kode QRIS ini telah kedaluwarsa. Silakan buat pesanan baru.</p>
+            </div>
         </section>
 
-        <!-- Status Pesanan (Step Progress Bar) -->
-        <section class="co-card">
-            <h2>Status Pesanan</h2>
-            <p class="co-sub" id="success-status-note">Pesanan telah kami terima dan sedang disiapkan di dapur Hamta.</p>
-            <ol class="co-steps">
-                <li class="co-step is-done">
-                    <span class="co-dot">
-                        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                    </span>
-                    <span class="co-label">Pesanan Diterima</span>
-                    <span class="co-bar"><i></i></span>
-                </li>
-                <li class="co-step is-active">
-                    <span class="co-dot">
-                        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h16a8 8 0 0 1-8 8 8 8 0 0 1-8-8Z"/><path d="M7 7c0-1 .7-1.5 1.4-2"/><path d="M12 6c0-1.2.8-1.8 1.5-2.4"/><path d="M17 7c0-1 .6-1.4 1.2-1.8"/></svg>
-                    </span>
-                    <span class="co-label">Menyiapkan Salad</span>
-                    <span class="co-bar"><i></i></span>
-                </li>
-                <li class="co-step">
-                    <span class="co-dot">
-                        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
-                    </span>
-                    <span class="co-label">Siap Diambil / Diantar</span>
-                    <span class="co-bar"><i></i></span>
-                </li>
-            </ol>
-        </section>
+        <!-- KARTU 2: RINCIAN PESANAN (DI BAWAH QRIS) -->
+        <section class="co-card co-order-summary-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+                <h2 style="margin:0">Rincian Pesanan</h2>
+                <span id="success-order-pay" class="co-badge-status co-badge-pending">QRIS — Menunggu Pembayaran</span>
+            </div>
 
-        <!-- Informasi Pesanan yang Sudah Dipesan -->
-        <section class="co-card">
-            <h2>Rincian Pesanan Anda</h2>
-            <div class="co-order-meta">
+            <div class="co-order-meta" style="margin-top:0">
                 <div class="co-order-meta-item">
                     <span class="co-order-meta-label">Kode Pesanan</span>
                     <div style="display:flex;align-items:center;gap:8px">
@@ -487,11 +1014,7 @@
                     <span class="co-order-meta-label">Waktu Pemesanan</span>
                     <span class="co-order-meta-val" id="success-order-time">—</span>
                 </div>
-                <div class="co-order-meta-item">
-                    <span class="co-order-meta-label">Status Pembayaran</span>
-                    <span id="success-order-pay" class="co-badge-status co-badge-pending">QRIS — Menunggu Verifikasi</span>
-                </div>
-                <div class="co-order-meta-item">
+                <div class="co-order-meta-item" style="grid-column: span 2">
                     <span class="co-order-meta-label">Metode Pengambilan</span>
                     <span class="co-order-meta-val" id="success-order-take">Pickup di Tempat</span>
                 </div>
@@ -505,48 +1028,25 @@
                 <span id="success-order-total" style="font-size:20px;font-weight:800;color:var(--green)">Rp. 0</span>
             </div>
 
-            <!-- QRIS Midtrans (Jika Ada) -->
-            <div id="success-midtrans-qr-box" style="display:none;margin:16px 0;padding:20px 16px;background:#fff;border:2px solid var(--green);border-radius:12px;text-align:center">
-                <span style="display:block;font-size:12px;font-weight:800;color:var(--green);letter-spacing:.6px;margin-bottom:12px">SCAN QRIS UNTUK MEMBAYAR</span>
-                
-                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;margin:0 auto">
-                    <!-- Countdown Timer -->
-                    <div id="success-expiry-badge" style="display:inline-flex;align-items:center;gap:6px;background:#fef2f2;border:1px solid #fecaca;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;color:#991b1b">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        <span>Sisa Waktu Pembayaran: <span id="success-expiry-countdown">--:--</span></span>
-                    </div>
+            <!-- Tombol Aksi & Navigasi -->
+            <div style="margin-top:20px">
+                <!-- Tombol Utama: Pantau Status Live -->
+                <a href="#" class="co-submit-btn" id="success-tracker-btn" style="text-decoration:none;margin-top:0;background:var(--green);color:#fff">
+                    <span>Pantau Status Pesanan Live ➔</span>
+                </a>
 
-                    <div style="display:inline-block;padding:12px;background:#fbf8f0;border-radius:14px;border:1px dashed rgba(11,65,43,.3);box-shadow:0 2px 8px rgba(0,0,0,.04)">
-                        <img id="success-midtrans-qr-img" src="" alt="QRIS Midtrans" style="width:200px;height:200px;display:block;margin:0 auto;object-fit:contain" />
-                    </div>
+                <!-- Baris Tombol Pendukung: WhatsApp & Buat Pesanan Baru (2 Kolom Sejajar) -->
+                <div class="co-action-sub-grid">
+                    <a href="#" target="_blank" class="co-sub-action-btn" id="success-wa-btn" title="Hubungi Kasir via WhatsApp">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="#25D366"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.34C9.36 7.34 9.09 7.41 8.86 7.65C8.63 7.9 7.99 8.5 7.99 9.71C7.99 10.93 8.88 12.1 9 12.27C9.13 12.44 10.74 14.92 13.2 15.97C13.78 16.22 14.24 16.38 14.6 16.49C15.19 16.68 15.72 16.65 16.14 16.59C16.61 16.51 17.58 16 17.79 15.41C17.99 14.83 17.99 14.33 17.93 14.22C17.87 14.12 17.7 14.05 17.44 13.93C17.19 13.8 15.93 13.18 15.7 13.1C15.47 13.01 15.3 12.97 15.13 13.22C14.96 13.47 14.47 14.05 14.33 14.22C14.18 14.38 14.04 14.4 13.79 14.27C13.54 14.15 12.72 13.88 11.75 13.02C10.99 12.35 10.48 11.51 10.33 11.26C10.19 11.01 10.31 10.88 10.44 10.75C10.55 10.64 10.69 10.46 10.82 10.31C10.95 10.16 11 10.05 11.08 9.89C11.16 9.72 11.12 9.57 11.06 9.45C11 9.33 10.5 8.12 10.3 7.62C10.1 7.15 9.9 7.21 9.74 7.21C9.6 7.21 9.43 7.21 9.26 7.21L9.53 7.34Z"/></svg>
+                        <span>Konfirmasi ke WA</span>
+                    </a>
+
+                    <button type="button" class="co-sub-action-btn" id="success-new-order-btn">
+                        <span>+ Buat Pesanan Baru</span>
+                    </button>
                 </div>
-
-                <p style="margin:12px 0 0;font-size:12px;color:#4a5a52">Scan dengan aplikasi e-wallet atau m-Banking Anda. Pembayaran akan terverifikasi secara otomatis.</p>
             </div>
-
-            <!-- Wadah Jika QRIS Expired di Checkout -->
-            <div id="success-midtrans-expired-box" style="display:none;margin:16px 0;padding:18px 16px;background:#fff;border:2px dashed #ef4444;border-radius:12px;text-align:center">
-                <div style="width:40px;height:40px;border-radius:50%;background:#fee2e2;color:#dc2626;display:inline-flex;align-items:center;justify-content:center;margin-bottom:8px">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                </div>
-                <h4 style="margin:0 0 4px;font-size:14px;font-weight:800;color:#991b1b">Waktu Pembayaran Telah Habis</h4>
-                <p style="margin:0 0 12px;font-size:12px;color:#6f6a5f">Kode QRIS ini telah kedaluwarsa. Silakan buat pesanan baru.</p>
-            </div>
-
-            <!-- Tombol Pantau Status Live -->
-            <a href="#" class="co-submit-btn" id="success-tracker-btn" style="text-decoration:none;margin-top:16px;background:var(--green);color:#fff">
-                <span>Pantau Status Pesanan Live (Realtime Tracker) ➔</span>
-            </a>
-
-            <!-- Tombol WhatsApp & Pesan Baru -->
-            <a href="#" target="_blank" class="co-wa-btn" id="success-wa-btn" style="margin-top:10px">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.34C9.36 7.34 9.09 7.41 8.86 7.65C8.63 7.9 7.99 8.5 7.99 9.71C7.99 10.93 8.88 12.1 9 12.27C9.13 12.44 10.74 14.92 13.2 15.97C13.78 16.22 14.24 16.38 14.6 16.49C15.19 16.68 15.72 16.65 16.14 16.59C16.61 16.51 17.58 16 17.79 15.41C17.99 14.83 17.99 14.33 17.93 14.22C17.87 14.12 17.7 14.05 17.44 13.93C17.19 13.8 15.93 13.18 15.7 13.1C15.47 13.01 15.3 12.97 15.13 13.22C14.96 13.47 14.47 14.05 14.33 14.22C14.18 14.38 14.04 14.4 13.79 14.27C13.54 14.15 12.72 13.88 11.75 13.02C10.99 12.35 10.48 11.51 10.33 11.26C10.19 11.01 10.31 10.88 10.44 10.75C10.55 10.64 10.69 10.46 10.82 10.31C10.95 10.16 11 10.05 11.08 9.89C11.16 9.72 11.12 9.57 11.06 9.45C11 9.33 10.5 8.12 10.3 7.62C10.1 7.15 9.9 7.21 9.74 7.21C9.6 7.21 9.43 7.21 9.26 7.21L9.53 7.34Z"/></svg>
-                <span>Konfirmasi Pesanan ke WhatsApp Kasir</span>
-            </a>
-
-            <button type="button" class="co-new-btn" id="success-new-order-btn">
-                <span>+ Buat Pesanan Baru</span>
-            </button>
         </section>
     </div>
     </div>
@@ -688,7 +1188,7 @@
     function render() {
         var cart = window.hamtaGetCart ? window.hamtaGetCart() : [];
         if (list) list.textContent = '';
-        if (empty) empty.style.display = cart.length ? 'none' : '';
+        if (empty) empty.style.display = cart.length ? 'none' : 'block';
         cart.forEach(function (item, index) {
             var row = document.createElement('div');
             row.className = 'co-item';
@@ -909,8 +1409,13 @@
         var qrSuccessBox = document.getElementById('success-midtrans-qr-box');
         var qrSuccessImg = document.getElementById('success-midtrans-qr-img');
         var qrExpiredBox = document.getElementById('success-midtrans-expired-box');
+        var qrLoadingBox = document.getElementById('success-qr-loading-box');
+        var qrFallbackBox = document.getElementById('success-fallback-qr-box');
         var successCountdownEl = document.getElementById('success-expiry-countdown');
         var successCountdownTimer = null;
+
+        if (qrLoadingBox) qrLoadingBox.style.display = 'none';
+        if (qrFallbackBox) qrFallbackBox.style.display = 'none';
 
         function startSuccessCountdown(expiryIso) {
             if (!expiryIso) return;
@@ -963,6 +1468,14 @@
         }
 
         if (totalEl) totalEl.textContent = rupiah(order.total_bayar || 0);
+        var totalHeroEl = document.getElementById('success-order-total-hero');
+        if (totalHeroEl) totalHeroEl.textContent = rupiah(order.total_bayar || 0);
+
+        var downloadQrBtn = document.getElementById('success-download-qr-btn');
+        if (downloadQrBtn && order.qr_url) {
+            downloadQrBtn.href = order.qr_url;
+            downloadQrBtn.download = 'QRIS-Hamta-' + (order.kode_pesanan || 'Order') + '.png';
+        }
 
         if (itemsList) {
             itemsList.innerHTML = '';
@@ -1078,6 +1591,22 @@
             };
         }
 
+        var copyTotalBtn = document.getElementById('success-copy-total-btn');
+        if (copyTotalBtn) {
+            copyTotalBtn.onclick = function () {
+                var totalHeroEl = document.getElementById('success-order-total-hero');
+                var text = totalHeroEl ? totalHeroEl.textContent : '';
+                var digits = text.replace(/[^0-9]/g, '');
+                if (!digits) return;
+                try {
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(digits);
+                    }
+                    if (window.hamtaToast) window.hamtaToast('Nominal Rp ' + Number(digits).toLocaleString('id-ID') + ' disalin!');
+                } catch (e) {}
+            };
+        }
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -1092,6 +1621,294 @@
             render();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
+    }
+
+    // Toast Notifikasi Friendly Sukses Buat Pesanan (Melayang di Layar)
+    function showSuccessOrderToast(code) {
+        var existing = document.querySelector('.co-success-toast');
+        if (existing) existing.remove();
+
+        var toastEl = document.createElement('div');
+        toastEl.className = 'co-success-toast';
+        toastEl.innerHTML = '<div class="co-success-toast-icon">' +
+            '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' +
+            '</div>' +
+            '<div class="co-success-toast-content">' +
+            '<div class="co-success-toast-title">Hore! Pesanan Berhasil Dibuat 🎉</div>' +
+            '<div>' + (code ? ('No. Pesanan <strong>' + esc(code) + '</strong> berhasil dicatat. ') : 'Pesananmu sudah dicatat. ') + 'Yuk selesaikan pembayaran QRIS di bawah ini agar segera disiapkan dapur Hamta 😊</div>' +
+            '</div>' +
+            '<button type="button" class="co-success-toast-close" aria-label="Tutup notifikasi">&times;</button>';
+
+        document.body.appendChild(toastEl);
+
+        var closeBtn = toastEl.querySelector('.co-success-toast-close');
+        if (closeBtn) {
+            closeBtn.onclick = function () {
+                toastEl.style.opacity = '0';
+                toastEl.style.transform = 'translateY(-16px) scale(0.96)';
+                setTimeout(function () { toastEl.remove(); }, 350);
+            };
+        }
+
+        setTimeout(function () {
+            if (toastEl && toastEl.parentNode) {
+                toastEl.style.opacity = '0';
+                toastEl.style.transform = 'translateY(-16px) scale(0.96)';
+                setTimeout(function () { if (toastEl.parentNode) toastEl.remove(); }, 350);
+            }
+        }, 8000);
+    }
+
+    // Toast Notifikasi Friendly Khusus QRIS Fallback
+    function showFriendlyFallbackToast(customMessage) {
+        var existing = document.querySelector('.co-friendly-toast');
+        if (existing) existing.remove();
+
+        var toastEl = document.createElement('div');
+        toastEl.className = 'co-friendly-toast';
+        toastEl.innerHTML = '<div class="co-friendly-toast-icon">' +
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">' +
+            '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>' +
+            '</svg>' +
+            '</div>' +
+            '<div class="co-friendly-toast-content">' +
+            '<div class="co-friendly-toast-title">Sedikit Kendala pada QRIS Otomatis</div>' +
+            '<div>' + esc(customMessage || 'Wah, pembuatan QRIS otomatis sedang sedikit terkendala nih. Tapi jangan khawatir, kamu tetap bisa bayar pakai QRIS statis di bawah ini lalu unggah bukti transfer ya. Terima kasih banyak atas kesabaranmu! 😊') + '</div>' +
+            '</div>' +
+            '<button type="button" class="co-friendly-toast-close" aria-label="Tutup notifikasi">&times;</button>';
+
+        document.body.appendChild(toastEl);
+
+        var closeBtn = toastEl.querySelector('.co-friendly-toast-close');
+        if (closeBtn) {
+            closeBtn.onclick = function () {
+                toastEl.style.opacity = '0';
+                toastEl.style.transform = 'translateY(-16px) scale(0.96)';
+                setTimeout(function () { toastEl.remove(); }, 350);
+            };
+        }
+
+        setTimeout(function () {
+            if (toastEl && toastEl.parentNode) {
+                toastEl.style.opacity = '0';
+                toastEl.style.transform = 'translateY(-16px) scale(0.96)';
+                setTimeout(function () { if (toastEl.parentNode) toastEl.remove(); }, 350);
+            }
+        }, 9000);
+    }
+
+    var activeCheckoutTimeout = null;
+    var activeLoadingTicker = null;
+    var isCheckoutResolved = false;
+    var activeOrderData = null;
+    var activeCartSnapshot = [];
+    var successSelectedBuktiFile = null;
+
+    // File Upload Handler untuk Fallback QRIS Statis di View Pembayaran
+    var successBuktiInput = document.getElementById('success-bukti-input');
+    var successBuktiPreview = document.getElementById('success-bukti-preview');
+    var successBuktiImg = document.getElementById('success-bukti-img');
+    var successBuktiFilename = document.getElementById('success-bukti-filename');
+    var successBuktiRemove = document.getElementById('success-bukti-remove');
+    var successBuktiSubmitBtn = document.getElementById('success-bukti-submit-btn');
+
+    if (successBuktiInput) {
+        successBuktiInput.addEventListener('change', function () {
+            if (this.files && this.files[0]) {
+                var f = this.files[0];
+                if (f.size > 5 * 1024 * 1024) {
+                    showFriendlyFallbackToast('Ukuran file foto melebihi batas 5MB. Silakan pilih foto bukti yang lebih kecil ya 😊');
+                    this.value = '';
+                    return;
+                }
+                successSelectedBuktiFile = f;
+                if (successBuktiFilename) successBuktiFilename.textContent = f.name;
+                if (successBuktiImg) {
+                    var r = new FileReader();
+                    r.onload = function (e) { successBuktiImg.src = e.target.result; };
+                    r.readAsDataURL(f);
+                }
+                if (successBuktiPreview) successBuktiPreview.style.display = 'flex';
+            }
+        });
+    }
+
+    if (successBuktiRemove) {
+        successBuktiRemove.addEventListener('click', function () {
+            successSelectedBuktiFile = null;
+            if (successBuktiInput) successBuktiInput.value = '';
+            if (successBuktiPreview) successBuktiPreview.style.display = 'none';
+            if (successBuktiImg) successBuktiImg.src = '';
+        });
+    }
+
+    if (successBuktiSubmitBtn) {
+        successBuktiSubmitBtn.addEventListener('click', function () {
+            if (!successSelectedBuktiFile) {
+                showFriendlyFallbackToast('Yuk pilih atau foto bukti transfermu terlebih dahulu ya sebelum menekan konfirmasi 😊');
+                var uploadArea = document.getElementById('success-bukti-upload-area');
+                if (uploadArea) {
+                    uploadArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    uploadArea.style.borderColor = '#c0392b';
+                    setTimeout(function () { uploadArea.style.borderColor = ''; }, 2500);
+                }
+                return;
+            }
+
+            var btn = successBuktiSubmitBtn;
+            var btnLabel = document.getElementById('success-bukti-submit-label');
+            btn.disabled = true;
+            if (btnLabel) btnLabel.textContent = 'Mengirim Bukti Transfer...';
+
+            var token = (document.querySelector('meta[name="csrf-token"]') || {}).content || '';
+
+            // Kasus 1: Pesanan sudah dibuat di backend (memiliki kode_pesanan)
+            if (activeOrderData && activeOrderData.kode_pesanan) {
+                var fd = new FormData();
+                fd.append('bukti_bayar', successSelectedBuktiFile);
+
+                fetch("{{ url('status-pesanan') }}/" + encodeURIComponent(activeOrderData.kode_pesanan) + "/upload-bukti", {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: fd
+                }).then(function (res) {
+                    return res.json().then(function (body) { return { ok: res.ok, body: body }; });
+                }).then(function (out) {
+                    btn.disabled = false;
+                    if (!out.ok) {
+                        showFriendlyFallbackToast((out.body && out.body.message) || 'Gagal mengirim bukti transfer. Coba lagi ya!');
+                        if (btnLabel) btnLabel.textContent = 'Kirim Bukti Pembayaran & Konfirmasi';
+                        return;
+                    }
+
+                    window.hamtaSaveCart([]);
+                    var payEl = document.getElementById('success-order-pay');
+                    if (payEl) {
+                        payEl.className = 'co-badge-status co-badge-pending';
+                        payEl.textContent = 'QRIS Statis — Menunggu Verifikasi Kasir';
+                    }
+                    var uploadWrap = document.getElementById('success-fallback-upload-wrap');
+                    if (uploadWrap) {
+                        uploadWrap.innerHTML = '<div style="padding:16px;background:#eef5ea;border:2px solid var(--primary);border-radius:12px;text-align:center;color:var(--green)"><div style="font-weight:800;font-size:14px;margin-bottom:4px">✓ Bukti Pembayaran Berhasil Dikirim!</div><div style="font-size:12px;color:#4a5a52">Tim kasir Hamta akan segera memverifikasi pesananmu. Terima kasih banyak ya! 😊</div></div>';
+                    }
+                    showFriendlyFallbackToast('Terima kasih! Bukti transfermu berhasil dikirim dan sedang menunggu verifikasi kasir 😊');
+                }).catch(function () {
+                    btn.disabled = false;
+                    if (btnLabel) btnLabel.textContent = 'Kirim Bukti Pembayaran & Konfirmasi';
+                    showFriendlyFallbackToast('Koneksi terputus saat mengunggah bukti. Silakan periksa jaringan dan coba lagi ya.');
+                });
+                return;
+            }
+
+            // Kasus 2: Pesanan belum tersimpan di backend (misal checkout awal rollback karena Midtrans error)
+            var savedAddr = getActiveAddress();
+            var take = currentTake();
+            var payloadCart = (activeCartSnapshot || []).map(function (it) {
+                var ids = it.id_komponen || (it.komponen || []).map(function (k) { return k.id; });
+                return {
+                    tipe: it.tipe === 'custom' ? 'custom' : 'produk',
+                    id_produk: parseInt(it.id_produk, 10),
+                    id_komponen: (ids || []).map(function (id) { return parseInt(id, 10); }).filter(Boolean),
+                    jumlah: parseInt(it.jumlah, 10) || 1,
+                    catatan: it.catatan ? String(it.catatan).trim() : null,
+                };
+            });
+
+            var formData = new FormData();
+            formData.append('nama_pelanggan', (savedAddr && savedAddr.nama) || '');
+            formData.append('no_whatsapp', (savedAddr && savedAddr.telepon) || '');
+            formData.append('metode_ambil', take);
+            if (take === 'pickup') {
+                formData.append('id_cabang', currentBranch());
+            }
+            if (take === 'delivery' && savedAddr) {
+                formData.append('alamat_delivery', [savedAddr.alamat, savedAddr.patokan].filter(Boolean).join(' — '));
+            }
+            formData.append('metode_bayar', 'qris_statis');
+            formData.append('cart', JSON.stringify(payloadCart));
+            formData.append('bukti_bayar', successSelectedBuktiFile);
+
+            fetch("{{ route('customer.checkout.store') }}", {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': token
+                },
+                body: formData
+            }).then(function (res) {
+                return res.json().then(function (body) { return { ok: res.ok, body: body }; });
+            }).then(function (out) {
+                btn.disabled = false;
+                if (!out.ok) {
+                    showFriendlyFallbackToast((out.body && out.body.message) || 'Gagal membuat pesanan dengan QRIS statis. Coba lagi ya.');
+                    if (btnLabel) btnLabel.textContent = 'Kirim Bukti Pembayaran & Konfirmasi';
+                    return;
+                }
+
+                activeOrderData = out.body;
+                showSuccessOrder(out.body, activeCartSnapshot);
+
+                var qrSuccessBox = document.getElementById('success-midtrans-qr-box');
+                var qrFallbackBox = document.getElementById('success-fallback-qr-box');
+                if (qrSuccessBox) qrSuccessBox.style.display = 'none';
+                if (qrFallbackBox) qrFallbackBox.style.display = 'block';
+
+                var payEl = document.getElementById('success-order-pay');
+                if (payEl) {
+                    payEl.className = 'co-badge-status co-badge-pending';
+                    payEl.textContent = 'QRIS Statis — Menunggu Verifikasi Kasir';
+                }
+
+                var uploadWrap = document.getElementById('success-fallback-upload-wrap');
+                if (uploadWrap) {
+                    uploadWrap.innerHTML = '<div style="padding:16px;background:#eef5ea;border:2px solid var(--primary);border-radius:12px;text-align:center;color:var(--green)"><div style="font-weight:800;font-size:14px;margin-bottom:4px">✓ Pesanan & Bukti Pembayaran Berhasil Dikirim!</div><div style="font-size:12px;color:#4a5a52">Tim kasir Hamta akan segera memverifikasi pesananmu. Terima kasih banyak ya! 😊</div></div>';
+                }
+
+                window.hamtaSaveCart([]);
+                try {
+                    localStorage.setItem('hamta_last_order', JSON.stringify({
+                        order: out.body,
+                        items: activeCartSnapshot,
+                        timestamp: Date.now()
+                    }));
+                } catch (e) {}
+
+                showFriendlyFallbackToast('Hore! Pesanan dan bukti pembayaranmu berhasil dibuat 😊');
+            }).catch(function () {
+                btn.disabled = false;
+                if (btnLabel) btnLabel.textContent = 'Kirim Bukti Pembayaran & Konfirmasi';
+                showFriendlyFallbackToast('Koneksi terputus. Silakan periksa jaringan dan coba lagi.');
+            });
+        });
+    }
+
+    // Fungsi Mengaktifkan Fallback QRIS Statis
+    function activateFallbackMode(reasonMsg) {
+        if (isCheckoutResolved) return;
+        isCheckoutResolved = true;
+        if (activeLoadingTicker) clearInterval(activeLoadingTicker);
+        if (activeCheckoutTimeout) clearTimeout(activeCheckoutTimeout);
+
+        var qrLoadingBox = document.getElementById('success-qr-loading-box');
+        var qrFallbackBox = document.getElementById('success-fallback-qr-box');
+        var qrMidtransBox = document.getElementById('success-midtrans-qr-box');
+        var qrExpiredBox = document.getElementById('success-midtrans-expired-box');
+
+        if (qrLoadingBox) qrLoadingBox.style.display = 'none';
+        if (qrMidtransBox) qrMidtransBox.style.display = 'none';
+        if (qrExpiredBox) qrExpiredBox.style.display = 'none';
+        if (qrFallbackBox) qrFallbackBox.style.display = 'block';
+
+        var payEl = document.getElementById('success-order-pay');
+        if (payEl) {
+            payEl.className = 'co-badge-status co-badge-pending';
+            payEl.textContent = 'QRIS Statis — Menunggu Bukti Transfer';
+        }
+
+        showFriendlyFallbackToast(reasonMsg || 'Wah, pembuatan QRIS otomatis sedang sedikit terkendala nih. Tapi jangan khawatir, kamu tetap bisa bayar pakai QRIS statis di bawah ini lalu unggah bukti transfer ya. Terima kasih banyak atas kesabaranmu! 😊');
     }
 
     // Submit Checkout
@@ -1119,25 +1936,108 @@
                 return;
             }
 
-            // Validasi 2: Bukti transfer QRIS manual wajib ada jika dalam mode fallback QRIS statis
             var take = currentTake();
             var pay = currentPay();
-            if (pay === 'qris' && isFallbackMode && !selectedBuktiFile) {
-                showMsg('Bukti pembayaran QRIS statis wajib diunggah sebelum membuat pesanan.', true);
-                if (window.hamtaToast) window.hamtaToast('Unggah bukti pembayaran QRIS terlebih dahulu.');
-                var buktiArea = document.getElementById('co-bukti-upload-area');
-                if (buktiArea) {
-                    buktiArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    buktiArea.style.borderColor = '#c0392b';
-                    buktiArea.style.backgroundColor = '#fef2f2';
-                    setTimeout(function () {
-                        buktiArea.style.borderColor = '';
-                        buktiArea.style.backgroundColor = '';
-                    }, 3000);
-                }
-                return;
+
+            // Snapshot data keranjang
+            var cartSnapshot = cart.slice();
+            activeCartSnapshot = cartSnapshot;
+
+            // Hitung kalkulasi biaya untuk ditampilkan seketika
+            var subtotal = cart.reduce(function (s, it) { return s + (parseFloat(it.harga) || 0) * (parseInt(it.jumlah, 10) || 0); }, 0);
+            var isDelivery = take === 'delivery';
+            var ongkir = isDelivery ? FLAT_ONGKIR : 0;
+            var ppn = Math.round((subtotal + ongkir) * 0.11);
+            var grandTotal = subtotal + ongkir + ppn;
+
+            // ─── OPTIMISTIC TRANSITION: LANGSUNG BUKA TAMPILAN PEMBAYARAN ───
+            var formView = document.getElementById('co-form-view');
+            var successView = document.getElementById('co-success-view');
+            if (formView) formView.style.display = 'none';
+            if (successView) successView.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Tampilkan rincian pesanan awal
+            var codeEl = document.getElementById('success-order-code');
+            var timeEl = document.getElementById('success-order-time');
+            var payEl = document.getElementById('success-order-pay');
+            var takeEl = document.getElementById('success-order-take');
+            var totalEl = document.getElementById('success-order-total');
+            var fallbackNominal = document.getElementById('success-fallback-nominal');
+            var itemsList = document.getElementById('success-items-list');
+
+            if (codeEl) codeEl.textContent = 'Menyiapkan...';
+            if (timeEl) timeEl.textContent = 'Baru saja';
+            if (payEl) {
+                payEl.className = 'co-badge-status co-badge-pending';
+                payEl.textContent = 'Menghubungkan QRIS...';
+            }
+            if (takeEl) {
+                takeEl.textContent = isDelivery ? ('Delivery ke ' + (savedAddr.alamat || 'Alamat')) : 'Pickup di Cabang Hamta';
+            }
+            if (totalEl) totalEl.textContent = rupiah(grandTotal);
+            var totalHeroEl = document.getElementById('success-order-total-hero');
+            if (totalHeroEl) totalHeroEl.textContent = rupiah(grandTotal);
+            if (fallbackNominal) fallbackNominal.textContent = rupiah(grandTotal);
+
+            showSuccessOrderToast(null);
+
+            // Render list produk keranjang
+            if (itemsList) {
+                itemsList.innerHTML = '';
+                cartSnapshot.forEach(function (it) {
+                    var row = document.createElement('div');
+                    row.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;font-size:13px;border-bottom:1px dashed rgba(11,65,43,.12);gap:12px';
+                    var itemSub = (parseFloat(it.harga) || 0) * (parseInt(it.jumlah, 10) || 0);
+
+                    var noteHtml = '';
+                    if (it.catatan && String(it.catatan).trim()) {
+                        noteHtml = '<div style="margin-top:4px;font-size:11.5px;color:#0b412b;background:rgba(101,189,94,.14);border-left:2.5px solid var(--green);padding:2px 8px;border-radius:4px;display:inline-block"><span style="font-weight:700">Catatan:</span> ' + esc(it.catatan) + '</div>';
+                    }
+
+                    var kompHtml = '';
+                    if (it.komponen && it.komponen.length) {
+                        kompHtml = '<div style="font-size:11.5px;color:#6f6a5f;margin-top:2px">' + esc(it.komponen.map(function(k){ return k.nama || k; }).join(', ')) + '</div>';
+                    }
+
+                    row.innerHTML = '<div><div><strong style="color:var(--ink)">' + esc(it.nama) + '</strong> <span style="font-weight:600;color:#6f6a5f">x' + it.jumlah + '</span></div>' + kompHtml + noteHtml + '</div><div style="font-weight:700;white-space:nowrap">' + rupiah(itemSub) + '</div>';
+                    itemsList.appendChild(row);
+                });
             }
 
+            // Tampilkan kotak loading QRIS, sembunyikan kotak QR lainnya
+            var qrLoadingBox = document.getElementById('success-qr-loading-box');
+            var qrMidtransBox = document.getElementById('success-midtrans-qr-box');
+            var qrFallbackBox = document.getElementById('success-fallback-qr-box');
+            var qrExpiredBox = document.getElementById('success-midtrans-expired-box');
+
+            if (qrLoadingBox) qrLoadingBox.style.display = 'block';
+            if (qrMidtransBox) qrMidtransBox.style.display = 'none';
+            if (qrFallbackBox) qrFallbackBox.style.display = 'none';
+            if (qrExpiredBox) qrExpiredBox.style.display = 'none';
+
+            // ─── TIMER 10 DETIK: JIKA MELEBIHI 10 DETIK, AKTIFKAN FALLBACK QR ───
+            isCheckoutResolved = false;
+            activeOrderData = null;
+            var remainingSec = 10;
+            var countdownNum = document.getElementById('co-loading-countdown-num');
+            if (countdownNum) countdownNum.textContent = '10';
+
+            if (activeLoadingTicker) clearInterval(activeLoadingTicker);
+            activeLoadingTicker = setInterval(function () {
+                remainingSec--;
+                if (countdownNum) countdownNum.textContent = Math.max(0, remainingSec);
+                if (remainingSec <= 0) {
+                    clearInterval(activeLoadingTicker);
+                }
+            }, 1000);
+
+            if (activeCheckoutTimeout) clearTimeout(activeCheckoutTimeout);
+            activeCheckoutTimeout = setTimeout(function () {
+                activateFallbackMode('Wah, proses pembuatan QRIS otomatis memakan waktu lebih dari 10 detik nih. Agar kamu tidak menunggu kelamaan, silakan scan QRIS statis di bawah ini dan unggah bukti transfer ya 😊');
+            }, 10000);
+
+            // ─── KIRIM REQUEST BACKEND DI LATAR BELAKANG ───
             var token = (document.querySelector('meta[name="csrf-token"]') || {}).content || '';
             var payloadCart = cart.map(function (it) {
                 var ids = it.id_komponen || (it.komponen || []).map(function (k) { return k.id; });
@@ -1160,18 +2060,8 @@
             if (take === 'delivery' && savedAddr) {
                 formData.append('alamat_delivery', [savedAddr.alamat, savedAddr.patokan].filter(Boolean).join(' — '));
             }
-            // Jika dalam mode fallback QRIS statis, kirim metode_bayar='qris_statis'
-            var sendPay = (pay === 'qris' && isFallbackMode) ? 'qris_statis' : pay;
-            formData.append('metode_bayar', sendPay);
+            formData.append('metode_bayar', 'qris');
             formData.append('cart', JSON.stringify(payloadCart));
-            if (selectedBuktiFile) {
-                formData.append('bukti_bayar', selectedBuktiFile);
-            }
-
-            submitBtn.disabled = true;
-            if (submitLabel) submitLabel.textContent = 'Memproses Pesanan...';
-
-            var cartSnapshot = cart.slice();
 
             fetch("{{ route('customer.checkout.store') }}", {
                 method: 'POST',
@@ -1183,38 +2073,46 @@
             }).then(function (res) {
                 return res.json().then(function (body) { return { ok: res.ok, body: body }; });
             }).then(function (out) {
-                submitBtn.disabled = false;
-
-                // Cek apakah server meminta fallback ke QRIS statis (misal Midtrans down/timeout/gagal)
-                if (out.body && out.body.fallback_required) {
-                    isFallbackMode = true;
-                    updatePaymentDisplay();
-                    var fallbackBanner = document.getElementById('co-fallback-banner');
-                    var fallbackText = document.getElementById('co-fallback-text');
-                    if (fallbackBanner) fallbackBanner.style.display = 'block';
-                    if (fallbackText && out.body.message) fallbackText.textContent = out.body.message;
-
-                    var qrisBox = document.getElementById('qris-box');
-                    if (qrisBox) {
-                        qrisBox.style.display = 'block';
-                        qrisBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Jika timeout 10 detik sudah keburu aktif
+                if (isCheckoutResolved) {
+                    if (out.ok && out.body && out.body.kode_pesanan) {
+                        activeOrderData = out.body;
+                        if (codeEl) codeEl.textContent = out.body.kode_pesanan;
+                        var trackerBtn = document.getElementById('success-tracker-btn');
+                        if (trackerBtn) trackerBtn.href = "{{ url('status-pesanan') }}/" + encodeURIComponent(out.body.kode_pesanan);
                     }
-                    if (window.hamtaToast) window.hamtaToast('Layanan QRIS otomatis dialihkan ke QRIS statis.');
-                    showMsg('Layanan QRIS otomatis sedang tidak dapat dijangkau. Silakan transfer via barcode QRIS dan unggah bukti transfer di bawah.', true);
                     return;
                 }
 
-                updatePaymentDisplay();
+                // Jika server meminta fallback QRIS statis
+                if (out.body && out.body.fallback_required) {
+                    activateFallbackMode('Wah, QRIS otomatis kami sedang sedikit terkendala nih. Tapi tenang, kamu tetap bisa bayar pakai QRIS statis di bawah ini lalu unggah bukti transfer ya. Terima kasih banyak atas kesabaranmu! 😊');
+                    return;
+                }
+
                 if (!out.ok) {
                     var firstErr = out.body && out.body.errors
                         ? Object.values(out.body.errors).flat()[0]
                         : null;
-                    showMsg(firstErr || (out.body && out.body.message) || 'Gagal membuat pesanan. Coba lagi.', true);
+                    activateFallbackMode(firstErr || (out.body && out.body.message) || null);
                     return;
                 }
 
-                // Berhasil membuat pesanan!
+                // ─── SUKSES DENGAN QRIS MIDTRANS (< 10 DETIK) ───
+                isCheckoutResolved = true;
+                if (activeLoadingTicker) clearInterval(activeLoadingTicker);
+                if (activeCheckoutTimeout) clearTimeout(activeCheckoutTimeout);
+
                 var orderData = out.body;
+                activeOrderData = orderData;
+
+                if (qrLoadingBox) qrLoadingBox.style.display = 'none';
+
+                // Tampilkan sukses penuh & QRIS Midtrans
+                showSuccessOrder(orderData, cartSnapshot);
+                showSuccessOrderToast(orderData.kode_pesanan);
+
+                window.hamtaSaveCart([]);
                 try {
                     localStorage.setItem('hamta_last_order', JSON.stringify({
                         order: orderData,
@@ -1223,13 +2121,11 @@
                     }));
                 } catch (e) {}
 
-                window.hamtaSaveCart([]);
-                if (window.hamtaToast) window.hamtaToast('Pesanan ' + orderData.kode_pesanan + ' berhasil dibuat!');
-                showSuccessOrder(orderData, cartSnapshot);
+                if (window.hamtaToast) window.hamtaToast('Pesanan ' + orderData.kode_pesanan + ' siap dibayar!');
             }).catch(function () {
-                submitBtn.disabled = false;
-                updatePaymentDisplay();
-                showMsg('Gagal membuat pesanan. Periksa koneksi lalu coba lagi.', true);
+                if (!isCheckoutResolved) {
+                    activateFallbackMode('Koneksi ke gateway pembayaran terputus. Silakan gunakan QRIS statis di bawah ini ya 😊');
+                }
             });
         });
     }

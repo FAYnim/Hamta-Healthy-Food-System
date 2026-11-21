@@ -38,7 +38,7 @@ class CheckoutController extends Controller
             'metode_ambil' => ['required', Rule::in(['pickup', 'delivery'])],
             'id_cabang' => ['nullable', 'integer', 'exists:cabang,id_cabang'],
             'alamat_delivery' => ['required_if:metode_ambil,delivery', 'nullable', 'string', 'max:255'],
-            'metode_bayar' => ['required', Rule::in(['qris', 'qris_statis', 'midtrans'])],
+            'metode_bayar' => ['required', Rule::in(['qris', 'qris_statis', 'tunai', 'midtrans'])],
             'bukti_bayar' => [
                 Rule::requiredIf(fn () => $request->input('metode_bayar') === 'qris_statis'),
                 'nullable',

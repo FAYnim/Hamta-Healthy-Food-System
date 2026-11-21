@@ -24,12 +24,17 @@ class MidtransService
         Config::$isSanitized = (bool) config('services.midtrans.is_sanitized', true);
         Config::$is3ds = (bool) config('services.midtrans.is_3ds', true);
 
-        // Pastikan cURL menggunakan CA bundle bawaan Midtrans / Laragon untuk mencegah SSL certificate error di Windows
-        $cacertPath = base_path('vendor/midtrans/midtrans-php/data/cacert.pem');
-        $caFile = file_exists($cacertPath) ? $cacertPath : (file_exists('C:/laragon/etc/ssl/cacert.pem') ? 'C:/laragon/etc/ssl/cacert.pem' : null);
+        // Pastikan cURL menggunakan CA bundle yang valid untuk mencegah SSL certificate error di Windows
+        $laragonCa = 'C:/laragon/etc/ssl/cacert.pem';
+        $vendorCa = base_path('vendor/midtrans/midtrans-php/data/cacert.pem');
+        $caFile = file_exists($laragonCa) ? $laragonCa : (file_exists($vendorCa) ? $vendorCa : null);
 
         Config::$curlOptions = [
             CURLOPT_HTTPHEADER => ['User-Agent: Hamta-Healthy-Food/1.0'],
+            CURLOPT_IPRESOLVE => defined('CURL_IPRESOLVE_V4') ? CURL_IPRESOLVE_V4 : 1,
+            CURLOPT_HTTP_VERSION => defined('CURL_HTTP_VERSION_1_1') ? CURL_HTTP_VERSION_1_1 : 2,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT => 25,
         ];
 
         if ($caFile) {
