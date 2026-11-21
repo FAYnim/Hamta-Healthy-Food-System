@@ -768,12 +768,6 @@
                     <h2 class="co-pay-hero-title">Selesaikan Pembayaran</h2>
                     <p class="co-pay-hero-sub">Silakan scan kode QRIS di bawah ini agar pesananmu segera disiapkan di dapur Hamta.</p>
                 </div>
-
-                <!-- Countdown Timer -->
-                <div id="success-expiry-badge" class="co-expiry-badge" style="display:none">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    <span>Sisa Waktu: <strong id="success-expiry-countdown">--:--</strong></span>
-                </div>
             </div>
 
             <!-- Highlight Nominal Tagihan yang Harus Ditransfer -->
@@ -813,8 +807,18 @@
 
             <!-- QRIS Midtrans (Jika Ada) -->
             <div id="success-midtrans-qr-box" style="display:none;margin:16px 0;padding:22px 16px;background:#fbfbf9;border:1.5px solid rgba(11,65,43,.2);border-radius:14px;text-align:center">
-                <div style="display:inline-block;padding:12px;background:#fff;border-radius:14px;border:1px dashed rgba(11,65,43,.3);box-shadow:0 4px 16px rgba(11,65,43,.06)">
-                    <img id="success-midtrans-qr-img" src="" alt="QRIS Midtrans" style="width:220px;height:220px;display:block;margin:0 auto;object-fit:contain;border-radius:8px" />
+                <!-- Countdown Timer 15 Menit Tepat di Atas QR -->
+                <div style="margin-bottom:14px">
+                    <div id="success-expiry-badge" class="co-expiry-badge" style="display:inline-flex;align-items:center;gap:7px;padding:6px 16px;background:#fef2f2;border:1.5px solid #fecaca;border-radius:999px;font-size:12.5px;font-weight:700;color:#991b1b">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>Sisa Waktu Pembayaran: <strong id="success-expiry-countdown" style="font-size:13.5px;font-weight:900">15:00</strong></span>
+                    </div>
+                </div>
+
+                <div style="display:block">
+                    <div style="display:inline-block;padding:12px;background:#fff;border-radius:14px;border:1px dashed rgba(11,65,43,.3);box-shadow:0 4px 16px rgba(11,65,43,.06)">
+                        <img id="success-midtrans-qr-img" src="" alt="QRIS Midtrans" style="width:220px;height:220px;display:block;margin:0 auto;object-fit:contain;border-radius:8px" />
+                    </div>
                 </div>
 
                 <div style="margin-top:14px;display:flex;justify-content:center;gap:10px">
@@ -1412,14 +1416,23 @@
         var qrLoadingBox = document.getElementById('success-qr-loading-box');
         var qrFallbackBox = document.getElementById('success-fallback-qr-box');
         var successCountdownEl = document.getElementById('success-expiry-countdown');
+        var successExpiryBadge = document.getElementById('success-expiry-badge');
         var successCountdownTimer = null;
 
         if (qrLoadingBox) qrLoadingBox.style.display = 'none';
         if (qrFallbackBox) qrFallbackBox.style.display = 'none';
 
-        function startSuccessCountdown(expiryIso) {
-            if (!expiryIso) return;
-            var targetMs = new Date(expiryIso).getTime();
+        function startSuccessCountdown(expiryIso, orderTimestamp) {
+            var targetMs;
+            if (expiryIso) {
+                targetMs = new Date(expiryIso).getTime();
+            } else if (orderTimestamp) {
+                targetMs = parseInt(orderTimestamp, 10) + (15 * 60 * 1000);
+            } else {
+                targetMs = Date.now() + (15 * 60 * 1000);
+            }
+
+            if (successExpiryBadge) successExpiryBadge.style.display = 'inline-flex';
             if (successCountdownTimer) clearInterval(successCountdownTimer);
 
             function updateTimer() {
@@ -1451,9 +1464,7 @@
                 qrSuccessImg.src = order.qr_url;
                 qrSuccessBox.style.display = 'block';
                 if (qrExpiredBox) qrExpiredBox.style.display = 'none';
-                if (order.expiry_time) {
-                    startSuccessCountdown(order.expiry_time);
-                }
+                startSuccessCountdown(order.expiry_time, order.created_at_ms || order.timestamp);
             } else {
                 qrSuccessBox.style.display = 'none';
             }
