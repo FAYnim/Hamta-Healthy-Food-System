@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hamta — Konfirmasi Pesanan</title>
+    @include('partials.favicon')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         .by-head { display:flex; align-items:center; gap:16px; margin:6px 0 22px; }

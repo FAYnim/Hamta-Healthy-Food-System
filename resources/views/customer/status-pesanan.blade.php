@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Status Pesanan — Hamta Healthy Food</title>
+    @include('partials.favicon')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         .tr-wrap { width: 100%; max-width: 820px; margin: 0 auto; padding-bottom: 48px; }
