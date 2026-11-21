@@ -203,9 +203,13 @@
                                 </tr>
                                 <!-- Baris loker: panel detail yang membuka tepat di bawah baris ini -->
                                 <tr class="detail-row hidden">
-                                    <td colspan="7" class="p-0">
-                                        <div class="detail-slot bg-white border-y border-stone-200">
-                                            <div class="p-10 text-center text-sm text-hamta-gray">Memuat detail…</div>
+                                    <td colspan="7" class="p-0 border-0">
+                                        <div class="loker-collapse overflow-hidden" style="max-height: 0; opacity: 0;">
+                                            <div class="detail-slot bg-white border-y border-stone-200" data-loaded="1">
+                                                <div class="loker-wrap px-4 sm:px-6 py-4">
+                                                    @include('admin.partials.pesanan_detail', ['pesanan' => $item])
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -250,6 +254,56 @@
                 p.textContent = pesan;
             }
 
+            function bukaLoker(loker, tombol) {
+                loker.classList.remove('hidden');
+                tombol.setAttribute('aria-expanded', 'true');
+                tombol.classList.add('bg-hamta-black', 'text-white');
+                tombol.classList.remove('hover:bg-stone-100');
+
+                const collapse = loker.querySelector('.loker-collapse');
+                if (!collapse) return;
+
+                // Animasi expand halus
+                collapse.style.transition = 'max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease';
+                collapse.style.maxHeight = collapse.scrollHeight + 'px';
+                collapse.style.opacity = '1';
+
+                const onEnd = function (e) {
+                    if (e.propertyName === 'max-height' && !loker.classList.contains('hidden')) {
+                        collapse.style.maxHeight = 'none';
+                        collapse.removeEventListener('transitionend', onEnd);
+                    }
+                };
+                collapse.addEventListener('transitionend', onEnd);
+            }
+
+            function tutupLoker(loker, tombol) {
+                tombol.setAttribute('aria-expanded', 'false');
+                tombol.classList.remove('bg-hamta-black', 'text-white');
+                tombol.classList.add('hover:bg-stone-100');
+
+                const collapse = loker.querySelector('.loker-collapse');
+                if (!collapse) {
+                    loker.classList.add('hidden');
+                    return;
+                }
+
+                // Tetapkan height awal dulu sebelum transisi ke 0
+                collapse.style.maxHeight = collapse.scrollHeight + 'px';
+                collapse.offsetHeight; // trigger reflow
+                collapse.style.transition = 'max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease';
+                collapse.style.maxHeight = '0px';
+                collapse.style.opacity = '0';
+
+                const onEnd = function (e) {
+                    if (e.propertyName === 'max-height') {
+                        loker.classList.add('hidden');
+                        collapse.removeEventListener('transitionend', onEnd);
+                    }
+                };
+                collapse.addEventListener('transitionend', onEnd);
+            }
+
             document.addEventListener('click', function (e) {
                 const tombol = e.target.closest('.btn-detail');
                 if (!tombol) return;
@@ -258,43 +312,22 @@
                 const loker = baris.nextElementSibling; // <tr class="detail-row">
                 if (!loker || !loker.classList.contains('detail-row')) return;
 
-                const slot = loker.querySelector('.detail-slot');
                 const terbuka = !loker.classList.contains('hidden');
 
                 // Klik lagi = tutup loker
                 if (terbuka) {
-                    loker.classList.add('hidden');
-                    tombol.setAttribute('aria-expanded', 'false');
+                    tutupLoker(loker, tombol);
                     return;
                 }
 
                 // Tutup loker lain yang sedang terbuka
                 document.querySelectorAll('.detail-row:not(.hidden)').forEach(function (r) {
-                    r.classList.add('hidden');
                     const b = r.previousElementSibling && r.previousElementSibling.querySelector('.btn-detail');
-                    if (b) b.setAttribute('aria-expanded', 'false');
+                    if (b) tutupLoker(r, b);
                 });
 
-                loker.classList.remove('hidden');
-                tombol.setAttribute('aria-expanded', 'true');
-
-                // Sudah pernah dimuat → tidak perlu fetch ulang
-                if (slot.dataset.loaded === '1') return;
-
-                slot.innerHTML = '<div class="p-10 text-center text-sm text-hamta-gray">Memuat detail…</div>';
-
-                fetch(tombol.dataset.detailUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-                    .then(function (res) {
-                        if (!res.ok) throw new Error('Gagal memuat');
-                        return res.text();
-                    })
-                    .then(function (html) {
-                        slot.innerHTML = bungkus(html);
-                        slot.dataset.loaded = '1';
-                    })
-                    .catch(function () {
-                        slot.innerHTML = '<div class="p-10 text-center text-sm text-red-600">Gagal memuat detail pesanan.</div>';
-                    });
+                // Buka loker ini dengan animasi smooth
+                bukaLoker(loker, tombol);
             });
 
             // Submit form aksi di dalam loker (ajax) — loker tetap terbuka, isi disegarkan

@@ -22,7 +22,7 @@ class PesananController extends Controller
         $status = $request->query('status');
         $q = trim((string) $request->query('q'));
 
-        $pesanan = Pesanan::with(['cabang', 'detailPesanan'])
+        $pesanan = Pesanan::with(['cabang', 'admin', 'detailPesanan.komponenSalad', 'promo', 'rating'])
             ->when(in_array($status, ['diproses', 'siap', 'selesai', 'batal'], true),
                 fn ($query) => $query->where('status_pesanan', $status))
             ->when($q !== '', fn ($query) => $query->where(fn ($sub) => $sub
@@ -30,7 +30,7 @@ class PesananController extends Controller
                 ->orWhere('nama_pelanggan', 'like', "%{$q}%")
                 ->orWhere('no_whatsapp', 'like', "%{$q}%")))
             ->latest()
-            ->paginate(15)
+            ->paginate(10)
             ->withQueryString();
 
         return view('admin.daftar_pesanan', [

@@ -40,17 +40,19 @@
 
             <ul class="text-sm text-hamta-black">
                 @foreach ($pesanan->detailPesanan as $item)
-                    <li class="flex items-baseline gap-2 py-1 {{ $item->status_item === 'dibatalkan' ? 'opacity-60 line-through' : '' }}">
+                    <li class="flex items-center gap-2 py-1 {{ $item->status_item === 'dibatalkan' ? 'opacity-60 line-through' : '' }}">
                         <span class="shrink-0">•</span>
                         <span class="font-semibold shrink-0">{{ $item->nama_item }}</span>
                         <span class="shrink-0">{{ $item->jumlah }}x {{ $rp($item->harga_satuan) }}</span>
-                        <span class="flex-1 border-b border-hamta-black/25 translate-y-[-2px]"></span>
+                        <span class="flex-1 border-b border-hamta-black/25"></span>
                         <span class="font-semibold shrink-0">{{ $rp($item->subtotal_item) }}</span>
                         @if ($item->status_item !== 'dibatalkan')
                             <form method="POST" action="{{ route('admin.daftar_pesanan.item.batal', $item->id_detail) }}" class="loker-form inline" onsubmit="return confirm('Batalkan item {{ $item->nama_item }}?')">
                                 @csrf
                                 @method('PATCH')
-                                <button type="submit" class="text-xs font-semibold text-red-600 hover:underline">Batalkan</button>
+                                <button type="submit" class="p-1 rounded-lg text-red-600 hover:bg-red-200/60 transition inline-flex items-center justify-center shrink-0" title="Batalkan item {{ $item->nama_item }}" aria-label="Batalkan item {{ $item->nama_item }}">
+                                    <x-lucide-trash-2 class="w-3.5 h-3.5" />
+                                </button>
                             </form>
                         @endif
                     </li>
@@ -285,16 +287,16 @@
         <!-- KOTAK ALUR PESANAN (OPERASIONAL DAPUR) -->
         <div class="bg-stone-50 border border-stone-200/80 rounded-2xl p-4 space-y-3">
             <div class="flex items-center justify-between">
-                <span class="font-bold text-xs uppercase tracking-wider text-stone-500">Status Pengerjaan Dapur</span>
-                <span class="text-xs font-bold text-hamta-black">
+                <span class="font-bold text-xs uppercase tracking-wider text-stone-500">Status Pengerjaan Dapur:</span>
+                <span class="text-xs font-bold text-stone-800">
                     @if ($pesanan->status_pesanan === 'diproses')
-                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#BEE3B6] text-hamta-dark">Diproses (Sedang Disiapkan)</span>
+                        Diproses (Sedang Disiapkan)
                     @elseif ($pesanan->status_pesanan === 'siap')
-                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-teal-100 text-teal-800">Siap (Ambil / Antar)</span>
+                        Siap (Ambil / Antar)
                     @elseif ($pesanan->status_pesanan === 'selesai')
-                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">Selesai</span>
+                        Selesai
                     @else
-                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">Dibatalkan</span>
+                        Dibatalkan
                     @endif
                 </span>
             </div>
@@ -306,10 +308,10 @@
                         <form method="POST" action="{{ route('admin.daftar_pesanan.status', $pesanan->id_pesanan) }}" class="loker-form inline">
                             @csrf
                             @method('PATCH')
-                            <input type="hidden" name="status_pesanan" value="siap">
-                            <button type="submit" class="px-4 py-2 bg-hamta-green hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-xs transition inline-flex items-center gap-2">
-                                <x-lucide-package-check class="w-4 h-4" />
-                                <span>Tandai Siap (Ambil / Antar) ➔</span>
+                            <input type="hidden" name="status_pesanan" value="selesai">
+                            <button type="submit" class="px-4 py-2.5 bg-hamta-green hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-xs transition inline-flex items-center gap-2 cursor-pointer">
+                                <x-lucide-check-circle-2 class="w-4 h-4" />
+                                <span>Tandai Selesai</span>
                             </button>
                         </form>
 
@@ -317,8 +319,9 @@
                             @csrf
                             @method('PATCH')
                             <input type="hidden" name="status_pesanan" value="batal">
-                            <button type="submit" onclick="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')" class="text-xs font-semibold text-red-600 hover:underline">
-                                Batalkan Pesanan
+                            <button type="submit" onclick="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')" class="px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 font-bold text-xs rounded-xl border border-red-200 transition inline-flex items-center gap-1.5 cursor-pointer shadow-xs">
+                                <x-lucide-x-circle class="w-4 h-4" />
+                                <span>Batalkan Pesanan</span>
                             </button>
                         </form>
                     </div>
@@ -328,9 +331,19 @@
                             @csrf
                             @method('PATCH')
                             <input type="hidden" name="status_pesanan" value="selesai">
-                            <button type="submit" class="px-4 py-2 bg-hamta-green hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-xs transition inline-flex items-center gap-2">
-                                <x-lucide-check class="w-4 h-4" />
-                                <span>Selesaikan Pesanan ✓</span>
+                            <button type="submit" class="px-4 py-2.5 bg-hamta-green hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-xs transition inline-flex items-center gap-2 cursor-pointer">
+                                <x-lucide-check-circle-2 class="w-4 h-4" />
+                                <span>Tandai Selesai</span>
+                            </button>
+                        </form>
+
+                        <form method="POST" action="{{ route('admin.daftar_pesanan.status', $pesanan->id_pesanan) }}" class="loker-form inline">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="status_pesanan" value="batal">
+                            <button type="submit" onclick="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')" class="px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 font-bold text-xs rounded-xl border border-red-200 transition inline-flex items-center gap-1.5 cursor-pointer shadow-xs">
+                                <x-lucide-x-circle class="w-4 h-4" />
+                                <span>Batalkan Pesanan</span>
                             </button>
                         </form>
 
@@ -338,31 +351,37 @@
                             @csrf
                             @method('PATCH')
                             <input type="hidden" name="status_pesanan" value="diproses">
-                            <button type="submit" class="text-xs font-semibold text-stone-500 hover:underline">
+                            <button type="submit" class="px-3 py-2 text-xs font-semibold text-stone-500 hover:text-stone-700 transition inline-flex items-center gap-1 cursor-pointer">
                                 ↺ Kembalikan ke Diproses
                             </button>
                         </form>
                     </div>
                 @elseif ($pesanan->status_pesanan === 'selesai')
                     <div class="flex items-center justify-between text-xs text-stone-500 font-medium">
-                        <span>Pesanan telah selesai diserahkan ke pelanggan.</span>
+                        <span class="inline-flex items-center gap-1.5 text-stone-600">
+                            <x-lucide-check-circle-2 class="w-4 h-4 text-emerald-600 shrink-0" />
+                            Pesanan telah selesai diserahkan ke pelanggan.
+                        </span>
                         <form method="POST" action="{{ route('admin.daftar_pesanan.status', $pesanan->id_pesanan) }}" class="loker-form inline">
                             @csrf
                             @method('PATCH')
-                            <input type="hidden" name="status_pesanan" value="siap">
-                            <button type="submit" class="text-xs text-stone-500 hover:underline">
-                                ↺ Kembalikan ke Siap
+                            <input type="hidden" name="status_pesanan" value="diproses">
+                            <button type="submit" class="px-3 py-1.5 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-lg text-xs font-semibold transition cursor-pointer">
+                                ↺ Kembalikan ke Diproses
                             </button>
                         </form>
                     </div>
                 @else
                     <div class="flex items-center justify-between text-xs">
-                        <span class="text-red-600 font-medium">Pesanan ini telah dibatalkan.</span>
+                        <span class="text-stone-600 font-medium inline-flex items-center gap-1.5">
+                            <x-lucide-x-circle class="w-4 h-4 text-red-500 shrink-0" />
+                            Pesanan ini telah dibatalkan.
+                        </span>
                         <form method="POST" action="{{ route('admin.daftar_pesanan.status', $pesanan->id_pesanan) }}" class="loker-form inline">
                             @csrf
                             @method('PATCH')
                             <input type="hidden" name="status_pesanan" value="diproses">
-                            <button type="submit" class="text-xs font-semibold text-emerald-700 hover:underline">
+                            <button type="submit" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-semibold transition cursor-pointer">
                                 ↺ Pulihkan Pesanan (Proses Ulang)
                             </button>
                         </form>
@@ -371,26 +390,18 @@
             </div>
         </div>
 
-        <div class="pt-3 border-t border-stone-200">
-            <p class="font-bold text-xs text-stone-500 uppercase tracking-wider mb-2">Koneksi &amp; Notifikasi Pelanggan:</p>
-            <div class="flex flex-wrap items-center gap-2">
-                @if ($waLink)
+        @if ($waLink)
+            <div class="pt-3 border-t border-stone-200">
+                <p class="font-bold text-xs text-stone-500 uppercase tracking-wider mb-2">Koneksi &amp; Notifikasi Pelanggan:</p>
+                <div class="flex flex-wrap items-center gap-2">
                     <a href="{{ $waLink }}" target="_blank"
                        class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs rounded-xl shadow-sm transition">
                         <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.34C9.36 7.34 9.09 7.41 8.86 7.65C8.63 7.9 7.99 8.5 7.99 9.71C7.99 10.93 8.88 12.1 9 12.27C9.13 12.44 10.74 14.92 13.2 15.97C13.78 16.22 14.24 16.38 14.6 16.49C15.19 16.68 15.72 16.65 16.14 16.59C16.61 16.51 17.58 16 17.79 15.41C17.99 14.83 17.99 14.33 17.93 14.22C17.87 14.12 17.7 14.05 17.44 13.93C17.19 13.8 15.93 13.18 15.7 13.1C15.47 13.01 15.3 12.97 15.13 13.22C14.96 13.47 14.47 14.05 14.33 14.22C14.18 14.38 14.04 14.4 13.79 14.27C13.54 14.15 12.72 13.88 11.75 13.02C10.99 12.35 10.48 11.51 10.33 11.26C10.19 11.01 10.31 10.88 10.44 10.75C10.55 10.64 10.69 10.46 10.82 10.31C10.95 10.16 11 10.05 11.08 9.89C11.16 9.72 11.12 9.57 11.06 9.45C11 9.33 10.5 8.12 10.3 7.62C10.1 7.15 9.9 7.21 9.74 7.21C9.6 7.21 9.43 7.21 9.26 7.21L9.53 7.34Z"/></svg>
                         <span>Beri Tahu Pelanggan via WhatsApp</span>
                     </a>
-                @else
-                    <span class="text-xs text-stone-400 italic">(Nomor WhatsApp pelanggan tidak tersedia)</span>
-                @endif
-
-                <a href="{{ $customerTrackingUrl }}" target="_blank"
-                   class="inline-flex items-center gap-1.5 px-3.5 py-2.5 bg-stone-100 hover:bg-stone-200 text-hamta-black font-semibold text-xs rounded-xl transition">
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                    <span>Buka Live Tracker Pelanggan ↗</span>
-                </a>
+                </div>
             </div>
-        </div>
+        @endif
     </div>
 
 </div>
