@@ -38,7 +38,7 @@ class TempReviewProbeTest extends TestCase
             ->assertOk();
 
         $r = $this->admin()->patch(route('admin.kelola_menu.status', $target->id_produk));
-        fwrite(STDERR, "\nPROBE no-referer with session previous -> " . $r->headers->get('Location') . "\n");
+        fwrite(STDERR, "\nPROBE no-referer with session previous -> ".$r->headers->get('Location')."\n");
 
         $this->assertTrue(true);
     }
@@ -53,7 +53,7 @@ class TempReviewProbeTest extends TestCase
             'http://localhost./admin/kelola-menu?page=2',
         ] as $ref) {
             $r = $this->admin()->withHeader('Referer', $ref)->patch(route('admin.kelola_menu.status', $p->id_produk));
-            fwrite(STDERR, "\nPROBE referer={$ref} -> " . $r->headers->get('Location') . "\n");
+            fwrite(STDERR, "\nPROBE referer={$ref} -> ".$r->headers->get('Location')."\n");
             $p->refresh();
         }
         $this->assertTrue(true);

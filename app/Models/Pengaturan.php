@@ -15,11 +15,21 @@ class Pengaturan extends Model
         'whatsapp',
         'instagram',
         'tarif_ongkir',
+        'qris_statis',
     ];
 
     protected $casts = [
         'tarif_ongkir' => 'float',
     ];
+
+    public static function getQrisStatis(): ?string
+    {
+        try {
+            return self::value('qris_statis');
+        } catch (\Throwable) {
+            return null;
+        }
+    }
 
     public static function getTarifOngkir(): float
     {

@@ -604,6 +604,9 @@
                 </div>
 
                 <div class="qris-code-wrap">
+                    @if (!empty($qrisStatis))
+                        <img src="{{ asset('storage/'.$qrisStatis) }}" alt="QRIS Hamta Healthy Food" style="width:220px;height:220px;object-fit:contain;border-radius:12px;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.08);padding:10px;display:block;">
+                    @else
                     <!-- High Quality QRIS SVG -->
                     <svg width="220" height="220" viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:12px;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.08);padding:10px">
                         <rect x="20" y="20" width="56" height="56" rx="8" fill="#0B412B"/>
@@ -703,6 +706,7 @@
                         <path d="M136 135c0-6-6-11-12-11 0 6 6 11 12 11Z" fill="#A8E6A1"/>
                         <path d="M122 136q8-1 16-8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
                     </svg>
+                    @endif
                     <div class="qris-scan-tag">SCAN &amp; BAYAR DI SINI</div>
                 </div>
 
@@ -857,6 +861,9 @@
 
                 <!-- Barcode SVG QRIS Statis -->
                 <div style="display:inline-block;padding:12px;background:#fbf8f0;border-radius:14px;border:1px dashed rgba(11,65,43,.3);box-shadow:0 2px 8px rgba(0,0,0,.04);margin-bottom:12px">
+                    @if (!empty($qrisStatis))
+                        <img src="{{ asset('storage/'.$qrisStatis) }}" alt="QRIS Hamta Healthy Food" style="width:200px;height:200px;object-fit:contain;border-radius:10px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06);padding:8px;margin:0 auto;display:block;">
+                    @else
                     <svg width="200" height="200" viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:10px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06);padding:8px">
                         <rect x="20" y="20" width="56" height="56" rx="8" fill="#0B412B"/>
                         <rect x="28" y="28" width="40" height="40" rx="4" fill="#fff"/>
@@ -955,6 +962,7 @@
                         <path d="M136 135c0-6-6-11-12-11 0 6 6 11 12 11Z" fill="#A8E6A1"/>
                         <path d="M122 136q8-1 16-8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
                     </svg>
+                    @endif
                     <div style="margin-top:8px;font-size:11px;font-weight:800;letter-spacing:1px;color:var(--green);background:#eef5ea;padding:3px 12px;border-radius:999px">SCAN &amp; BAYAR DI SINI</div>
                 </div>
 

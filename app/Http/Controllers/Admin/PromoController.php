@@ -1,18 +1,17 @@
 <?php
 
-
 namespace App\Http\Controllers\Admin;
 
-
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 use App\Models\Promo;
 use App\Services\PromoService;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
-
-class PromoController extends \App\Http\Controllers\Controller
+class PromoController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         // Tampilkan semua promo (aktif & nonaktif) supaya admin bisa monitored & diaktifkan kembali
         $q = trim((string) $request->query('q'));
 
@@ -25,7 +24,8 @@ class PromoController extends \App\Http\Controllers\Controller
         return view('admin.promo', ['promo' => $promo, 'q' => $q]);
     }
 
-    public function toggleStatus(Request $request, $id) {
+    public function toggleStatus(Request $request, $id)
+    {
         // Validasi input: status_aktif harus boolean (toggle kirim 1/0)
         $data = $request->validate([
             'status_aktif' => ['required', 'boolean'],
@@ -36,7 +36,7 @@ class PromoController extends \App\Http\Controllers\Controller
         // Mengaktifkan promo yang kuotanya sudah habis tidak diizinkan
         if ($data['status_aktif'] && $promo->jumlah_terpakai >= $promo->batas_penggunaan) {
             return redirect()->route('admin.promo.index')
-                ->with('error', 'Promo "' . $promo->nama_promo . '" tidak bisa diaktifkan karena kuota sudah habis (' . $promo->jumlah_terpakai . '/' . $promo->batas_penggunaan . ').');
+                ->with('error', 'Promo "'.$promo->nama_promo.'" tidak bisa diaktifkan karena kuota sudah habis ('.$promo->jumlah_terpakai.'/'.$promo->batas_penggunaan.').');
         }
 
         $promo->update(['status_aktif' => (bool) $data['status_aktif']]);
@@ -45,10 +45,11 @@ class PromoController extends \App\Http\Controllers\Controller
         $this->promoService()->nonaktifkanJikaHabis($promo);
 
         return redirect()->route('admin.promo.index')
-            ->with('success', 'Status promo "' . $promo->nama_promo . '" berhasil diperbarui.');
+            ->with('success', 'Status promo "'.$promo->nama_promo.'" berhasil diperbarui.');
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         // Validasi input form tambah promo
         $data = $request->validate($this->rulesValidasi($request));
 
@@ -68,10 +69,11 @@ class PromoController extends \App\Http\Controllers\Controller
         ]);
 
         return redirect()->route('admin.promo.index')
-            ->with('success', 'Promo "' . $promo->nama_promo . '" berhasil ditambahkan.');
+            ->with('success', 'Promo "'.$promo->nama_promo.'" berhasil ditambahkan.');
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         // Validasi input form edit promo (sama persis dengan form tambah)
         $data = $request->validate($this->rulesValidasi($request));
 
@@ -95,10 +97,11 @@ class PromoController extends \App\Http\Controllers\Controller
         $this->promoService()->nonaktifkanJikaHabis($promo);
 
         return redirect()->route('admin.promo.index')
-            ->with('success', 'Promo "' . $promo->nama_promo . '" berhasil diperbarui.');
+            ->with('success', 'Promo "'.$promo->nama_promo.'" berhasil diperbarui.');
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         // Ambil promo yang mau dihapus
         $promo = Promo::findOrFail($id);
         $namaPromo = $promo->nama_promo;
@@ -111,14 +114,14 @@ class PromoController extends \App\Http\Controllers\Controller
             $promo->update(['status_aktif' => false]);
 
             return redirect()->route('admin.promo.index')
-                ->with('error', 'Promo "' . $namaPromo . '" sudah pernah dipakai, jadi dinonaktifkan (tidak dihapus).');
+                ->with('error', 'Promo "'.$namaPromo.'" sudah pernah dipakai, jadi dinonaktifkan (tidak dihapus).');
         }
 
         // Hapus promo dari database (hard delete)
         $promo->delete();
 
         return redirect()->route('admin.promo.index')
-            ->with('success', 'Promo "' . $namaPromo . '" berhasil dihapus.');
+            ->with('success', 'Promo "'.$namaPromo.'" berhasil dihapus.');
     }
 
     // Logika auto-nonaktif kuota tinggal di PromoService (satu sumber kebenaran),

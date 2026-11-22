@@ -419,10 +419,8 @@ class AutomatedBlackBoxTest extends TestCase
     {
         $response = $this->get(route('customer.status_pesanan', ['kode' => 'KODE-PALSU-999']));
         $response->assertStatus(200);
-        // Halaman status pesanan tidak menampilkan pesan error 'tidak ditemukan',
-        // melainkan hanya kembali menampilkan form input lacak 'Cari Pesanan Anda'
         $response->assertSee('Cari Pesanan Anda');
-        $this->assertStringNotContainsString('tidak ditemukan', strtolower($response->getContent()));
+        $response->assertSee('tidak ditemukan di sistem');
     }
 
     public function test_api_status_pesanan_live(): void

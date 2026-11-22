@@ -36,20 +36,24 @@
             @endif
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                <section class="bg-white rounded-2xl p-6 md:p-7 shadow-sm border border-stone-100">
+                <section class="bg-white rounded-2xl p-6 md:p-7 shadow-sm border border-stone-100 flex flex-col">
                     <h3 class="text-lg font-bold mb-5">Logo Usaha</h3>
                     @if ($errors->has('logo'))
                         <p class="text-sm text-red-600 mb-3">{{ $errors->first('logo') }}</p>
                     @endif
-                    <form id="form-logo" method="POST" action="{{ route('admin.pengaturan.identitas') }}" enctype="multipart/form-data">
+                    <form id="form-logo" method="POST" action="{{ route('admin.pengaturan.identitas') }}" enctype="multipart/form-data" class="flex-1 flex flex-col justify-between">
                         @csrf
-                        <div class="w-36 h-24 bg-[#E5E5E5] rounded-2xl flex items-center justify-center overflow-hidden">
-                            <img id="preview-logo" src="{{ $pengaturan->logo ? Storage::url($pengaturan->logo) : '' }}" alt="Pratinjau logo usaha" class="{{ $pengaturan->logo ? '' : 'hidden' }} w-full h-full object-contain">
-                            <x-lucide-image id="placeholder-logo" class="{{ $pengaturan->logo ? 'hidden' : '' }} w-10 h-10 text-stone-500" aria-hidden="true" />
+                        <div>
+                            <div class="w-36 h-36 bg-[#E5E5E5] rounded-2xl flex items-center justify-center overflow-hidden border border-stone-200">
+                                <img id="preview-logo" src="{{ $pengaturan->logo ? Storage::url($pengaturan->logo) : '' }}" alt="Pratinjau logo usaha" class="{{ $pengaturan->logo ? '' : 'hidden' }} w-full h-full object-contain p-2 bg-white">
+                                <x-lucide-image id="placeholder-logo" class="{{ $pengaturan->logo ? 'hidden' : '' }} w-16 h-16 text-stone-500" aria-hidden="true" />
+                            </div>
+                            <div class="mt-5">
+                                <label for="logo" class="block text-sm font-semibold mb-1.5">Pilih logo <span class="font-normal text-hamta-gray">(PNG, JPG, WebP · maks. 2 MB)</span></label>
+                                <input id="logo" name="logo" type="file" accept="image/png,image/jpeg,image/webp" class="w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-[#E5E5E5] file:px-3 file:py-2 file:font-semibold">
+                            </div>
                         </div>
-                        <label for="logo" class="block text-sm font-semibold mt-4 mb-1.5">Pilih logo <span class="font-normal text-hamta-gray">(PNG, JPG, WebP · maks. 2 MB)</span></label>
-                        <input id="logo" name="logo" type="file" accept="image/png,image/jpeg,image/webp" class="w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-[#E5E5E5] file:px-3 file:py-2 file:font-semibold">
-                        <div class="flex items-center justify-between gap-3 mt-6">
+                        <div class="flex items-center justify-between gap-3 mt-6 pt-2">
                             @if ($pengaturan->logo)
                                 <button type="submit" form="form-hapus-logo" class="text-sm font-semibold text-red-700 hover:underline" onclick="return confirm('Hapus logo usaha?')">Hapus logo</button>
                             @else
@@ -65,6 +69,52 @@
                         <form id="form-hapus-logo" method="POST" action="{{ route('admin.pengaturan.identitas') }}" class="hidden">
                             @csrf
                             <input type="hidden" name="hapus_logo" value="1">
+                        </form>
+                    @endif
+                </section>
+
+                <section class="bg-white rounded-2xl p-6 md:p-7 shadow-sm border border-stone-100 flex flex-col">
+                    <div class="flex items-center gap-2 mb-5">
+                        <h3 class="text-lg font-bold">QRIS Statis (Fallback)</h3>
+                        <div class="relative group cursor-pointer inline-flex items-center" tabindex="0" role="button" aria-label="Penjelasan QRIS Statis">
+                            <span class="w-4 h-4 rounded-full bg-stone-200/80 hover:bg-stone-300 text-stone-600 text-[11px] font-bold inline-flex items-center justify-center transition select-none" title="Barcode QRIS yang ditampilkan kepada pelanggan jika koneksi Midtrans otomatis sedang bermasalah.">?</span>
+                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block group-focus:block w-64 p-2.5 bg-stone-800 text-white text-xs rounded-xl shadow-lg z-20 pointer-events-none transition-all text-center leading-relaxed font-normal">
+                                Barcode QRIS yang ditampilkan kepada pelanggan jika koneksi Midtrans otomatis sedang bermasalah.
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-stone-800"></div>
+                            </div>
+                        </div>
+                    </div>
+                    @if ($errors->has('qris_statis'))
+                        <p class="text-sm text-red-600 mb-3">{{ $errors->first('qris_statis') }}</p>
+                    @endif
+                    <form id="form-qris" method="POST" action="{{ route('admin.pengaturan.qris') }}" enctype="multipart/form-data" class="flex-1 flex flex-col justify-between">
+                        @csrf
+                        <div>
+                            <div class="w-36 h-36 bg-[#E5E5E5] rounded-2xl flex items-center justify-center overflow-hidden border border-stone-200">
+                                <img id="preview-qris" src="{{ $pengaturan->qris_statis ? Storage::url($pengaturan->qris_statis) : '' }}" alt="Pratinjau QRIS statis" class="{{ $pengaturan->qris_statis ? '' : 'hidden' }} w-full h-full object-contain p-1 bg-white">
+                                <x-lucide-qr-code id="placeholder-qris" class="{{ $pengaturan->qris_statis ? 'hidden' : '' }} w-20 h-20 text-stone-500" aria-hidden="true" />
+                            </div>
+                            <div class="mt-5">
+                                <label for="qris_statis" class="block text-sm font-semibold mb-1.5">Pilih gambar QRIS <span class="font-normal text-hamta-gray">(PNG, JPG, WebP · maks. 2 MB)</span></label>
+                                <input id="qris_statis" name="qris_statis" type="file" accept="image/png,image/jpeg,image/webp" class="w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-[#E5E5E5] file:px-3 file:py-2 file:font-semibold">
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between gap-3 mt-6 pt-2">
+                            @if ($pengaturan->qris_statis)
+                                <button type="submit" form="form-hapus-qris" class="text-sm font-semibold text-red-700 hover:underline" onclick="return confirm('Hapus gambar QRIS statis?')">Hapus QRIS</button>
+                            @else
+                                <span></span>
+                            @endif
+                            <div class="flex items-center gap-3">
+                                <button type="reset" class="bg-hamta-gray hover:bg-stone-500 text-white font-semibold text-sm px-5 py-2 rounded-xl transition">Batal</button>
+                                <button type="submit" class="bg-hamta-green hover:bg-[#58a851] text-white font-semibold text-sm px-5 py-2 rounded-xl shadow-sm transition">Simpan QRIS</button>
+                            </div>
+                        </div>
+                    </form>
+                    @if ($pengaturan->qris_statis)
+                        <form id="form-hapus-qris" method="POST" action="{{ route('admin.pengaturan.qris') }}" class="hidden">
+                            @csrf
+                            <input type="hidden" name="hapus_qris" value="1">
                         </form>
                     @endif
                 </section>
@@ -235,6 +285,9 @@
         const previewLogo = document.getElementById('preview-logo');
         const placeholderLogo = document.getElementById('placeholder-logo');
         const logoInput = document.getElementById('logo');
+        const previewQris = document.getElementById('preview-qris');
+        const placeholderQris = document.getElementById('placeholder-qris');
+        const qrisInput = document.getElementById('qris_statis');
 
         function urlUpdateCabang(id) {
             return urlCabangUpdate.replace('__CABANG__', encodeURIComponent(id));
@@ -315,6 +368,27 @@
                 placeholderLogo.classList.toggle('hidden', !!previewLogo.src);
             });
         });
+
+        if (qrisInput && previewQris && placeholderQris) {
+            qrisInput.addEventListener('change', () => {
+                const file = qrisInput.files[0];
+                if (!file) return;
+                previewQris.src = URL.createObjectURL(file);
+                previewQris.classList.remove('hidden');
+                placeholderQris.classList.add('hidden');
+            });
+
+            const formQris = document.getElementById('form-qris');
+            if (formQris) {
+                formQris.addEventListener('reset', () => {
+                    window.setTimeout(() => {
+                        previewQris.src = @js($pengaturan->qris_statis ? Storage::url($pengaturan->qris_statis) : '');
+                        previewQris.classList.toggle('hidden', !previewQris.src);
+                        placeholderQris.classList.toggle('hidden', !!previewQris.src);
+                    });
+                });
+            }
+        }
 
         @if ($errors->any() && old('form_cabang'))
             formCabang.querySelector('[name="nama_cabang"]').value = @js(old('nama_cabang', ''));

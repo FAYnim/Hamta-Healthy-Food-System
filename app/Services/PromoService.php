@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\Promo;
 use App\Models\Pesanan;
+use App\Models\Promo;
 use Illuminate\Support\Facades\DB;
 
 class PromoService
@@ -14,7 +14,7 @@ class PromoService
     public function promoLayak(Promo $p, float $subtotal, int $totalPorsi, string $metodeAmbil = 'pickup'): bool
     {
         // Promo harus masih aktif
-        if (!$p->status_aktif) {
+        if (! $p->status_aktif) {
             return false;
         }
 
@@ -81,9 +81,9 @@ class PromoService
             $promoLayak = Promo::where('status_aktif', true)
                 ->orderBy('id_promo')
                 ->get()
-                ->filter(fn($p) => $this->promoLayak($p, $subtotal, $totalPorsi, (string) $pesanan->metode_ambil))
+                ->filter(fn ($p) => $this->promoLayak($p, $subtotal, $totalPorsi, (string) $pesanan->metode_ambil))
                 // Urut dari potongan terbesar (dihitung terhadap subtotal penuh)
-                ->sortByDesc(fn($p) => $this->hitungPotongan($p, $subtotal))
+                ->sortByDesc(fn ($p) => $this->hitungPotongan($p, $subtotal))
                 ->values();
 
             // Tidak ada promo layak = pesanan dibiarkan tanpa diskon
@@ -106,7 +106,7 @@ class PromoService
 
                 // Slot kuota dipesan atomik: hanya berhasil kalau kuota belum habis,
                 // jadi 2 transaksi bersamaan tidak bisa memakai slot terakhir yang sama
-                if (!$this->pesanSlotKuota($promo)) {
+                if (! $this->pesanSlotKuota($promo)) {
                     continue;
                 }
 
@@ -208,7 +208,7 @@ class PromoService
         // load() (bukan loadMissing) supaya nilai pivot selalu terbaru dari DB
         return $pesanan->load('promo')
             ->promo
-            ->sortByDesc(fn($p) => $this->hitungPotongan($p, $subtotal))
+            ->sortByDesc(fn ($p) => $this->hitungPotongan($p, $subtotal))
             ->values();
     }
 }
