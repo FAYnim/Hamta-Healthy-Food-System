@@ -55,6 +55,44 @@ class PengaturanController extends Controller
             ->with('success', 'Logo usaha berhasil diperbarui.');
     }
 
+    public function updateQrisStatis(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'qris_statis' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
+            'hapus_qris' => ['nullable', 'boolean'],
+        ], [
+            'qris_statis.image' => 'File QRIS harus berupa gambar.',
+            'qris_statis.mimes' => 'Format file QRIS harus PNG, JPG, JPEG, atau WebP.',
+            'qris_statis.max' => 'Ukuran file QRIS maksimal 2 MB.',
+        ]);
+
+        $pengaturan = Pengaturan::firstOrCreate([], [
+            'whatsapp' => '+6285812345678',
+            'instagram' => '@hamta.sby',
+        ]);
+        $qrisLama = $pengaturan->qris_statis;
+        $qris = $qrisLama;
+
+        if ($request->hasFile('qris_statis')) {
+            $qris = $request->file('qris_statis')->store('pengaturan', 'public');
+        } elseif ($request->boolean('hapus_qris')) {
+            $qris = null;
+        }
+
+        $pengaturan->update(['qris_statis' => $qris]);
+
+        if ($qrisLama && $qris !== $qrisLama) {
+            Storage::disk('public')->delete($qrisLama);
+        }
+
+        $pesan = $qris === null && $request->boolean('hapus_qris')
+            ? 'QRIS statis berhasil dihapus.'
+            : 'QRIS statis berhasil diperbarui.';
+
+        return redirect()->route('admin.pengaturan')
+            ->with('success', $pesan);
+    }
+
     public function updateKontak(Request $request): RedirectResponse
     {
         $data = $request->validate([

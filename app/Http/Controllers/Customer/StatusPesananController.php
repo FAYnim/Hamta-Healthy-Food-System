@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Pengaturan;
 use App\Models\Pesanan;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -23,11 +24,14 @@ class StatusPesananController extends Controller
             $pesanan = Pesanan::with(['cabang', 'detailPesanan.komponenSalad', 'rating'])
                 ->where('kode_pesanan', $kodePesanan)
                 ->first();
+
+            $pesanan?->batalkanJikaExpired();
         }
 
         return view('customer.status-pesanan', [
             'pesanan' => $pesanan,
             'kode' => $kodePesanan,
+            'qrisStatis' => Pengaturan::getQrisStatis(),
         ]);
     }
 
@@ -77,6 +81,7 @@ class StatusPesananController extends Controller
             try {
                 if (now()->greaterThanOrEqualTo(Carbon::parse($expiryTime))) {
                     $isExpired = true;
+                    $pesanan->batalkanJikaExpired();
                 }
             } catch (\Throwable) {
                 $isExpired = false;
@@ -101,6 +106,7 @@ class StatusPesananController extends Controller
             'expiry_time' => $expiryTime,
             'is_expired' => $isExpired,
             'bukti_bayar' => $pesanan->bukti_bayar ? asset('storage/'.$pesanan->bukti_bayar) : null,
+            'qris_statis_img' => Pengaturan::getQrisStatis() ? asset('storage/'.Pengaturan::getQrisStatis()) : null,
             'nama_pelanggan' => $pesanan->nama_pelanggan,
             'items' => $items,
             'updated_at' => $pesanan->updated_at ? $pesanan->updated_at->timezone('Asia/Jakarta')->format('d M Y, H:i') : null,

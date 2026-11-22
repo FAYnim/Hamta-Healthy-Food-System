@@ -229,6 +229,12 @@ if (root) {
     // --- Product cards ---
     cards.forEach((card) => {
         card.addEventListener('click', () => {
+            // Efek redup sebentar saat diklik untuk menunjukkan feedback interaksi
+            card.classList.add('opacity-40', 'scale-[0.98]');
+            setTimeout(() => {
+                card.classList.remove('opacity-40', 'scale-[0.98]');
+            }, 180);
+
             addProduk({
                 id: card.dataset.id,
                 nama: card.dataset.nama,

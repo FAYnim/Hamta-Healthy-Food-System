@@ -97,6 +97,7 @@ Route::get('/kreasikan-salad', function () {
 Route::get('/checkout', function () {
     return view('customer.checkout', [
         'tarifOngkir' => Pengaturan::getTarifOngkir(),
+        'qrisStatis' => Pengaturan::getQrisStatis(),
         'cabang' => Cabang::all(),
     ]);
 })->name('customer.checkout');
@@ -155,6 +156,8 @@ Route::middleware('admin.auth')->group(function () {
         ->name('admin.pengaturan');
     Route::post('/admin/pengaturan/identitas', [PengaturanController::class, 'updateIdentitas'])
         ->name('admin.pengaturan.identitas');
+    Route::post('/admin/pengaturan/qris', [PengaturanController::class, 'updateQrisStatis'])
+        ->name('admin.pengaturan.qris');
     Route::post('/admin/pengaturan/kontak', [PengaturanController::class, 'updateKontak'])
         ->name('admin.pengaturan.kontak');
     Route::post('/admin/pengaturan/pengiriman', [PengaturanController::class, 'updatePengiriman'])

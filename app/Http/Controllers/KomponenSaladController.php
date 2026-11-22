@@ -1,15 +1,13 @@
 <?php
 
-
 namespace App\Http\Controllers;
-
 
 use App\Models\KomponenSalad;
 
-
 class KomponenSaladController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         // Ambil semua komponen salad yang sedang aktif (bisa dipilih customer)
         $komponen = KomponenSalad::where('status_aktif', true)
             ->get();

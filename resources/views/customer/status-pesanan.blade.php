@@ -307,6 +307,9 @@
                             </p>
 
                             <div style="display:inline-block;padding:10px;background:#fbf8f0;border-radius:12px;border:1px solid rgba(11,65,43,.2);margin-bottom:12px">
+                                @if (!empty($qrisStatis))
+                                    <img src="{{ asset('storage/'.$qrisStatis) }}" alt="QRIS Hamta Healthy Food" style="width:180px;height:180px;object-fit:contain;border-radius:8px;background:#fff;padding:8px;margin:0 auto;display:block;">
+                                @else
                                 <svg width="180" height="180" viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:8px;background:#fff;padding:8px">
                                     <rect x="20" y="20" width="56" height="56" rx="8" fill="#0B412B"/>
                                     <rect x="28" y="28" width="40" height="40" rx="4" fill="#fff"/>
@@ -347,6 +350,7 @@
                                     <path d="M124 135c0-6 6-11 12-11 0 6-6 11-12 11Z" fill="#65BD5E"/>
                                     <path d="M136 135c0-6-6-11-12-11 0 6 6 11 12 11Z" fill="#A8E6A1"/>
                                 </svg>
+                                @endif
                                 <span style="display:block;font-size:11px;font-weight:700;color:var(--green);margin-top:4px">NMID: ID1024398129038</span>
                             </div>
 

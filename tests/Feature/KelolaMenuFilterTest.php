@@ -140,7 +140,7 @@ class KelolaMenuFilterTest extends TestCase
         // assertSee(route(...), false) tidak mendiskriminasi: href yang sama juga dipakai
         // link "Kelola Menu" di sidebar. Regex mengikat href ke label "Reset filter".
         $this->assertMatchesRegularExpression(
-            '#<a href="' . preg_quote(route('admin.kelola_menu'), '#') . '"[^>]*>\s*Reset filter#s',
+            '#<a href="'.preg_quote(route('admin.kelola_menu'), '#').'"[^>]*>\s*Reset filter#s',
             $html
         );
     }

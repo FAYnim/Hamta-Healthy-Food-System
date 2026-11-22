@@ -114,7 +114,7 @@
                                 data-nama="{{ $item->nama_produk }}"
                                 data-harga="{{ (float) $item->harga_offline }}"
                                 data-kategori="{{ $item->kategori }}"
-                                class="kasir-produk-card bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-stone-100 hover:shadow-md hover:border-hamta-green/50 transition cursor-pointer text-left w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-hamta-green"
+                                class="kasir-produk-card bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-stone-100 hover:shadow-md hover:border-hamta-green/50 active:scale-[0.98] active:opacity-50 transition-all duration-150 cursor-pointer text-left w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-hamta-green select-none"
                             >
                                 <div class="w-full aspect-square bg-[#D9D9D9] rounded-xl mb-3 flex items-center justify-center overflow-hidden">
                                     @if ($item->foto)
@@ -242,31 +242,57 @@
                             </div>
 
                             <div>
-                                <label for="id_cabang" class="block text-xs font-semibold text-hamta-black mb-1.5">Cabang</label>
-                                <select
-                                    id="id_cabang"
-                                    name="id_cabang"
-                                    required
-                                    class="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-hamta-black outline-none focus:border-hamta-green focus:ring-1 focus:ring-hamta-green"
-                                >
-                                    <option value="" disabled {{ old('id_cabang') ? '' : 'selected' }} hidden>Pilih cabang</option>
-                                    @foreach ($cabang as $item)
-                                        <option value="{{ $item->id_cabang }}" {{ (string) old('id_cabang') === (string) $item->id_cabang ? 'selected' : '' }}>
-                                            {{ $item->nama_cabang }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <span class="block text-xs font-semibold text-hamta-black mb-1.5">Cabang Outlet</span>
+                                <input type="hidden" name="id_cabang" value="{{ $cabangMerr?->id_cabang }}">
+                                <div class="flex items-center justify-between rounded-xl border border-stone-200 bg-stone-50 px-3.5 py-2.5">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <x-lucide-map-pin class="w-4 h-4 text-hamta-green shrink-0" />
+                                        <span class="text-sm font-semibold text-hamta-black truncate">{{ $cabangMerr?->nama_cabang ?? 'MERR (Apartemen Bale Hinggil)' }}</span>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-stone-500 bg-stone-200/80 px-2 py-0.5 rounded-full shrink-0">Outlet Offline</span>
+                                </div>
                             </div>
 
                             <div>
                                 <span class="block text-xs font-semibold text-hamta-black mb-1.5">Metode Bayar</span>
-                                <input type="hidden" name="metode_bayar" value="qris">
-                                <div class="flex items-center justify-between rounded-xl border border-hamta-green/30 bg-hamta-green/5 px-3.5 py-2.5">
-                                    <div class="flex items-center gap-2">
-                                        <x-lucide-qr-code class="w-4 h-4 text-hamta-green" />
-                                        <span class="text-sm font-semibold text-hamta-green">QRIS (Cashless)</span>
-                                    </div>
-                                    <span class="text-[11px] font-bold text-hamta-green bg-hamta-lime/30 px-2 py-0.5 rounded-full">Satu-satunya metode</span>
+                                <div id="kasir-metode-group" class="grid grid-cols-2 gap-2.5 items-stretch">
+                                    <!-- Tunai (Cash) -->
+                                    <label class="metode-bayar-card cursor-pointer block h-full">
+                                        <input type="radio" name="metode_bayar" value="tunai" {{ old('metode_bayar', 'tunai') === 'tunai' ? 'checked' : '' }} class="sr-only">
+                                        <div class="card-box h-full flex items-center justify-between gap-2 p-3 rounded-xl border-2 transition select-none">
+                                            <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                                                <div class="icon-box w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition">
+                                                    <x-lucide-banknote class="w-4 h-4" />
+                                                </div>
+                                                <div class="min-w-0 flex-1">
+                                                    <span class="block text-xs font-bold text-hamta-black truncate">Tunai (Cash)</span>
+                                                    <span class="block text-[11px] text-stone-500 truncate">Uang Tunai</span>
+                                                </div>
+                                            </div>
+                                            <div class="radio-indicator w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition">
+                                                <div class="radio-dot w-1.5 h-1.5 rounded-full transition"></div>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <!-- QRIS (Cashless) -->
+                                    <label class="metode-bayar-card cursor-pointer block h-full">
+                                        <input type="radio" name="metode_bayar" value="qris" {{ old('metode_bayar') === 'qris' ? 'checked' : '' }} class="sr-only">
+                                        <div class="card-box h-full flex items-center justify-between gap-2 p-3 rounded-xl border-2 transition select-none">
+                                            <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                                                <div class="icon-box w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition">
+                                                    <x-lucide-qr-code class="w-4 h-4" />
+                                                </div>
+                                                <div class="min-w-0 flex-1">
+                                                    <span class="block text-xs font-bold text-hamta-black truncate">QRIS (Cashless)</span>
+                                                    <span class="block text-[11px] text-stone-500 truncate">Scan QRIS / EDC</span>
+                                                </div>
+                                            </div>
+                                            <div class="radio-indicator w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition">
+                                                <div class="radio-dot w-1.5 h-1.5 rounded-full transition"></div>
+                                            </div>
+                                        </div>
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -392,5 +418,37 @@
     {{-- json_encode langsung: @json() memecah argumen lewat explode(','), koma di dalam array bikin compile rusak --}}
     <script type="application/json" id="kasir-old-cart">{!! json_encode(old('cart', []), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
 
+    <script>
+        (function () {
+            function updateMetodeBayar() {
+                document.querySelectorAll('#kasir-metode-group .metode-bayar-card').forEach(function (card) {
+                    const radio = card.querySelector('input[type="radio"]');
+                    const box = card.querySelector('.card-box');
+                    const iconBox = card.querySelector('.icon-box');
+                    const indicator = card.querySelector('.radio-indicator');
+                    const dot = card.querySelector('.radio-dot');
+
+                    if (radio.checked) {
+                        box.className = 'card-box h-full flex items-center justify-between gap-2 p-3 rounded-xl border-2 transition select-none border-hamta-green bg-hamta-green/10 shadow-xs';
+                        iconBox.className = 'icon-box w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition bg-hamta-green text-white';
+                        indicator.className = 'radio-indicator w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition border-hamta-green bg-hamta-green';
+                        dot.className = 'radio-dot w-1.5 h-1.5 rounded-full bg-white transition';
+                    } else {
+                        box.className = 'card-box h-full flex items-center justify-between gap-2 p-3 rounded-xl border-2 transition select-none border-stone-200 bg-white hover:border-stone-300';
+                        iconBox.className = 'icon-box w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition bg-stone-100 text-stone-600';
+                        indicator.className = 'radio-indicator w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition border-stone-300 bg-white';
+                        dot.className = 'radio-dot w-1.5 h-1.5 rounded-full bg-transparent transition';
+                    }
+                });
+            }
+
+            document.querySelectorAll('#kasir-metode-group input[type="radio"]').forEach(function (radio) {
+                radio.addEventListener('change', updateMetodeBayar);
+            });
+
+            // Jalankan inisialisasi saat halaman dimuat
+            updateMetodeBayar();
+        })();
+    </script>
 </body>
 </html>

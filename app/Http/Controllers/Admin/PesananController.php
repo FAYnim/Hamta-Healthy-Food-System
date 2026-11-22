@@ -15,11 +15,14 @@ class PesananController extends Controller
 {
     public function index(Request $request)
     {
+        // Sinkronkan otomatis pesanan QRIS yang telah melewati batas expiry time
+        Pesanan::sinkronkanPesananExpired();
+
         // Tampilkan semua pesanan (online & kasir), filter status + pencarian opsional
         $status = $request->query('status');
         $q = trim((string) $request->query('q'));
 
-        $pesanan = Pesanan::with(['cabang', 'detailPesanan'])
+        $pesanan = Pesanan::with(['cabang', 'admin', 'detailPesanan.komponenSalad', 'promo', 'rating'])
             ->when(in_array($status, ['diproses', 'siap', 'selesai', 'batal'], true),
                 fn ($query) => $query->where('status_pesanan', $status))
             ->when($q !== '', fn ($query) => $query->where(fn ($sub) => $sub
@@ -27,7 +30,7 @@ class PesananController extends Controller
                 ->orWhere('nama_pelanggan', 'like', "%{$q}%")
                 ->orWhere('no_whatsapp', 'like', "%{$q}%")))
             ->latest()
-            ->paginate(15)
+            ->paginate(10)
             ->withQueryString();
 
         return view('admin.daftar_pesanan', [
@@ -42,6 +45,8 @@ class PesananController extends Controller
         // Detail 1 pesanan untuk panel drawer (relasi lengkap utk tampilan)
         $pesanan = Pesanan::with(['cabang', 'admin', 'detailPesanan.komponenSalad', 'promo', 'rating'])
             ->findOrFail($id);
+
+        $pesanan->batalkanJikaExpired();
 
         return view('admin.partials.pesanan_detail', ['pesanan' => $pesanan]);
     }

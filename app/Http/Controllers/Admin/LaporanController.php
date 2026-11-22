@@ -1,16 +1,15 @@
 <?php
 
-
 namespace App\Http\Controllers\Admin;
 
-
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\DetailPesanan;
+use Illuminate\Http\Request;
 
-
-class LaporanController extends \App\Http\Controllers\Controller
+class LaporanController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         // Validasi filter periode dari form laporan (boleh kosong, nanti default bulan berjalan)
         $data = $request->validate([
             'tanggal_mulai' => ['nullable', 'date'],

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\KomponenSalad;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class KomponenSaladSeeder extends Seeder
@@ -26,11 +25,11 @@ class KomponenSaladSeeder extends Seeder
 
         foreach ($sayuran as $nama) {
             KomponenSalad::create([
-                'nama_komponen'  => $nama,
-                'jenis'          => 'sayuran',
+                'nama_komponen' => $nama,
+                'jenis' => 'sayuran',
                 'harga_tambahan' => 0,
-                'foto'           => null,
-                'deskripsi'      => null,
+                'foto' => null,
+                'deskripsi' => null,
             ]);
         }
 
@@ -44,11 +43,11 @@ class KomponenSaladSeeder extends Seeder
 
         foreach ($protein as $nama) {
             KomponenSalad::create([
-                'nama_komponen'  => $nama,
-                'jenis'          => 'protein',
+                'nama_komponen' => $nama,
+                'jenis' => 'protein',
                 'harga_tambahan' => 0,    // TODO: Konfirmasi harga tambahan per komponen ke owner (Kak Yunita)
-                'foto'           => null, // TODO: Upload foto komponen setelah aset tersedia
-                'deskripsi'      => null,
+                'foto' => null, // TODO: Upload foto komponen setelah aset tersedia
+                'deskripsi' => null,
             ]);
         }
     }
