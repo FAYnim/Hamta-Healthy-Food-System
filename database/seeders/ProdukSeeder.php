@@ -180,10 +180,54 @@ class ProdukSeeder extends Seeder
                 'id_cabang' => null,
                 'bahan' => [],
             ],
+
+            // ===== SANDWICH =====
+            ['nama_produk' => 'Beef Sandwich', 'deskripsi' => 'Bread 3 Slice, Lettuce Curly, Tomato, Kyuri, Red Cabbage, Boiled Egg, Beef Patty, Chili Sauce', 'kategori' => 'Sandwich', 'harga_offline' => 22000, 'harga_online' => 22000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Chicken Sandwich', 'deskripsi' => 'Bread 3 Slice, Lettuce Curly, Tomato, Kyuri, Red Cabbage, Boiled Egg, Chicken Patty, Chili Sauce', 'kategori' => 'Sandwich', 'harga_offline' => 20000, 'harga_online' => 20000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Smoked Beef Sandwich', 'deskripsi' => 'Bread 3 Slice, Lettuce Curly, Tomato, Kyuri, Red Cabbage, Boiled Egg, Smoked Beef Slice, Chili Sauce', 'kategori' => 'Sandwich', 'harga_offline' => 20000, 'harga_online' => 20000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Club Sandwich', 'deskripsi' => 'Bread 3 Slice, Lettuce Iceberg, Tomato, Kyuri, Boiled Egg, Smoked Beef Slice, Roasted Chicken, Chili Sauce', 'kategori' => 'Sandwich', 'harga_offline' => 22000, 'harga_online' => 22000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+
+            // ===== WRAP =====
+            ['nama_produk' => 'Chef Wrap', 'deskripsi' => 'Lettuce Iceberg, Tomato, Kyuri, Red Cabbage, Sweet Corn, Boiled Egg, Roast Chicken, Thousand Island Dressing', 'kategori' => 'Wrap', 'harga_offline' => 20000, 'harga_online' => 20000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Caesar Wrap', 'deskripsi' => 'Lettuce & Romaine, Cucumber, Roasted Chicken, Red Cabbage, Smoked Beef, Caesar Dressing', 'kategori' => 'Wrap', 'harga_offline' => 18000, 'harga_online' => 18000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Salad Wrap', 'deskripsi' => 'Lettuce, Mix Vegetable, Cucumber, Tomato, Thousand Island Dressing', 'kategori' => 'Wrap', 'harga_offline' => 13000, 'harga_online' => 13000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Tuna Wrap', 'deskripsi' => 'Lettuce, Carrot, Tomato, Kyuri, Beans, Sweet Corn, Tuna, Onion, Roasted Sesame Mayo Dressing', 'kategori' => 'Wrap', 'harga_offline' => 22000, 'harga_online' => 22000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Egg Mayo Wrap', 'deskripsi' => 'Tortilla, Lettuce, Egg Mayo, Cucumber, Tomato, Mix Vegetable, Chili Sauce', 'kategori' => 'Wrap', 'harga_offline' => 16000, 'harga_online' => 16000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+
+            // ===== SALAD =====
+            ['nama_produk' => 'Chef Salad', 'deskripsi' => 'Lettuce Iceberg, Tomato, Red Cabbage, Sweet Corn, Boiled Egg, Roast Chicken, Thousand Island Dressing', 'kategori' => 'Salad', 'harga_offline' => 20000, 'harga_online' => 20000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Caesar Salad', 'deskripsi' => 'Lettuce & Romaine, Kyuri, Crouton, Red Cabbage, Smoked Beef, Roasted Chicken, Caesar Dressing', 'kategori' => 'Salad', 'harga_offline' => 20000, 'harga_online' => 20000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Mix Green Salad', 'deskripsi' => 'Lettuce, Sweet Corn, Beans, Kyuri, Tomato, Smoked Beef, Thousand Island Dressing', 'kategori' => 'Salad', 'harga_offline' => 18000, 'harga_online' => 18000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Tuna Salad', 'deskripsi' => 'Lettuce, Romaine, Carrot, Tomato, Beans, Sweet Corn, Onion, Tuna, Roasted Sesame Mayo Dressing', 'kategori' => 'Salad', 'harga_offline' => 22000, 'harga_online' => 22000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Fruits Salad', 'deskripsi' => 'Melon, Pear, Jelly, Watermelon, Dragon Fruit, Orange, Mix Granola, Yogurt Dressing', 'kategori' => 'Salad', 'harga_offline' => 20000, 'harga_online' => 20000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+
+            // ===== JUICE & MINUMAN LAIN =====
+            ['nama_produk' => 'Jus Mangga', 'deskripsi' => 'Fresh juice mangga', 'kategori' => 'Juice', 'harga_offline' => 12000, 'harga_online' => 12000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Jus Buah Naga', 'deskripsi' => 'Fresh juice buah naga', 'kategori' => 'Juice', 'harga_offline' => 12000, 'harga_online' => 12000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Jus Pear', 'deskripsi' => 'Fresh juice pear', 'kategori' => 'Juice', 'harga_offline' => 12000, 'harga_online' => 12000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Jus Wortel', 'deskripsi' => 'Fresh juice wortel', 'kategori' => 'Juice', 'harga_offline' => 12000, 'harga_online' => 12000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Jus Tomat', 'deskripsi' => 'Fresh juice tomat', 'kategori' => 'Juice', 'harga_offline' => 12000, 'harga_online' => 12000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Jus Strawberry', 'deskripsi' => 'Fresh juice strawberry', 'kategori' => 'Juice', 'harga_offline' => 12000, 'harga_online' => 12000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Jus Semangka', 'deskripsi' => 'Fresh juice semangka', 'kategori' => 'Juice', 'harga_offline' => 10000, 'harga_online' => 10000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Jus Melon', 'deskripsi' => 'Fresh juice melon', 'kategori' => 'Juice', 'harga_offline' => 10000, 'harga_online' => 10000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Jus Pepaya', 'deskripsi' => 'Fresh juice pepaya', 'kategori' => 'Juice', 'harga_offline' => 10000, 'harga_online' => 10000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Jus Alpukat', 'deskripsi' => 'Fresh juice alpukat', 'kategori' => 'Juice', 'harga_offline' => 15000, 'harga_online' => 15000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Jus Mix (2 Buah)', 'deskripsi' => 'Fresh juice campuran 2 jenis buah', 'kategori' => 'Juice', 'harga_offline' => 15000, 'harga_online' => 15000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Semangka Potong', 'deskripsi' => 'Buah potong semangka segar', 'kategori' => 'Juice', 'harga_offline' => 9000, 'harga_online' => 9000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Melon Potong', 'deskripsi' => 'Buah potong melon segar', 'kategori' => 'Juice', 'harga_offline' => 9000, 'harga_online' => 9000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Pepaya Potong', 'deskripsi' => 'Buah potong pepaya segar', 'kategori' => 'Juice', 'harga_offline' => 9000, 'harga_online' => 9000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Es Teh', 'deskripsi' => 'Es teh manis', 'kategori' => 'Juice', 'harga_offline' => 4000, 'harga_online' => 4000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+            ['nama_produk' => 'Mineral Water', 'deskripsi' => 'Air mineral', 'kategori' => 'Juice', 'harga_offline' => 5000, 'harga_online' => 5000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => null],
+
+            // ===== RICE BOWL (khusus MERR, id_cabang = 2) =====
+            ['nama_produk' => 'Chicken Pop Ori', 'deskripsi' => 'Rice Bowl by Hamta - Chicken Pop Original', 'kategori' => 'RiceBowl', 'harga_offline' => 12000, 'harga_online' => 12000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => 2],
+            ['nama_produk' => 'Chicken Pop Matah', 'deskripsi' => 'Rice Bowl by Hamta - Chicken Pop Matah', 'kategori' => 'RiceBowl', 'harga_offline' => 15000, 'harga_online' => 15000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => 2],
+            ['nama_produk' => 'Chicken Blackpapper', 'deskripsi' => 'Rice Bowl by Hamta - Chicken Blackpapper', 'kategori' => 'RiceBowl', 'harga_offline' => 17000, 'harga_online' => 17000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => 2],
+            ['nama_produk' => 'Chicken Teriyaki', 'deskripsi' => 'Rice Bowl by Hamta - Chicken Teriyaki', 'kategori' => 'RiceBowl', 'harga_offline' => 17000, 'harga_online' => 17000, 'foto' => null, 'status_aktif' => true, 'bisa_dikustom' => false, 'id_cabang' => 2],
         ];
 
         foreach ($daftar_produk as $item) {
-            $bahanList = $item['bahan'];
+            $bahanList = $item['bahan'] ?? [];
             unset($item['bahan']);
 
             $produk = Produk::updateOrCreate(
