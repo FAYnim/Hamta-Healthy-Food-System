@@ -62,29 +62,35 @@
 
             <!-- Detail Cabang 1: Lidah Kulon -->
             <div id="content-cabang-1" class="space-y-2 text-xs leading-relaxed text-gray-200">
-                <div class="p-3.5 rounded-xl bg-white/5 border border-white/10">
-                    <p class="font-bold text-white text-[13px]">Cabang Lidah Kulon</p>
-                    <p class="text-gray-300 mt-1">
-                        Rumah Produksi, Jl. Lidah Kulon Gg. 1, Lakarsantri, Surabaya, Jawa Timur 60213
-                    </p>
-                    <p class="text-[11px] text-emerald-200 mt-2 font-medium flex items-center gap-1.5">
-                        <x-lucide-clock class="w-3.5 h-3.5 text-emerald-300 shrink-0" />
-                        <span>Buka: 09.00 - 21.00 WIB (Pickup &amp; Delivery)</span>
-                    </p>
+                <div class="rounded-xl overflow-hidden border border-white/10 bg-white/5">
+                    <iframe
+                        src="https://maps.google.com/maps?q=Jl.%20Lidah%20Kulon%20Gg.%201,%20Lakarsantri,%20Surabaya,%20Jawa%20Timur%2060213&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                        class="w-full h-36 border-0"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Peta Cabang Lidah Kulon"
+                    ></iframe>
+                    <div class="p-3 flex items-center justify-between gap-2">
+                        <p class="font-bold text-white text-[13px]">Cabang Lidah Kulon</p>
+                        <p class="text-[11px] text-emerald-200 font-medium shrink-0">Buka: 09.00 - 21.00 WIB</p>
+                    </div>
                 </div>
             </div>
 
             <!-- Detail Cabang 2: MERR -->
             <div id="content-cabang-2" class="hidden space-y-2 text-xs leading-relaxed text-gray-200">
-                <div class="p-3.5 rounded-xl bg-white/5 border border-white/10">
-                    <p class="font-bold text-white text-[13px]">Cabang MERR (Apartemen Bale Hinggil)</p>
-                    <p class="text-gray-300 mt-1">
-                        Bale Hinggil Apartment (Jl. Dr. Ir. H. Soekarno / MERR), Rungkut, Surabaya
-                    </p>
-                    <p class="text-[11px] text-emerald-200 mt-2 font-medium flex items-center gap-1.5">
-                        <x-lucide-clock class="w-3.5 h-3.5 text-emerald-300 shrink-0" />
-                        <span>Buka: 09.00 - 21.00 WIB setiap hari (Dine-in &amp; Pickup)</span>
-                    </p>
+                <div class="rounded-xl overflow-hidden border border-white/10 bg-white/5">
+                    <iframe
+                        src="https://maps.google.com/maps?q=Bale%20Hinggil%20Apartment,%20Jl.%20Dr.%20Ir.%20H.%20Soekarno,%20Rungkut,%20Surabaya&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                        class="w-full h-36 border-0"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Peta Cabang MERR (Apartemen Bale Hinggil)"
+                    ></iframe>
+                    <div class="p-3 flex items-center justify-between gap-2">
+                        <p class="font-bold text-white text-[13px]">Cabang MERR (Apartemen Bale Hinggil)</p>
+                        <p class="text-[11px] text-emerald-200 font-medium shrink-0">Buka: 09.00 - 21.00 WIB</p>
+                    </div>
                 </div>
             </div>
         </div>
